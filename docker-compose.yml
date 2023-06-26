@@ -5,33 +5,54 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        image: callmedavid/pos
+        ports:
+            - 8000:80
         restart: unless-stopped
         volumes:
-            - .:/var/www/laravel
-        environment:
-            - DB_HOST=db
-            - DB_PORT=3306
-            - DB_DATABASE=laravel
-            - DB_USERNAME=root
-            - DB_PASSWORD=123456
-            - REDIS_HOST=redis
+            - ./:/var/www
         depends_on:
-            - db
+            - redis
+            - queue
+        networks:
+            - laravel
 
-    db:
+    mysql:
         image: mysql:8.0
-        container_name: pos-db
         restart: unless-stopped
         environment:
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_DATABASE=123456
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
         volumes:
-            - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+            - ./.docker/mysql/dbdata:/var/lib/mysql
+        networks:
+            - laravel
+        ports:
+            - 3307:3306
+
+    queue:
+        build:
+            args:
+                user: pos
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        command: "php artisan queue:work"
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - redis
+        networks:
+            - laravel
 
     redis:
-        image: redis:5.0-alpine
-        ports:
-            - "6379:6379"
+        image: redis:latest
+        networks:
+            - laravel
 
-volumes:
-    dbdata:
+networks:
+    laravel:
+        driver: bridge
