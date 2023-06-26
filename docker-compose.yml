@@ -1,81 +1,31 @@
-version: "3.8"
+version: "3.7"
 
 services:
-    php:
-        build:
-            context: .
-            target: php
-            args:
-                - APP_ENV=${APP_ENV}
-        environment:
-            - APP_ENV=${APP_ENV}
-            - CONTAINER_ROLE=app
-        working_dir: /var/www
-        volumes:
-            - ./:/var/www
-        ports:
-            - 8000:8000
-        depends_on:
-            - database
-            - redis
+  app:
+    build: ./docker
+    image: callmedavid/pos
+    container_name: pos
+    ports:
+      - "9000:80"
+    volumes:
+      # Mount source-code for development
+      - ./:/var/www
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
-    websocket:
-        build:
-            context: .
-            target: php
-            args:
-                - APP_ENV=${APP_ENV}
-        environment:
-            - APP_ENV=${APP_ENV}
-            - CONTAINER_ROLE=websocket
-        working_dir: /var/www
-        volumes:
-            - ./:/var/www
-        ports:
-            - 6001:6001
-        depends_on:
-            - database
-            - redis
-
-    database:
-        image: mysql:8.0
-        ports:
-            -   3306:3306
-        environment:
-            - MYSQL_DATABASE=${DB_DATABASE}
-            - MYSQL_USER=${DB_USERNAME}
-            - MYSQL_PASSWORD=${DB_PASSWORD}
-            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-        volumes:
-            - db-data:/var/lib/mysql
-
-    redis:
-        image: redis:7.0-alpine
-        command: redis-server --appendonly yes --requirepass  "${REDIS_PASSWORD}"
-        ports:
-            - 6379:6379
-
-    queue:
-        build:
-            context: .
-            target: php
-            args:
-                - APP_ENV=${APP_ENV}
-        environment:
-            - APP_ENV=${APP_ENV}
-            - CONTAINER_ROLE=queue
-        working_dir: /var/www
-        volumes:
-            - ./:/var/www
-
-    node:
-        build:
-            context: .
-            target: node
-        volumes:
-            - .:/usr/src
-            - ./node_modules:/usr/src/node_modules
-        tty: true
+  db:
+    image: mysql:8
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql-config.cnf:/etc/mysql/conf.d/config.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: pos
+      MYSQL_USER: pos
+      MYSQL_PASSWORD: 123456
 
 volumes:
-    db-data: ~
+  mysql-data:
