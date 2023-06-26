@@ -36,9 +36,6 @@ RUN npm install
 RUN chown -R www-data:www-data /var/www/html/storage
 RUN chmod -R 775 /var/www/html/storage
 
-# Generate application key
-RUN php artisan key:generate
-
 # Expose port
 EXPOSE 9000
 
