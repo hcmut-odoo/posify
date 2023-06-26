@@ -2,16 +2,14 @@ version: "3.7"
 
 services:
   app:
-    build: ./docker
-    image: callmedavid/pos
+    build:
+      context: .
     container_name: pos
     ports:
       - "9000:80"
     volumes:
       # Mount source-code for development
-      - ./:/var/www
-    extra_hosts:
-      - host.docker.internal:host-gateway
+      - ./:/var/www/html
 
   db:
     image: mysql:8
