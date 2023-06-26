@@ -32,6 +32,9 @@ COPY . .
 RUN composer install --optimize-autoloader --no-dev
 RUN npm install
 
+# Build breeze
+RUN npm run dev
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage
 RUN chmod -R 775 /var/www/html/storage
