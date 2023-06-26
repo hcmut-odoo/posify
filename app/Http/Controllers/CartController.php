@@ -37,7 +37,7 @@ class CartController extends Controller
 
     public function clear()
     {
-
+        
     }
 
     public function show()
