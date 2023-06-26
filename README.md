@@ -1,64 +1,114 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
-
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+  <a href="https://buymee.herokuapp.com">
+    <img alt="Buymee website" src="./public/images/logo/logo-2.png" width="100" />
+    <h2 align="center">POINT OF SALE</h2>
+    <h3 align="center">Pure PHP MVC</h3>
+  </a>
+</p> 
+<p align="center">Finally a POS system that integrates with your marketing, sales, inventory and eCommerce. A simple and flexible POS you can configure to meet your retail shop's precise needs.</p>
 
-## About Laravel
+[![Build Status](https://travis-ci.org/anuraghazra/anuraghazra.github.io.svg?branch=develop)](https://travis-ci.org/anuraghazra/anuraghazra.github.io)
+![GitHub](https://img.shields.io/github/license/anuraghazra/anuraghazra.github.io)
+![Website](https://img.shields.io/website?down_message=offline&label=site&up_message=online&url=http%3A%2F%2Fanuraghazra.github.io)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+![Anurag Hazra Site Preview](./public/images/home/capture.PNG)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+*NOTE: If you are using this site as a template for your own portfolio site, I would be very glad if you add a link to the original site with my name in footer*
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## :rocket: Quick start
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Run the site locally**
 
-## Laravel Sponsors
+_NOTE: The default branch for this repo is `master`, when you push or pull make sure you specify the correct branch_
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Step 1: Clone The Repo
 
-### Premium Partners
+Fork the repository. then clone the repo locally by doing -
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+git clone https://github.com/hcmut-odoo/pos
+```
 
-## Contributing
+### Step 2: Install Dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Access into the project directory
 
-## Code of Conduct
+```bash
+cd pos
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Install all the dependencies
+```bash
+composer install
+```
 
-## Security Vulnerabilities
+Install and build bereeze
+```bash
+npm install
+npm run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Step 3: Setup enviroment variables
+Copy and create a new enviroment variables from example
 
-## License
+```bash
+cp .example.env .env
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Fill database connection
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pos_ecommerce
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### Step 4:
+Migrate database
+
+```bash
+php artisan migration
+```
+
+Terminal returns the following, you have already run migrate successfully:
+
+```bash
+[2021-10-28 19:10:49] - Applying migration m0001_initial.php
+[2021-10-28 19:10:49] - Applyied migration m0001_initial.php
+```
+
+### Step 5: Start Development Server
+
+Then start the development Server
+```
+php artisan serve
+```
+After running the development server the site should be running on https://localhost:8000
+
+## Tools Used
+
+1. Docker
+2. Github action for CI/CD
+
+## :v: Contributing
+
+*NOTE: if you want to change the [blog content](./content) or fix any typo you can do that from github's ui without cloning the repo locally*
+
+After cloning & setting up the local project you can push the changes to your github fork and make a pull request.
+
+> You can also run the tests locally to see if everything works fine with
+
+### Pushing the changes
+
+```bash
+git add .
+git commit -m "commit message"
+git push YOUR_REPO_URL master
+```
+
+Made with my :heart: and youthful enthusiasm
