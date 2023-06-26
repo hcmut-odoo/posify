@@ -16,6 +16,16 @@ class Product extends Model
         return DB::table('products')->paginate(18);
     }
 
+    public function getCategory()
+    {
+        return Category::find($this->category_id)->name;
+    }
+
+    public static function pagination($per_page)
+    {
+        return DB::table('products')->paginate($per_page);
+    }
+
     public static function show($id)
     {
         return DB::table('products')->find($id);
