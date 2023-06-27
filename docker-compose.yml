@@ -2,8 +2,7 @@ version: "3.7"
 
 services:
   app:
-    build:
-      context: .
+    image: callmedavid/pos
     container_name: pos_app
     ports:
       - "9000:80"
