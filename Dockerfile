@@ -1,7 +1,7 @@
 FROM php:7.4-apache
 
 # Copy virtual host into container
-COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Enable rewrite mode
 RUN a2enmod rewrite
@@ -19,7 +19,7 @@ RUN apt-get update && \
 RUN docker-php-ext-install zip pdo_mysql
 
 # Copy php.ini
-COPY ./php.ini /usr/local/etc/php/
+COPY ./docker/php.ini /usr/local/etc/php/
 
 # Create a non-root user for running Composer
 RUN useradd -ms /bin/bash composer
@@ -32,7 +32,7 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
 
 # Copy application files
-COPY .. /var/www
+COPY . /var/www
 
 # Change the owner of the container document root
 RUN chown -R www-data:www-data /var/www

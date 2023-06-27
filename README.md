@@ -90,6 +90,29 @@ php artisan serve
 ```
 After running the development server the site should be running on https://localhost:8000
 
+**Run by Docker**
+
+### Step 1:
+Run docker-compose
+
+```bash
+docker-compose up -d
+```
+
+### Step 2: Do on the first time
+Run migrate and seed data
+
+```bash
+docker exec -t pos_app bash ./docker/init.sh
+```
+
+
+## Admin credenticals
+
+```bash
+Email: admin@pos.com
+Pass: 12345678
+```
 ## Tools Used
 
 1. Docker
