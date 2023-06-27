@@ -3,6 +3,7 @@ name: Continuous Integration
 on:
   push:
     branches:
+      - main
       - docker
   pull_request:
     types:
