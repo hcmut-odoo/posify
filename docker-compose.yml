@@ -1,13 +1,12 @@
 version: "3.7"
 
 services:
-  app:
-    image: callmedavid/pos
-    container_name: pos_app
-    ports:
-      - "9000:80"
-    depends_on:
-      - db
+  image: callmedavid/pos:latest
+  container_name: pos_app
+  ports:
+    - "9000:80"
+  depends_on:
+    - db
 
   db:
     image: mysql:8
