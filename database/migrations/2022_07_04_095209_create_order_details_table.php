@@ -14,17 +14,13 @@ class CreateOrderDetailsTable extends Migration
     public function up()
     {
         Schema::create('order_details', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id();
+            $table->uuid('transaction');
             $table->string('order_id');
             $table->string('product_id');
-            $table->string('quantity');
+            $table->integer('quantity');
             $table->timestamps();
         });
-
-        // Schema::table('order_details', function (Blueprint $table) {
-        //     $table->string('order_id');
-        //     $table->foreign('order_id')->references('id')->on('orders');
-        // });
     }
 
     /**

@@ -14,17 +14,13 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id();
             $table->string('user_id');
+            $table->uuid('transaction');
             $table->string('payment_method');
             $table->string('status');
             $table->timestamps();
         });
-
-        // Schema::table('orders', function (Blueprint $table) {
-        //     $table->string('user_id');
-        //     $table->foreign('user_id')->references('id')->on('orders');
-        // });
     }
 
     /**
