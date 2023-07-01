@@ -16,31 +16,31 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'id' => '1',
+                'id' => 1,
                 'name' => 'Cà phê',
                 'created_at' => '2021-10-30 02:31:28',
                 'updated_at' => '2021-10-30 02:31:28',
             ],
             [
-                'id' => '18',
+                'id' => 18,
                 'name' => 'Thưởng thức tại nhà',
                 'created_at' => '2021-10-30 02:31:28',
                 'updated_at' => '2021-10-30 02:31:28',
             ],
             [
-                'id' => '2',
+                'id' => 2,
                 'name' => 'Đá Xay - Choco - Matcha',
                 'created_at' => '2021-10-30 02:31:28',
                 'updated_at' => '2021-10-30 02:31:28',
             ],
             [
-                'id' => '20',
+                'id' => 20,
                 'name' => 'Bộ sưu tập quà tặng',
                 'created_at' => '2021-10-30 02:31:28',
                 'updated_at' => '2021-10-30 02:31:28',
             ],
             [
-                'id' => '5',
+                'id' => 5,
                 'name' => 'Trà Trái Cây - Trà Sữa',
                 'created_at' => '2021-10-30 02:31:28',
                 'updated_at' => '2021-10-30 02:31:28',
