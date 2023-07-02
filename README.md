@@ -2,7 +2,7 @@
   <a href="https://buymee.herokuapp.com">
     <img alt="Buymee website" src="./public/images/logo/logo-2.png" width="100" />
     <h2 align="center">POINT OF SALE</h2>
-    <h3 align="center">Pure PHP MVC</h3>
+    <h3 align="center">PHP Laravel</h3>
   </a>
 </p> 
 <p align="center">Finally a POS system that integrates with your marketing, sales, inventory and eCommerce. A simple and flexible POS you can configure to meet your retail shop's precise needs.</p>
