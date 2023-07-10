@@ -27,6 +27,7 @@ Route::get('/product/list', [ApiController::class, 'products'])->name('api.produ
 Route::get('/user/list', [ApiController::class, 'users'])->name('api.user.list');
 Route::get('/category/list', [ApiController::class, 'categories'])->name('api.category.list');
 Route::get('/store/list', [ApiController::class, 'stores'])->name('api.store.list');
+Route::post('/check-connection', [ApiController::class, 'checkConnection'])->name('api.check.connection');
 
 Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {

@@ -13,6 +13,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class ApiController extends Controller
 {
+
+    public function checkConnection(Request $request)
+    {
+        $apiKey = $request->header('X-API-Key');
+
+        // Check if the API key is valid
+        if ($apiKey) {
+            return response()->json(['message' => 'Connection successful'], 200);
+        } else {
+            return response()->json(['message' => 'API key missing or invalid'], 400);
+        }
+    }
+
     public function resourceList(Request $request, string $modelClass)
     {
         // Retrieve the JSON payload from the request
@@ -42,6 +55,10 @@ class ApiController extends Controller
                 $query->where($field, '<', $value);
             } elseif ($operator === 'lteq') {
                 $query->where($field, '<=', $value);
+            } elseif ($operator === 'gt') {
+                $query->where($field, '.', $value);
+            } elseif ($operator === 'gteq') {
+                $query->where($field, '>=', $value);
             } elseif ($operator === 'neq') {
                 $query->where($field, '!=', $value);
             }
