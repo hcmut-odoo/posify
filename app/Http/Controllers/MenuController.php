@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MenuController extends Controller
 {
+    private $productService;
 
-    public function __construct()
+    public function __construct(ProductService $productService)
     {
         $this->middleware('auth');
+        $this->productService = $productService;
     }
 
     public function menu()
     {
-        $products = Product::getAll();
+        $products = $this->productService->getAll();
 
         return view('menu', [
             'products' => $products
@@ -24,7 +27,7 @@ class MenuController extends Controller
 
     public function detail($id)
     {
-        $product = Product::show($id);
+        $product = $this->productService->getProductById($id);
 
         return view('product_detail', [
             'product' => $product,
@@ -34,7 +37,7 @@ class MenuController extends Controller
 
     public function category($id)
     {
-        $products = Product::getByCategory($id);
+        $products = $this->productService->getByCategory($id);
 
         return view('menu', [
             'products' => $products
@@ -43,7 +46,8 @@ class MenuController extends Controller
 
     public function search(Request $request)
     {
-        $products = Product::search($request->input("keyword"));
+        $keyword = $request->input("keyword");
+        $products = $this->productService->search($keyword);
 
         return view('menu', [
             'products' => $products

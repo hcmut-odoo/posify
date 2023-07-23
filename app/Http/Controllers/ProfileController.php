@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Services\ProfileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    private $profileService;
 
-    public function __construct()
+    public function __construct(ProfileService $profileService)
     {
         $this->middleware('auth');
+        $this->profileService = $profileService;
     }
 
     public function profile(Request $request)
@@ -25,14 +27,10 @@ class ProfileController extends Controller
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'password' => 'nullable|string|min:8|confirmed',
             ]);
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
 
-            if ($request->has('password')) {
-                $user->password = bcrypt($request->input('password'));
-            }
+            $updateSuccess = $this->profileService->updateProfile($user, $request);
 
-            if ($user->save()) {
+            if ($updateSuccess) {
                 $updateSuccess = true;
             }
         }
@@ -42,6 +40,4 @@ class ProfileController extends Controller
             'updateSuccess' => $updateSuccess,
         ]);
     }
-
-
 }

@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UserService;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class UserController extends Controller
 {
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index(Request $request)
     {
-        $users = User::all();
+        $users = $this->userService->getAllUsers();
 
         return view('/admin/users/users', [
             'users' => $users

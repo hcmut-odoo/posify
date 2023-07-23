@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
-use App\Models\Category;
 
 class CategoryController extends Controller
 {
+    private $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = $this->categoryService->getAllCategories();
 
         return view('/admin/categories/categories', [
             'categories' => $categories
