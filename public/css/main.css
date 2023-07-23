@@ -161,6 +161,6 @@
 
 @media screen and (max-width:768px) {
     .navbar-collapse {
-        background-image: linear-gradient(to right, #f6d365 0%, #fda085 100%);
+        background-image: linear-gradient(to right, #FFAD3C 0%, #FB8D17 100%);
     }
 }
