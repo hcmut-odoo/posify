@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateCartItemsTable extends Migration
@@ -14,19 +15,18 @@ class CreateCartItemsTable extends Migration
     public function up()
     {
         Schema::create('cart_items', function (Blueprint $table) {
-            $table->id();
-            $table->string('product_id');
-            $table->string('cart_id');
-            $table->string('size');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('cart_id');
+            $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
-            $table->text('note')->nullable();
+            $table->boolean('stamp')->default(true);
+            $table->string('note', 100)->nullable();
+            $table->string('size', 100)->nullable();
             $table->timestamps();
-        });
 
-        // Schema::table('cart_items', function (Blueprint $table) {
-        //     $table->string('cart_id');
-        //     $table->foreign('id')->references('id')->on('carts');
-        // });
+            $table->foreign('cart_id')->references('id')->on('carts');
+            $table->foreign('product_id')->references('id')->on('products');
+        });
     }
 
     /**
@@ -36,6 +36,12 @@ class CreateCartItemsTable extends Migration
      */
     public function down()
     {
+        // Disable foreign key constraints
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         Schema::dropIfExists('cart_items');
+
+        // Re-enable foreign key constraints
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateOrdersTable extends Migration
@@ -15,11 +16,17 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->uuid('transaction');
-            $table->string('payment_method');
+            $table->unsignedBigInteger('user_id');
             $table->string('status');
+            $table->uuid('order_transaction');
+            $table->string('payment_method');
+            // $table->string('delivery_note');
+            $table->string('delivery_phone');
+            $table->string('delivery_address');
+            $table->string('delivery_name');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -30,6 +37,12 @@ class CreateOrdersTable extends Migration
      */
     public function down()
     {
+        // Disable foreign key constraints
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         Schema::dropIfExists('orders');
+
+        // Re-enable foreign key constraints
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
