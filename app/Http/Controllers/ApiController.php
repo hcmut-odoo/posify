@@ -9,8 +9,6 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Store;
 
-use Illuminate\Database\Eloquent\Model;
-
 class ApiController extends Controller
 {
 
@@ -117,5 +115,41 @@ class ApiController extends Controller
     public function stores(Request $request)
     {
         return $this->resourceList($request, Store::class);
+    }
+
+    public function getProduct(Request $request, $id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+        return response()->json($product);
+    }
+
+    public function getCategory(Request $request, $id)
+    {
+        $category = Category::find($id);
+        if (!$category) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+        return response()->json($category);
+    }
+
+    public function getUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+        return response()->json($user);
+    }
+
+    public function getStore(Request $request, $id)
+    {
+        $store = Store::find($id);
+        if (!$store) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+        return response()->json($store);
     }
 }
