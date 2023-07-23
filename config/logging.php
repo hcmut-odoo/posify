@@ -95,6 +95,13 @@ return [
             ],
         ],
 
+        'db' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/db.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
+
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
