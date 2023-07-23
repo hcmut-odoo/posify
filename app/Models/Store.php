@@ -7,16 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class Store extends Model
 {
-
     protected $fillable = ['name', 'status', 'phone', 'image_url', 'open_time', 'address'];
 
-    public static function getAll()
+    public function __construct(array $attributes = [])
     {
-        return Store::all();
-    }
-
-    public static function pagination($per_page)
-    {
-        return DB::table('stores')->paginate($per_page);
+        parent::__construct($attributes);
     }
 }

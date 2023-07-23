@@ -7,10 +7,15 @@ use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
-    protected $fillable = ['name', 'phone_number', 'address', 'payment_method', 'category_id'];
+    protected $fillable = ['delivery_name', 'status', 'order_transaction', 'user_id', 'delivery_phone', 'payment_method', 'delivery_address'];
 
-    public static function pagination($per_page)
+    public function __construct(array $attributes = [])
     {
-        return DB::table('products')->paginate($per_page);
+        parent::__construct($attributes);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

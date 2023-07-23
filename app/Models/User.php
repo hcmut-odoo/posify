@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -46,6 +47,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
+    
     public static function generateApiKey()
     {
         return Str::random(32);

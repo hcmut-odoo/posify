@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class Category extends Model
 {
-    public static function pagination($per_page)
+    protected $fillable = ['name'];
+
+    public function __construct(array $attributes = [])
     {
-        return DB::table('categories')->paginate($per_page);
+        parent::__construct($attributes);
     }
 }
