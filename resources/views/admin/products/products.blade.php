@@ -31,9 +31,9 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>
-                                        <img width="60" height="60" src="{{ $item->image_url }}">
+                                        <img width="60" height="60" src="{{ $item->image_url }}" alt="Product Image">
                                     </td>
-                                    <td>{{ $item->getCategory() }}</td>
+                                    <td>{{ $item->category_name }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ number_format($item->price, 0, ',', '.') . 'đ' }}</td>
                                     <td>

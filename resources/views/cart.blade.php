@@ -96,7 +96,8 @@ function total($iems)
                                             </div>
                                         </div>
                                         <div class="form-popup" id="form-popup-{{$item->id}}">
-                                            <form accept-charset="utf-8" method="POST" action="{{ route('cart.edit', ['id' => $item->id]) }}" class="form-container">
+                                            <form accept-charset="utf-8" method="POST" action="{{ route('cart.edit') }}" class="form-container">
+                                                <input type="hidden" name="id" value="{{ $item->id }}">
                                                 <button type="button" class="btn-close" aria-label="Close" onclick="closeForm()" id="{{$item->id}}"></button>
                                                 <div class="row gy-2 information">
                                                     <div class="col-lg-2 col-md-2 col-sm-4 col-4">
@@ -118,7 +119,7 @@ function total($iems)
                                                                 alt=""/>
                                                         </button>
                                                         <input type="text" name="quantity" class="form-control quantity-input"
-                                                            id="product-quantity-{{$item->id}}" value="1">
+                                                            id="product-quantity-{{$item->id}}" value="{{ $item->quantity }}">
                                                         <button type="button" id="increase-quantity-button-{{$item->id}}" class="decreasebtn" onclick="increaseQuantity()">
                                                             <img class="item-button-image"
                                                                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuODU3MTQgNi44NTcxNFYwSDkuMTQyODZWNi44NTcxNEgxNlY5LjE0Mjg2SDkuMTQyODZWMTZINi44NTcxNFY5LjE0Mjg2SDBWNi44NTcxNEg2Ljg1NzE0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg=="
@@ -165,7 +166,7 @@ function total($iems)
                                                     </div>
 
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="hidden" name="cart_item_id" value="{{ $item->id }}">
+                                                    <input type="hidden" name="id" value="{{ $item->id }}">
                                                     <input type="hidden" name="product_id" value="{{ $item->product_id }}">
                                                     <label for="email"><b>Note</b></label>
                                                     <input name="note" type="text" id="cart-page__note" class="form-control"
@@ -180,11 +181,11 @@ function total($iems)
                                     </div>
                                 </div>
                                 <div id="delete-form" class="col-lg-1 col-md-1 col-sm-4 col-4 pt-5">
-                                    <form action="{{ route("cart.remove", ['id' => $item->id]) }}" method="POST">
+                                    <form action="{{ route("cart.remove") }}" method="POST">
                                         <input class="btn btn-default" type="image"
                                             src="{{ url('/images/delete.svg') }}" value="delete" />
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="hidden" name="cart_item_id" name="form1" value="{{ $item->id }}">
+                                        <input type="hidden" name="id" value="{{ $item->id }}">
                                     </form>
                                 </div>
                             </div>
@@ -218,14 +219,15 @@ function total($iems)
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-4">
-                    <form accept-charset="utf-8" action="" method="POST">
+                    <form accept-charset="utf-8" action="{{ route('cart.order') }}" method="POST">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <div class="cart-page__info">
                             <div class="cart-page__content__header">
                                 <div>Địa chỉ giao hàng</div>
                             </div>
                             <div class="cart-page-divider"></div>
                             <div class="cart-page__content__header">
-                                <input name="address" type="text" class="form-control" id="delivery-address"
+                                <input name="delivery_address" type="text" class="form-control" id="delivery-address"
                                     placeholder="Nhập đỉa chỉ nhận hàng" value="{{ Auth::user()->address }}">
                             </div>
                             <div class="cart-page__content__header">
@@ -233,11 +235,11 @@ function total($iems)
                             </div>
                             <div class="cart-page-divider"></div>
                             <div class="cart-page__content__header">
-                                <input name="phone_number" type="text" class="form-control" id="delivery-address"
+                                <input name="delivery_name" type="text" class="form-control" id="delivery-address"
                                     placeholder="Tên người nhận" value="{{ Auth::user()->name}}">
                             </div>
                             <div class="cart-page__content__header">
-                                <input name="phone_number" type="text" class="form-control" id="delivery-address"
+                                <input name="delivery_phone" type="text" class="form-control" id="delivery-address"
                                     placeholder="Số điện thoại" value="{{ Auth::user()->phone_number }}">
                             </div>
                             <div class="cart-page__content__header">
@@ -302,7 +304,7 @@ function total($iems)
     </div>
 
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="liveToast_1" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="removeItemToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <img src="{{ url('/images/logo/logo-2.png') }}" width="30px" class="rounded me-2" alt="logo-2">
                 <strong class="me-auto">Buy me store</strong>
@@ -310,10 +312,10 @@ function total($iems)
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                Xóa sản phẩm thành công
+                {{ session('removeItemMessage') }}
             </div>
         </div>
-        <div id="liveToast_2" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="updateItemToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <img src="{{ url('/images/logo/logo-2.png') }}" width="30px" class="rounded me-2" alt="logo-2">
                 <strong class="me-auto">Buy me store</strong>
@@ -321,7 +323,7 @@ function total($iems)
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                Cập nhật giỏ hàng thành công
+                {{ session('updateItemMessage') }}
             </div>
         </div>
         <div id="placeOrderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -332,23 +334,23 @@ function total($iems)
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                Đặt đơn hàng thành công.
+                {{ session('orderItemMessage') }}
             </div>
         </div>
     </div>
 </div>
 
-@if (\Session::get('message_1'))
+@if (\Session::get('removeItemMessage'))
 <script>
-    const toastLiveExample = document.getElementById('liveToast_1')
+    const toastLiveExample = document.getElementById('removeItemToast')
     const toast = new bootstrap.Toast(toastLiveExample)
     toast.show()
 </script>
 @endif
 
-@if (\Session::get('message_2'))
+@if (\Session::get('updateItemMessage'))
 <script>
-    const toastLiveExample = document.getElementById('liveToast_2')
+    const toastLiveExample = document.getElementById('updateItemToast')
     const toast = new bootstrap.Toast(toastLiveExample)
     toast.show()
 </script>

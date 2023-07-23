@@ -97,7 +97,7 @@
                                 </div>
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="product_id" value="{{ $product_id }}">
-                                <input type="hidden" name="cart_id" value="{{ $product_id }}">
+                                <input type="hidden" name="cart_id" value="{{ Auth::id() }}">
                             </div>
                         </div>
                         <div class="product-detail-button">
