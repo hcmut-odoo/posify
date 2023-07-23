@@ -29,6 +29,11 @@ Route::get('/category/list', [ApiController::class, 'categories'])->name('api.ca
 Route::get('/store/list', [ApiController::class, 'stores'])->name('api.store.list');
 Route::post('/check-connection', [ApiController::class, 'checkConnection'])->name('api.check.connection');
 
+Route::get('/product/find/{id}', [ApiController::class, 'getProduct']);
+Route::get('/user/find/{id}', [ApiController::class, 'getUser']);
+Route::get('/category/find/{id}', [ApiController::class, 'getCategory']);
+Route::get('/store/find/{id}', [ApiController::class, 'getStore']);
+
 Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::post('/api-key/generate', [ApiKeyController::class, 'generateApiKey'])->name('api.key.generate');

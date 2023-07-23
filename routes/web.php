@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,10 +37,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/product/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/menu', [MenuController::class, 'search'])->name('search');
     Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
-    Route::post('/cart', [CartController::class, 'show'])->name('cart.post');
-    Route::post('/cart/{id}/remove', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/cart/{id}/update', [CartController::class, 'edit'])->name('cart.edit');
+    Route::post('/cart', [CartController::class, 'placeOrder'])->name('cart.order');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'edit'])->name('cart.edit');
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::get('/cart/notice/{status}/{message}', [CartController::class, 'notice'])->name('cart.notice');
+    Route::get('/orders', [OrderController::class, 'orders'])->name('order.list');
+    Route::get('/orders/{id}', [OrderController::class, 'details'])->name('order.detail');
 
     // Admin routes
     Route::middleware('admin')->group(function () {
