@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Menu')
 @section('content')
 <link href="{{ asset('css/menu.css') }}" rel="stylesheet">
 <div class="menu">

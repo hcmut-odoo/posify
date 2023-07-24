@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Liên hệ')
 @section('content')
 <div class="contact">
     <section id="contact-info">

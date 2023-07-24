@@ -1,5 +1,5 @@
 @extends('layouts.auth')
-
+@section('title', 'Thông báo đặt hàng')
 @section('content')
 <link href="{{ asset('css/order_status.css') }}" rel="stylesheet">
 <div class="container">
@@ -31,10 +31,10 @@
             }
         });
 
-        // setTimeout(function () {
-        //     overlay.style.display = 'none';
-        //     window.location.href = '/cart';
-        // }, 3000);
+        setTimeout(function () {
+            overlay.style.display = 'none';
+            window.location.href = '/cart';
+        }, 3000);
     });
 </script>
 @endsection

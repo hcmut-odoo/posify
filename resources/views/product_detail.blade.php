@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Chi tiết sản phẩm')
 @section('content')
 <link href="{{ asset('css/product_detail.css') }}" rel="stylesheet">
 <div class="page-container">

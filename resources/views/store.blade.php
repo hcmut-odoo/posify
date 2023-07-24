@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Danh sách cửa hàng')
 @section('content')
 <link href="{{ asset('css/store.css') }}" rel="stylesheet">
 <h1>Thăm Buy me store chúng mình</h1>

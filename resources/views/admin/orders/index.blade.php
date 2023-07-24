@@ -1,12 +1,6 @@
 @extends('layouts.admin')
-
+@section('title', 'Quản lý đặt hàng')
 @section('content')
-    @push('scripts')
-        <script type="text/javascript">
-            document.title = 'Danh sách các mục sản phẩm';
-        </script>
-    @endpush
-
     <div class="row">
         <div class="col-lg-12">
             <section class="panel">

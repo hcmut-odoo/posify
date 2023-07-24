@@ -1,12 +1,6 @@
 @extends('layouts.admin')
-
+@section('title', 'Bảng điều khiển')
 @section('content')
-    @push('scripts')
-        <script type="text/javascript">
-            document.title = 'Bảng điều khiển';
-        </script>
-    @endpush
-
     <div class="main_notification">
         <div class="row">
             <div class="col-md-3">

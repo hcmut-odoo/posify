@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Hồ sơ cá nhân')
 @section('content')
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
     <h1>Tài khoản của bạn</h1>

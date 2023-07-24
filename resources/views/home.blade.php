@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Trang chủ')
 @section('content')
 <link href="{{ asset('css/home.css') }}" rel="stylesheet">
 <div class="home-page">
