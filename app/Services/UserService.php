@@ -3,15 +3,25 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Repositories\UserRepository;
 
-class UserService
+class UserService extends BaseService
 {
-    public function __construct()
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
     {
+        $this->userRepository = $userRepository;
+        parent::__construct();
     }
 
-    public function getAllUsers()
+    public function getById($id)
     {
-        return User::all();
+        return $this->userRepository->get($id);
+    }
+
+    public function getAll()
+    {
+        return $this->userRepository->getAll();
     }
 }
