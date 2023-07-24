@@ -233,6 +233,10 @@
     padding: 15px;
 }
 
+.cart-page .container {
+    padding-top: 30px;
+}
+
 .cart-page-item button {
     border: none;
     background-color: transparent;
