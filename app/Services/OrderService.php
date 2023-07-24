@@ -2,26 +2,32 @@
 
 namespace App\Services;
 
+use App\Repositories\CartItemRepository;
 use App\Repositories\OrderRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\OrderItemRepository;
+use InvalidArgumentException;
 
-class OrderService
+class OrderService extends BaseService
 {
     private $cartService;
     private $orderRepository;
     private $orderItemRepository;
+    private $cartItemRepository;
 
     public function __construct(
         CartService $cartService,
         OrderRepository $orderRepository,
-        OrderItemRepository $orderItemRepository
+        OrderItemRepository $orderItemRepository,
+        CartItemRepository $cartItemRepository
     )
     {
         $this->cartService = $cartService;
         $this->orderRepository = $orderRepository;
         $this->orderItemRepository = $orderItemRepository;
+        $this->cartItemRepository = $cartItemRepository;
+        parent::__construct();
     }
 
     public function getOrders($userId)
@@ -94,7 +100,11 @@ class OrderService
 
     public function createOrderItem($cartItemId, $orderId)
     {
-        $this->orderItemRepository->create($cartItemId, $orderId);
+        if (!isset($cartItemId) || !isset($orderId) || empty($cartItemId) || empty($orderId)) {
+            throw new InvalidArgumentException('Invalid cart item ID or order ID.');
+        }
+
+        return $this->orderItemRepository->create($cartItemId, $orderId);
     }
 
     public function mapOrderStatus($status)
@@ -110,11 +120,34 @@ class OrderService
 
     public function getById($orderId)
     {
-        $this->orderItemRepository->get($orderId);
+        if (!isset($orderId) || empty($orderId)) {
+            throw new InvalidArgumentException("Invalid order ID provided.");
+        }
+
+        return  $this->orderRepository->get($orderId);
     }
 
-    public function pagination($perPage, $page)
+    public function rejectOrder($orderId)
     {
-        return $this->orderRepository->pagination([], ['*'], $perPage, $page);
+        if (!isset($orderId) || empty($orderId)) {
+            throw new InvalidArgumentException("Invalid order ID provided.");
+        }
+
+        $order = $this->orderRepository->get($orderId);
+        $order->status = 'cancel';
+
+        try {
+            $order->save();
+            return true;
+        } catch (\Exception $e) {
+            Log::channel('db')->info("Error while updating order status: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    public function pagination($criteria, $perPage, $page)
+    {
+        return $this->orderRepository->pagination($criteria, ['*'], $perPage, $page);
     }
 }

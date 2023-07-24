@@ -7,16 +7,24 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\OrderService;
+use App\Services\InvoiceService;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
     private $cartService;
     private $orderService;
+    private $invoiceService;
 
-    public function __construct(CartService $cartService, OrderService $orderService)
+    public function __construct(
+        CartService $cartService,
+        OrderService $orderService,
+        InvoiceService $invoiceService
+    )
     {
         $this->cartService = $cartService;
         $this->orderService = $orderService;
+        $this->invoiceService = $invoiceService;
     }
 
     public function orders(Request $request)
@@ -34,43 +42,78 @@ class OrderController extends Controller
         return view('orders', ['orders' => $ordersWithNumericalOrder]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::getAllOrders('processing');
+        $page = $request->query('page', 1);
+        $perPage = $request->query('length', 15);
+        $orders = $this->orderService->pagination(['status' => 'processing'], $perPage, $page);
 
-        return view('admin.orders.orders', [
+        return view('/admin/orders/order_index', [
             'orders' => $orders,
+            'per_page' => $perPage,
+            'page' => $page
         ]);
     }
 
-    public function accept(Request $request)
+    public function acceptOrder(Request $request)
     {
         $orderId = $request->input('id');
-        $orderModel = Order::getOrderById($orderId);
-        if ($request->getMethod() === 'get') {
-            $orderModel->setStatus('done');
-            $orderModel->update($orderModel);
-            return redirect('/admin/orders');
+        if ($this->invoiceService->createInvoice($orderId)) {
+            Session::flash('message', 'Invoice was created successfully!');
+        } else {
+            Session::flash('message', 'Failed to create invoice.');
         }
+        return redirect()->back();
     }
 
-    public function reject(Request $request)
+    public function rejectOrder(Request $request)
     {
         $orderId = $request->input('id');
-        $orderModel = Order::getOrderById($orderId);
-        if ($request->getMethod() === 'get') {
-            $orderModel->setStatus('cancel');
-            $orderModel->update($orderModel);
-            return redirect('/admin/orders');
+        if ($this->orderService->rejectOrder($orderId)) {
+            Session::flash('message', 'Order was rejected successfully!');
+        } else {
+            Session::flash('message', 'Failed to reject order.');
         }
+        return redirect()->back();
     }
 
-    public function accepted()
+    public function acceptedOrderIndex(Request $request)
     {
-        $orders = Order::getAllOrders('done');
+        $page = $request->query('page', 1);
+        $perPage = $request->query('length', 15);
+        $acceptedOrders = $this->orderService->pagination(['status' => 'done'], $perPage, $page);
 
-        return view('admin.orders.accept_orders', [
-            'orders' => $orders,
+        return view('/admin/orders/order_accepted', [
+            'items' => $acceptedOrders,
+        ]);
+    }
+
+    public function rejectedOrderIndex(Request $request)
+    {
+        $page = $request->query('page', 1);
+        $perPage = $request->query('length', 15);
+        $rejectedOrders = $this->orderService->pagination(['status' => 'cancel'], $perPage, $page);
+
+        return view('/admin/orders/order_rejected', [
+            'items' => $rejectedOrders,
+        ]);
+    }
+
+    public function acceptedOrderDetail(Request $request, $id)
+    {
+        $acceptedOrders = $this->orderService->getOrderItems($id);
+
+        return view('/admin/orders/order_detail', [
+            'items' => $acceptedOrders,
+        ]);
+    }
+
+    public function rejectedOrderDetail(Request $request, $id)
+    {
+        $rejectedOrders = $this->orderService->getOrderItems($id);
+
+        return view('/admin/orders/order_detail', [
+            'items' => $rejectedOrders,
         ]);
     }
 
@@ -98,12 +141,12 @@ class OrderController extends Controller
         }
     }
 
-    public function details($id)
+    public function detail(Request $request, $id)
     {
-        $orders = $this->orderService->getOrderItems($id);
-        // dd($orders);
-        return view('order_detail', [
-            'orders' => $orders
+        $items = $this->orderService->getOrderItems($id);
+
+        return view('/admin/orders/order_detail', [
+            'items' => $items
         ]);
     }
 

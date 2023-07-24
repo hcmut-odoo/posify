@@ -70,6 +70,11 @@ class CartService extends BaseService
         return false;
     }
 
+    public function getCartItem($cartItemId)
+    {
+        return $this->cartItemRepository->get($cartItemId);
+    }
+
     public function clear($userId)
     {
         $cartId = DB::table('carts')->where('user_id', $userId)->get()->id;

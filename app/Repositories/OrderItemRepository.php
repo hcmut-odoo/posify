@@ -6,17 +6,35 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class OrderItemRepository
 {
     public function get($id)
     {
-        return OrderItem::find($id);
+        $orderItem = OrderItem::find($id);
+        if (!$orderItem) {
+            throw new RuntimeException("OrderItem has id equal $id not found.");
+        }
+        return $orderItem;
     }
 
     public function remove($id)
     {
-        return OrderItem::where('id', $id)->delete();
+        $orderItem = OrderItem::find($id);
+        if (!$orderItem) {
+            throw new RuntimeException("Order item not found.");
+        }
+        try {
+            if ($orderItem->delete()) {
+                return true;
+            } else {
+                throw new RuntimeException("Failed to delete order item.");
+            }
+        } catch (\Exception $e) {
+            Log::channel('db')->info("Error while deleting order item: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function pagination($perPage, $page)
