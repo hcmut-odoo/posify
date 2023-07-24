@@ -141,11 +141,13 @@ function total($items)
                         <div class="cart-page__content__header">
                             Số điện thoại: {{ $order->delivery_phone }}
                         </div>
-                        @if()
-                        <div class="cart-page__content__header">
-                            <input type="text" class="form-control" id="delivery-note"
-                                placeholder="Ghi chú cho đơn hàng này" disabled readonly>
-                        </div>
+                        @if($order->delivery_note)
+                            <div class="cart-page__content__header">
+                                <input type="text" class="form-control" id="delivery-note"
+                                    value="{{ $order->delivery_note }}"
+                                    placeholder="Ghi chú cho đơn hàng này" disabled readonly>
+                            </div>
+                        @endif
                         <div class="cart-page__content__header">
                             <div>Phương thức thanh toán</div>
                         </div>
