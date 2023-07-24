@@ -37,7 +37,7 @@ class ProductService extends BaseService
         return $this->productRepository->pagination($perPage, $page);
     }
 
-    public function getProductById($id)
+    public function getById($id)
     {
         return $this->productRepository->get($id);
     }
