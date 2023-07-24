@@ -34,10 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/menu', [MenuController::class, 'menu'])->name('menu');
     Route::get('/menu/category/{id}', [MenuController::class, 'category'])->name('category');
     Route::get('/product/{id}', [MenuController::class, 'detail'])->name('detail');
-    Route::post('/product/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/menu', [MenuController::class, 'search'])->name('search');
     Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
     Route::post('/cart', [CartController::class, 'placeOrder'])->name('cart.order');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update', [CartController::class, 'edit'])->name('cart.edit');
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
