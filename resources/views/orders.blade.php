@@ -43,7 +43,7 @@
                             {{ $order->numerical_order }}
                         </div>
                         <div class="col">
-                            {{ $order->id }}
+                            {{ $order->order_transaction }}
                         </div>
                         <div class="col">
                             {{ $order->status_label }}
