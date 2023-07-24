@@ -1,13 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Quản lý đặt hàng')
+@section('title', 'Đơn hàng đã duyệt')
 @section('content')
 <div class="row">
     <div class="col-lg-12">
         <section class="panel">
             <header class="panel-heading">
-                <h1>Quản lý đặt hàng</h1>
-                <a href="/admin/orders/accepted" class="btn btn-success">Đơn hàng đã duyệt</a>
-                <a href="/admin/orders/rejected" class="btn btn-success">Đơn hàng đã huỷ</a>
+                <h1>Đơn hàng đã duyệt</h1>
+                <a href="/admin/orders" class="btn btn-success">Trở về</a>
             </header>
             <div class="panel-body">
                 <table class="table table-striped table-hover dt-datatable">
@@ -25,28 +24,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($orders as $order)
+                        @foreach ($items as $item)
                             <tr>
-                                <td>{{ $order->id }}</td>
-                                <td>{{ $order->user_id }}</td>
-                                <td>{{ $order->payment_method }}</td>
-                                <td>{{ $order->status }}</td>
-                                <td>{{ $order->delivery_name }}</td>
-                                <td>{{ $order->delivery_address }}</td>
-                                <td>{{ $order->delivery_phone }}</td>
-                                <td>{{ $order->created_at }}</td>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->user_id }}</td>
+                                <td>{{ $item->payment_method }}</td>
+                                <td>{{ $item->status }}</td>
+                                <td>{{ $item->delivery_name }}</td>
+                                <td>{{ $item->delivery_address }}</td>
+                                <td>{{ $item->delivery_phone }}</td>
+                                <td>{{ $item->created_at }}</td>
                                 <td>
-                                    <a class="fa fa-eye btn btn-info btn-sm" href="{{ route('admin.order.detail', ['id' => $order->id]) }}"></a>
-                                    <form action="{{ route('admin.order.accept') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $order->id }}">
-                                        <button type="submit" class="far fa-check-circle btn btn-success btn-sm"></button>
-                                    </form>
-                                    <form action="{{ route('admin.order.reject') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $order->id }}">
-                                        <button type="submit" class="fas fa-ban btn btn-danger btn-sm"></button>
-                                    </form>
+                                    <a
+                                        class="fa fa-eye btn btn-info btn-sm"
+                                        href="{{ route('admin.order.accepted.detail', ['id' => $item->id]) }}">
+                                    </a>
+                                    <a
+                                        class="fa fa-trash btn btn-danger btn-sm"
+                                        href="{{ route('admin.order.accepted.delete', ['id' => $item->id]) }}">
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
