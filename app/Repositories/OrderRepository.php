@@ -5,15 +5,16 @@ namespace App\Repositories;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderRepository
 {
     public function get($id)
     {
-        return Order::where('id', $id)->get();
+        return Order::find($id);
     }
 
-    public function create($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryAddress)
+    public function create($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
     {
         return Order::create([
             'order_transaction' => uniqid(),
@@ -22,7 +23,8 @@ class OrderRepository
             'status' => 'processing',
             'delivery_name' => $deliveryName,
             'delivery_phone' => $deliveryPhone,
-            'delivery_address' => $deliveryAddress
+            'delivery_address' => $deliveryAddress,
+            'delivery_note' => $deliveryNote
         ]);
     }
 
