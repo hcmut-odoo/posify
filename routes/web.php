@@ -84,10 +84,16 @@ Route::middleware('auth')->group(function () {
 
         // order routes
         Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.order.list');
-        Route::get('/admin/orders/delete', [OrderController::class, 'delete'])->name('admin.order.delete');
-        Route::get('/admin/orders/accept', [OrderController::class, 'update'])->name('admin.order.accept');
-        Route::get('/admin/orders/reject', [OrderController::class, 'create'])->name('admin.order.reject');
+        Route::post('/admin/orders/delete', [OrderController::class, 'delete'])->name('admin.order.delete');
+        Route::post('/admin/orders/accept', [OrderController::class, 'acceptOrder'])->name('admin.order.accept');
+        Route::post('/admin/orders/reject', [OrderController::class, 'rejectOrder'])->name('admin.order.reject');
         Route::get('/admin/orders/detail/{id}', [OrderController::class, 'detail'])->name('admin.order.detail');
+        Route::get('/admin/orders/accepted', [OrderController::class, 'acceptedOrderIndex'])->name('admin.order.accepted.detail');
+        Route::get('/admin/orders/rejected', [OrderController::class, 'rejectedOrderIndex'])->name('admin.order.rejected.detail');
+        Route::get('/admin/orders/accepted/detail/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.accepted.detail');
+        Route::post('/admin/orders/accepted/delete/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.accepted.delete');
+        Route::get('/admin/orders/rejected/detail/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.rejected.detail');
+        Route::post('/admin/orders/rejected/delete/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.rejected.delete');
 
         // Api-key routes
         Route::get('/admin/api-key', [ApiKeyController::class, 'index'])->name('admin.api.key.list');
