@@ -31,18 +31,4 @@ class CartRepository
     {
         return Cart::where('user_id', Auth::id())->delete();
     }
-
-    public function create($userID)
-    {
-        $existingCart = Cart::where('user_id', $userID)->first();
-
-        if ($existingCart) {
-            return $existingCart->id;
-        }
-
-        $cartModel = new Cart(['user_id' => $userID]);
-        $cartModel->save();
-
-        return $cartModel;
-    }
 }
