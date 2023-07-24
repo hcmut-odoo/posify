@@ -1,0 +1,98 @@
+.toast {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.toast:not(:last-child) {
+    margin-bottom: 0.75rem;
+}
+
+.toast.showing {
+    opacity: 1;
+}
+
+.toast.show {
+    display: block;
+    opacity: 1;
+}
+
+.toast.hide {
+    display: none;
+}
+
+.me-auto {
+    font-weight: bold;
+}
+
+.toast-time {
+    position: absolute;
+    top: 5px; /* Adjust the top value to move the small tag down as needed */
+    right: 10px; /* Adjust the right value to move the small tag to the left as needed */
+}
+
+.btn-close {
+    position: absolute;
+    top: 5px; /* Adjust the top value to move the button down as needed */
+    right: 5px; /* Adjust the right value to move the button to the left as needed */
+}
+
+.toast-header {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    color: #6c757d;
+    background-color: rgba(255, 255, 255, 0.85);
+    background-clip: padding-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.toast-body {
+    padding: 0.75rem;
+}
+
+.toast-primary {
+    background-color: #007bff;
+}
+
+.toast-secondary {
+    background-color: #6c757d;
+}
+
+.toast-success {
+    background-color: #28a745;
+}
+
+.toast-danger {
+    background-color: #dc3545;
+}
+
+.toast-warning {
+    background-color: #ffc107;
+}
+
+.toast-info {
+    background-color: #17a2b8;
+}
+
+.toast-light {
+    background-color: #f8f9fa;
+}
+
+.toast-dark {
+    background-color: #343a40;
+}
+
+  @media (max-width: 575.98px) {
+.toast {
+      max-width: 100%;
+      width: 100%;
+}
+}

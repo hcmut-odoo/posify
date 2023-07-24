@@ -11,18 +11,18 @@
     <link rel="stylesheet" href="{{ asset('/css/admin/dt-gradients.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/dt-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/dt-styles.css') }}">
-    <link rel="stylesheet" href="{{ asset('/css/error.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ asset('/css/admin/create_user.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/admin/toast.css') }}">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <script src="{{ asset('/js/admin/jquery-3.2.1.js') }}"></script>
-    <script src="{{ asset('/js/admin/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/js/admin/jquery.dataTables.js') }}"></script>
-    <script src="{{ asset('/js/admin/dataTables.bootstrap.js') }}"></script>
-    <script src="{{ asset('/js/admin/underscore.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" integrity="sha512-oL84kLQMEPIS350nZEpvFH1whU0HHGNUDq/X3WBdDAvKP7jn06gHTsCsymsoPYKF/duN8ZxzzvQgOaaZSgcYtQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js" integrity="sha512-c2h4K/PN8OFjpm7r4Y+a10axJm1XrrK0HP3EhMGBTgK6RJY3bdiQNGwFIDs9uohgWtQ/+fRhTi3v8iYvHVriRg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 @php
     $user = Auth::user();
@@ -92,11 +92,6 @@
                             <i class="fa fa-arrow-left" aria-hidden="true"></i>
                         </a>
                         <a class="navbar-brand" href="/">Back to pos</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Đăng xuất</a></li>
-                        </ul>
                     </div>
                 </div>
             </nav>
