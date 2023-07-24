@@ -29,15 +29,21 @@ class CartService extends BaseService
             $cartId = $this->cartRepository->new()->id;
         }
 
-        $cartItem = CartItem::create([
-                        'product_id' => $productId,
-                        'cart_id' => $cartId,
-                        'size' => $size,
-                        'note' => $note,
-                        'quantity' => $quantity
-                    ]);
+        $duplicateItem = $this->cartItemRepository->search([
+            'cart_id' => $cartId,
+            'product_id' => $productId,
+            'size' => $size,
+            'note' => false
+        ]);
 
-        return $cartItem ? true : false;
+        if ($duplicateItem) {
+            return $this->cartItemRepository->update([
+                'id' => $duplicateItem->id,
+                'quantity' => $duplicateItem->quantity + $quantity
+            ]);
+        }
+
+        return $this->cartItemRepository->create($productId, $cartId, $size, $note, $quantity);
     }
 
     public function markToOder($itemId)
@@ -85,7 +91,9 @@ class CartService extends BaseService
     {
         $items = DB::table('cart_items')
             ->join('products', 'cart_items.product_id', '=', 'products.id')
-            ->where('cart_items.cart_id', $cartId)
+            ->where('cart_items.cart_id', $cartId, 'and')
+            ->where('cart_items.stamp', true)
+            ->where('cart_items.deleted_at', null)
             ->select(
                 'cart_items.id as id',
                 'cart_items.product_id',
