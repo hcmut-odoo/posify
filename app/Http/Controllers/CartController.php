@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\CartService;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
@@ -109,6 +110,7 @@ class CartController extends Controller
             'delivery_name' => $request->input('delivery_name'),
             'delivery_phone' => $request->input('delivery_phone'),
             'delivery_address' => $request->input('delivery_address'),
+            'delivery_note' => $request->input('delivery_note'),
             'payment_method' => $request->input('payment_method')
         ];
 

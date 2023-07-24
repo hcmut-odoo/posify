@@ -243,6 +243,14 @@ function total($iems)
                                     placeholder="Số điện thoại" value="{{ Auth::user()->phone_number }}">
                             </div>
                             <div class="cart-page__content__header">
+                                <div>Ghi chú</div>
+                            </div>
+                            <div class="cart-page-divider"></div>
+                            <div class="cart-page__content__header">
+                                <input name="delivery_note" type="text" class="form-control" id="delivery-note"
+                                    placeholder="Ghi chú cho đơn hàng này" value="">
+                            </div>
+                            <div class="cart-page__content__header">
                                 <div>Phương thức thanh toán</div>
                             </div>
                             <div class="cart-page-divider"></div>

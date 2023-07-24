@@ -65,9 +65,9 @@ class OrderService
                 $orderData['payment_method'],
                 $orderData['delivery_name'],
                 $orderData['delivery_phone'],
+                $orderData['delivery_note'],
                 $orderData['delivery_address']
             );
-
 
             foreach ($cartItems as $item) {
                 $this->createOrderItem($item->id, $order->id);
@@ -85,9 +85,16 @@ class OrderService
         }
     }
 
-    public function createOrder($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryAddress)
+    public function createOrder($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
     {
-        return $this->orderRepository->create($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryAddress);
+        return $this->orderRepository->create(
+            $userId,
+            $paymentMethod,
+            $deliveryName,
+            $deliveryPhone,
+            $deliveryNote,
+            $deliveryAddress
+        );
     }
 
     public function createOrderItem($cartItemId, $orderId)
