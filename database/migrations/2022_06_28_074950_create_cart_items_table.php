@@ -22,6 +22,7 @@ class CreateCartItemsTable extends Migration
             $table->boolean('stamp')->default(true);
             $table->string('note', 100)->nullable();
             $table->string('size', 100)->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('cart_id')->references('id')->on('carts');

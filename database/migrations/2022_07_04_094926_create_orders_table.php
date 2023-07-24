@@ -20,10 +20,11 @@ class CreateOrdersTable extends Migration
             $table->string('status');
             $table->uuid('order_transaction');
             $table->string('payment_method');
-            // $table->string('delivery_note');
+            $table->string('delivery_note', 100)->nullable();
             $table->string('delivery_phone');
             $table->string('delivery_address');
             $table->string('delivery_name');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

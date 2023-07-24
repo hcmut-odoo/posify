@@ -3,11 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
-    protected $fillable = ['delivery_name', 'status', 'order_transaction', 'user_id', 'delivery_phone', 'payment_method', 'delivery_address'];
+    use SoftDeletes;
+    
+    protected $fillable = [
+        'delivery_name', 'status', 'order_transaction', 'user_id',
+        'delivery_phone', 'payment_method', 'delivery_address',
+        'delivery_note'
+    ];
 
     public function __construct(array $attributes = [])
     {

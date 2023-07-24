@@ -18,6 +18,7 @@ class CreateOrderItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('cart_item_id');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('orders');
@@ -35,7 +36,7 @@ class CreateOrderItemsTable extends Migration
         // Disable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Schema::dropIfExists('order_details');
+        Schema::dropIfExists('order_items');
 
         // Re-enable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

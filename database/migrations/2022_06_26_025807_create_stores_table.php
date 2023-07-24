@@ -20,6 +20,7 @@ class CreateStoresTable extends Migration
             $table->text('image_url');
             $table->string('open_time');
             $table->string('phone');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
