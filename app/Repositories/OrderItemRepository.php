@@ -11,12 +11,17 @@ class OrderItemRepository
 {
     public function get($id)
     {
-        return OrderItem::where('id', $id)->get();
+        return OrderItem::find($id);
     }
 
     public function remove($id)
     {
         return OrderItem::where('id', $id)->delete();
+    }
+
+    public function pagination($perPage, $page)
+    {
+        return OrderItem::paginate($perPage, ['*'], 'page', $page);
     }
 
     public function create($cartItemId, $orderId)

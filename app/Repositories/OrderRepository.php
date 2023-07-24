@@ -38,8 +38,24 @@ class OrderRepository
         return Order::get();
     }
 
-    public function pagination($perPage, $page)
+    public function pagination($criteria, $fields, $perPage, $page)
     {
-        return Order::paginate($perPage, ['*'], 'page', $page);
+        return Order::query()
+            ->when(isset($criteria['user_id']), function ($query) use ($criteria) {
+                $query->where('user_id', $criteria['user_id']);
+            })
+            ->when(isset($criteria['status']), function ($query) use ($criteria) {
+                $query->where('status', $criteria['status']);
+            })
+            ->when(isset($criteria['order_transaction']), function ($query) use ($criteria) {
+                $query->where('order_transaction', $criteria['order_transaction']);
+            })
+            ->when(isset($criteria['delivery_phone']), function ($query) use ($criteria) {
+                $query->where('delivery_phone', $criteria['delivery_phone']);
+            })
+            ->when(isset($criteria['delivery_name']), function ($query) use ($criteria) {
+                $query->where('delivery_name', $criteria['delivery_name']);
+            })
+            ->paginate($perPage, $fields, 'page', $page);
     }
 }

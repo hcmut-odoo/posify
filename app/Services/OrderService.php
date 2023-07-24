@@ -5,12 +5,6 @@ namespace App\Services;
 use App\Repositories\OrderRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\OrderDetail;
-use App\Models\Cart;
-use App\Models\CartItem;
 use App\Repositories\OrderItemRepository;
 
 class OrderService
@@ -48,7 +42,8 @@ class OrderService
             ->join('cart_items', 'order_items.cart_item_id', '=', 'cart_items.id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
             ->where('orders.id', $orderId)
-            ->get();
+            ->get()
+            ->toArray();
 
         return $orderItems;
     }
@@ -111,5 +106,15 @@ class OrderService
         ];
 
         return isset($statusMappings[$status]) ? $statusMappings[$status] : '';
+    }
+
+    public function getById($orderId)
+    {
+        $this->orderItemRepository->get($orderId);
+    }
+
+    public function pagination($perPage, $page)
+    {
+        return $this->orderRepository->pagination([], ['*'], $perPage, $page);
     }
 }
