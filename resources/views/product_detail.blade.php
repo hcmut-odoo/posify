@@ -3,7 +3,7 @@
 @section('content')
 <link href="{{ asset('css/product_detail.css') }}" rel="stylesheet">
 <div class="page-container">
-    <form accept-charset="utf-8" method="POST" action="">
+    <form accept-charset="utf-8" method="POST" action="{{ route("cart.add") }}">
         <div class="product-detail">
             <div class="container">
                 <div class="row gx-5">
@@ -124,18 +124,16 @@
                 <img src="/images/logo/logo-2.png" width="30px" class="rounded me-2" alt="logo-2">
                 <strong class="me-auto">Buy me store</strong>
                 <small>Bây giờ</small>
-                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                Thêm vào giỏ hàng thành công.
+                {{ session('addItemMessage') }}
             </div>
         </div>
     </div>
 </div>
 <script src="{{ asset('js/product_detail.js') }}"></script>
-@if (\Session::get('message'))
+@if (\Session::get('addItemMessage'))
     <script>
         const toastTrigger = document.getElementById('liveToastBtn')
         const toastLiveExample = document.getElementById('liveToast')
