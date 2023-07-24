@@ -18,7 +18,7 @@ class CategoryController extends Controller
     {
         $categories = $this->categoryService->getAllCategories();
 
-        return view('/admin/categories/categories', [
+        return view('/admin/categories/category_index', [
             'categories' => $categories
         ]);
     }
