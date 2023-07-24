@@ -16,7 +16,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->userService->getAllUsers();
+        $users = $this->userService->getAll();
 
         return view('/admin/users/users', [
             'users' => $users

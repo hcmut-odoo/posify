@@ -10,7 +10,7 @@ class CategoryRepository
 {
     public function get($id)
     {
-        return Category::where('id', $id)->get();
+        return Category::find($id);
     }
 
     public function remove($id)

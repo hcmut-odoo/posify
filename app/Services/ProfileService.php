@@ -4,10 +4,11 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Auth;
 
-class ProfileService
+class ProfileService extends BaseService
 {
     public function __construct()
     {
+        parent::__construct();
     }
 
     public function updateProfile($user, $requestData)

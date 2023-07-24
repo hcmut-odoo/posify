@@ -10,7 +10,7 @@ class StoreRepository
 {
     public function get($id)
     {
-        return Store::where('id', $id)->get();
+        return Store::find($id);
     }
 
     public function remove($id)

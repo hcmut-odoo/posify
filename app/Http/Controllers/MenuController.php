@@ -27,7 +27,7 @@ class MenuController extends Controller
 
     public function detail($id)
     {
-        $product = $this->productService->getProductById($id);
+        $product = $this->productService->getById($id);
 
         return view('product_detail', [
             'product' => $product,
