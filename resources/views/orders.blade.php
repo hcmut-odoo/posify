@@ -2,8 +2,6 @@
 @section('title', 'Đơn hàng đã đặt')
 @section('content')
 <link href="{{ asset('css/order.css') }}" rel="stylesheet">
-
-
 <div class="order-page">
     <div class="menu__header">
         <img class="menu-image" src="{{ asset('images/orders.png') }}" alt="menu-image" />
