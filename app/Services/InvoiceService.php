@@ -32,7 +32,7 @@ class InvoiceService extends BaseService
 
         try {
             DB::beginTransaction();
-            
+
             $invoice = $this->invoiceRepository->create($orderId, $totalPrice);
             $order->status = 'done';
             $order->save();
@@ -47,7 +47,7 @@ class InvoiceService extends BaseService
 
     }
 
-    public function getAllCategories()
+    public function getAll()
     {
         return $this->invoiceRepository->getAll();
     }
@@ -55,5 +55,52 @@ class InvoiceService extends BaseService
     public function getById($id)
     {
         return $this->invoiceRepository->get($id);
+    }
+
+    public function pagination($criteria, $perPage, $page)
+    {
+        return $this->invoiceRepository->pagination($criteria, ['*'], $perPage, $page);
+    }
+
+    public function getInvoiceFormData($invoiceId)
+    {
+        $invoiceFormData = DB::table('invoices')
+            ->where('invoices.id', '=', $invoiceId)
+            ->join('orders', 'orders.id', '=', 'invoices.order_id')
+            ->join('order_items', 'order_items.order_id', '=', 'invoices.order_id')
+            ->join('cart_items', 'cart_items.id', '=', 'order_items.cart_item_id')
+            ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->select(
+                'cart_items.quantity',
+                'cart_items.note',
+                'cart_items.size',
+                'products.name',
+                'products.price'
+            )
+            ->get();
+
+        return $invoiceFormData;
+    }
+
+    public function getInvoiceDetailData($invoiceId)
+    {
+        $invoiceDetails = DB::table('invoices')
+            ->where('invoices.id', '=', $invoiceId)
+            ->join('orders', 'orders.id', '=', 'invoices.order_id')
+            ->join('order_items', 'order_items.order_id', '=', 'invoices.order_id')
+            ->join('cart_items', 'cart_items.id', '=', 'order_items.cart_item_id')
+            ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->select(
+                'invoices.id AS invoice_id', 'invoices.created_at AS invoice_created_at',
+                'orders.payment_method', 'orders.delivery_phone', 'orders.delivery_address',
+                'orders.delivery_name', 'orders.id AS order_id', 'orders.created_at AS order_created_at',
+                'orders.updated_at AS order_accepted_at', 'orders.order_transaction',
+                'cart_items.quantity', 'cart_items.note', 'cart_items.size',
+                'products.name', 'products.price', 'products.description AS product_description',
+                'products.image_url AS product_image_url', 'products.id AS product_id'
+            )
+            ->get();
+
+        return $invoiceDetails;
     }
 }

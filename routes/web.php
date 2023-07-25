@@ -16,6 +16,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RoleGroupController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::get('/cart/notice/{status}/{message}', [CartController::class, 'notice'])->name('cart.notice');
     Route::get('/orders', [OrderController::class, 'orders'])->name('order.list');
-    Route::get('/orders/{id}', [OrderController::class, 'details'])->name('order.detail');
+    Route::get('/orders/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
 
     // Admin routes
     Route::middleware('admin')->group(function () {
@@ -88,12 +89,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/orders/accept', [OrderController::class, 'acceptOrder'])->name('admin.order.accept');
         Route::post('/admin/orders/reject', [OrderController::class, 'rejectOrder'])->name('admin.order.reject');
         Route::get('/admin/orders/detail/{id}', [OrderController::class, 'detail'])->name('admin.order.detail');
-        Route::get('/admin/orders/accepted', [OrderController::class, 'acceptedOrderIndex'])->name('admin.order.accepted.detail');
-        Route::get('/admin/orders/rejected', [OrderController::class, 'rejectedOrderIndex'])->name('admin.order.rejected.detail');
+        Route::get('/admin/orders/accepted', [OrderController::class, 'acceptedOrderIndex'])->name('admin.order.accepted');
+        Route::get('/admin/orders/rejected', [OrderController::class, 'rejectedOrderIndex'])->name('admin.order.rejected');
         Route::get('/admin/orders/accepted/detail/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.accepted.detail');
         Route::post('/admin/orders/accepted/delete/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.accepted.delete');
         Route::get('/admin/orders/rejected/detail/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.rejected.detail');
         Route::post('/admin/orders/rejected/delete/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.rejected.delete');
+
+        // invoice routes
+        Route::get('/admin/invoices', [InvoiceController::class, 'index'])->name('admin.invoice.list');
+        Route::post('/admin/invoices/delete', [InvoiceController::class, 'delete'])->name('admin.invoice.delete');
+        Route::get('/admin/invoices/detail/{id}', [InvoiceController::class, 'invoiceDetail'])->name('admin.invoice.detail');
+        Route::get('/admin/invoices/print/{id}', [InvoiceController::class, 'invoiceForm'])->name('admin.invoice.form');
 
         // Api-key routes
         Route::get('/admin/api-key', [ApiKeyController::class, 'index'])->name('admin.api.key.list');

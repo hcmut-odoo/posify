@@ -31,8 +31,18 @@ class InvoiceRepository
         return Invoice::all();
     }
 
-    public function pagination($perPage, $page)
+    public function pagination($criteria, $fields, $perPage, $page)
     {
-        return Invoice::paginate($perPage, ['*'], 'page', $page);
+        return Invoice::query()
+            ->when(isset($criteria['order_id']), function ($query) use ($criteria) {
+                $query->where('order_id', $criteria['order_id']);
+            })
+            ->when(isset($criteria['total']), function ($query) use ($criteria) {
+                $query->where('total', $criteria['total']);
+            })
+            ->when(isset($criteria['created_at']), function ($query) use ($criteria) {
+                $query->where('created_at', $criteria['created_at']);
+            })
+            ->paginate($perPage, $fields, 'page', $page);
     }
 }
