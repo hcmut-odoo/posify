@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Bảng điều khiển</title>
+    <title>
+        @if(View::hasSection('title'))
+            @yield('title')
+        @else
+            {{ config('app.name', 'Laravel') }}
+        @endif
+    </title>
 
     <link rel="stylesheet" href="{{ asset('/css/admin/dataTables.bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/dt-sidebar.css') }}">
@@ -53,7 +59,7 @@
                 </li>
                 <li>
                     <a href="/admin/users">
-                        <i class="fa fa-users" aria-hidden="true"></i> &nbsp;Quản lý người dùng
+                        <i class="fa fa-users" aria-hidden="true"></i>&nbsp;Quản lý người dùng
                     </a>
                 </li>
                 <li>
@@ -62,8 +68,13 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/admin/invoices">
+                        <i class="fas fa-file-invoice" aria-hidden="true"></i>&nbsp; Quản lý hóa đơn
+                    </a>
+                </li>
+                <li>
                     <a href="/admin/stores">
-                        <i class="fa fa-store" aria-hidden="true"></i> &nbsp;Quản lý cửa hàng
+                        <i class="fa fa-store" aria-hidden="true"></i>&nbsp;Quản lý cửa hàng
                     </a>
                 </li>
                 <li>
