@@ -33,7 +33,7 @@
 
         setTimeout(function () {
             overlay.style.display = 'none';
-            window.location.href = '/cart';
+            window.location.href = '/orders';
         }, 3000);
     });
 </script>
