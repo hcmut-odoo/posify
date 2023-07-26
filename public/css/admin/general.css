@@ -1,0 +1,10 @@
+.right-button {
+    position: absolute;
+    right: 2%;
+}
+
+.break-row {
+    padding: 10px 15px;
+    border-bottom-right-radius: 1px;
+    border-bottom-left-radius: 1px;
+}
