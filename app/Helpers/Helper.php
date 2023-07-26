@@ -13,3 +13,29 @@ if (! function_exists('add_numerical_order')) {
         });
     }
 }
+
+if (! function_exists('validate_parameter')) {
+    function validate_parameter($param)
+    {
+        if (!isset($param) || empty($param)) {
+            return false;
+        }
+        return true;
+    }
+}
+
+if (!function_exists('validate_id')) {
+    function validate_id($id)
+    {
+        if (!isset($id) || empty($id)) {
+            return false;
+        }
+
+        if (!is_numeric($id) || intval($id) <= 0) {
+            return false;
+        }
+
+        return true;
+    }
+}
+
