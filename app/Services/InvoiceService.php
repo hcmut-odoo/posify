@@ -22,7 +22,7 @@ class InvoiceService extends BaseService
 
     public function createInvoice($orderId)
     {
-        $order = $this->orderService->getById($orderId);
+        $order = $this->orderService->findById($orderId);
         $orderItems = $this->orderService->getOrderItems($orderId);
         $totalPrice = 0;
 
@@ -52,7 +52,7 @@ class InvoiceService extends BaseService
         return $this->invoiceRepository->getAll();
     }
 
-    public function getById($id)
+    public function findById($id)
     {
         return $this->invoiceRepository->get($id);
     }
