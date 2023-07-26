@@ -27,7 +27,7 @@ class MenuController extends Controller
 
     public function detail($id)
     {
-        $product = $this->productService->getById($id);
+        $product = $this->productService->findById($id);
 
         return view('product_detail', [
             'product' => $product,
@@ -37,7 +37,7 @@ class MenuController extends Controller
 
     public function category($id)
     {
-        $products = $this->productService->getByCategory($id);
+        $products = $this->productService->findByCategory($id);
 
         return view('menu', [
             'products' => $products

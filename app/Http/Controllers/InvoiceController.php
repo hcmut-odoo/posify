@@ -50,9 +50,9 @@ class InvoiceController extends Controller
 
     public function invoiceForm(Request $request, $id)
     {
-        $invoice = $this->invoiceService->getById($id);
-        $order = $this->orderService->getById($invoice->order_id);
-        $partner = $this->userService->getById($order->user_id);
+        $invoice = $this->invoiceService->findById($id);
+        $order = $this->orderService->findById($invoice->order_id);
+        $partner = $this->userService->findById($order->user_id);
         $invoiceFormData = $this->invoiceService->getInvoiceFormData($id);
         $invoiceFormWithNumericalOrder = add_numerical_order($invoiceFormData);
 
