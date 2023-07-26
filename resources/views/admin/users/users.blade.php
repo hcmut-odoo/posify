@@ -18,7 +18,7 @@
                                 <th>Số điện thoại</th>
                                 <th>Vai trò</th>
                                 <th>Địa chỉ</th>
-                                <th class="no-sort"></th>
+                                <th class="no-sort">Tuỳ chọn</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,9 +31,12 @@
                                     <td>{{ $user->role }}</td>
                                     <td>{{ $user->address }}</td>
                                     <td>
-                                        <a class="fa fa-eye btn btn-info btn-sm" href="/admin/products/details?id={{ $user->id }}"></a>
-                                        <a class="fa fa-pencil btn btn-warning btn-sm" href="/admin/products/edit?id={{ $user->id }}"></a>
-                                        <a class="fa fa-trash btn btn-danger btn-sm" href="/admin/products/delete?id={{ $user->id }}"></a>
+                                        <a class="fa fa-eye btn btn-info btn-sm" href="{{ route('admin.user.view', ['id' => $user->id]) }}"></a>
+                                        <a class="fa fa-pencil btn btn-warning btn-sm" href="{{ route('admin.user.update.get', ['id' => $user->id]) }}"></a>
+                                        <form method="POST" action="{{ route('admin.user.delete', ['id' => $user->id]) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                            @csrf
+                                            <button type="submit" class="fa fa-trash btn btn-danger btn-sm"></button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
