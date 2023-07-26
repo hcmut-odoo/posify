@@ -12,11 +12,7 @@ class OrderItemRepository
 {
     public function get($id)
     {
-        $orderItem = OrderItem::find($id);
-        if (!$orderItem) {
-            throw new RuntimeException("OrderItem has id equal $id not found.");
-        }
-        return $orderItem;
+        return OrderItem::find($id);
     }
 
     public function remove($id)

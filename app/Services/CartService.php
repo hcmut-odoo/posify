@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\InvalidParameterException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
@@ -54,9 +55,12 @@ class CartService extends BaseService
         return false;
     }
 
-    public function removeItem($itemId)
+    public function removeItem($cartItemId)
     {
-        if($this->cartItemRepository->remove($itemId)) {
+        if (!validate_id($cartItemId)) {
+            throw new InvalidParameterException("Invalid cart item ID: $cartItemId");
+        }
+        if($this->cartItemRepository->remove($cartItemId)) {
             return true;
         }
         return false;
@@ -72,13 +76,18 @@ class CartService extends BaseService
 
     public function getCartItem($cartItemId)
     {
+        if (!validate_id($cartItemId)) {
+            throw new InvalidParameterException("Invalid cart item ID: $cartItemId");
+        }
         return $this->cartItemRepository->get($cartItemId);
     }
 
     public function clear($userId)
     {
+        if (!validate_id($userId)) {
+            throw new InvalidParameterException("Invalid user ID: $userId");
+        }
         $cartId = DB::table('carts')->where('user_id', $userId)->get()->id;
-
         DB::beginTransaction();
         try {
             DB::table('cart_items')->where('cart_id', $cartId)->delete();
@@ -94,6 +103,9 @@ class CartService extends BaseService
 
     public function getCartItems($cartId)
     {
+        if (!validate_id($cartId)) {
+            throw new InvalidParameterException("Invalid cart ID: $cartId");
+        }
         $items = DB::table('cart_items')
             ->join('products', 'cart_items.product_id', '=', 'products.id')
             ->where('cart_items.cart_id', $cartId, 'and')

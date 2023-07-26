@@ -13,6 +13,16 @@ class CategoryRepository
         return Category::find($id);
     }
 
+    public function findByName($name)
+    {
+        return Category::where('name', $name)->first();
+    }
+
+    public function create($name)
+    {
+        return Category::create(['name' => $name]);
+    }
+
     public function remove($id)
     {
         return Category::where('id', $id)->delete();
@@ -26,5 +36,25 @@ class CategoryRepository
     public function pagination($perPage, $page)
     {
         return Category::paginate($perPage, ['*'], 'page', $page);
+    }
+
+    public function update($data)
+    {
+        $fields = ['name'];
+        $updateData = [];
+
+        foreach ($fields as $field) {
+            if (isset($data[$field])) {
+                $updateData[$field] = $data[$field];
+            }
+        }
+
+        if (!empty($updateData)) {
+            return DB::table('categories')
+                ->where('id', $data['id'])
+                ->update($updateData);
+        }
+
+        return false;
     }
 }
