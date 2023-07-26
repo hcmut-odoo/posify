@@ -19,7 +19,7 @@ class RoleGroupService extends BaseService
         return $this->roleGroupRepository->getAll();
     }
 
-    public function getById($id)
+    public function findById($id)
     {
         return $this->roleGroupRepository->get($id);
     }

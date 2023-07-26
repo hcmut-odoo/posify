@@ -19,7 +19,7 @@ class ActionService extends BaseService
         return $this->actionRepository->getAll();
     }
 
-    public function getById($id)
+    public function findById($id)
     {
         return $this->actionRepository->get($id);
     }

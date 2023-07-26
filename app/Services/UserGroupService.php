@@ -19,7 +19,7 @@ class UserGroupService extends BaseService
         return $this->userGroupRepository->getAll();
     }
 
-    public function getById($id)
+    public function findById($id)
     {
         return $this->userGroupRepository->get($id);
     }

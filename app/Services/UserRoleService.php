@@ -19,7 +19,7 @@ class UserRoleService extends BaseService
         return $this->userRoleRepository->getAll();
     }
 
-    public function getById($id)
+    public function findById($id)
     {
         return $this->userRoleRepository->get($id);
     }
