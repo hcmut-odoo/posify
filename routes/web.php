@@ -76,10 +76,11 @@ Route::middleware('auth')->group(function () {
         // user routes
         Route::prefix('/users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('admin.user.list');
-            Route::get('/delete', [UserController::class, 'delete'])->name('admin.user.delete');
-            Route::get('/edit', [UserController::class, 'update'])->name('admin.user.update');
-            Route::get('/create', [UserController::class, 'create'])->name('admin.user.create');
-            Route::get('/detail', [UserController::class, 'detail'])->name('admin.user.detail');
+            Route::post('/delete/{id}', [UserController::class, 'deleteUser'])->name('admin.user.delete');
+            Route::get('/update/{id}', [UserController::class, 'updateUser'])->name('admin.user.update.get');
+            Route::post('/update/{id}', [UserController::class, 'updateUser'])->name('admin.user.update.post');
+            Route::post('/create', [UserController::class, 'createUser'])->name('admin.user.create');
+            Route::get('/view/{id}', [UserController::class, 'viewUser'])->name('admin.user.view');
         });
 
         // store routes
