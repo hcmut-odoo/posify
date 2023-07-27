@@ -236,7 +236,7 @@ class ApiController extends Controller
         }
     }
 
-    public function users(Request $request) : JsonResponse
+    public function users(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, User::class);
     }
@@ -272,7 +272,7 @@ class ApiController extends Controller
         }
     }
 
-    public function stores(Request $request) : JsonResponse
+    public function stores(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Store::class);
     }
@@ -329,7 +329,7 @@ class ApiController extends Controller
         }
     }
 
-    public function orders(Request $request) : JsonResponse
+    public function orders(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Order::class);
     }
