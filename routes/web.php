@@ -108,7 +108,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // invoice routes
-        Route::prefix('/orders')->group(function () {
+        Route::prefix('/invoices')->group(function () {
             Route::get('/', [InvoiceController::class, 'index'])->name('admin.invoice.list');
             Route::post('/delete', [InvoiceController::class, 'delete'])->name('admin.invoice.delete');
             Route::get('/detail/{id}', [InvoiceController::class, 'invoiceDetail'])->name('admin.invoice.detail');
@@ -118,10 +118,11 @@ Route::middleware('auth')->group(function () {
         // Api-key routes
         Route::prefix('/api-key')->group(function () {
             Route::get('/', [ApiKeyController::class, 'index'])->name('admin.api.key.list');
-            Route::get('/delete', [ApiKeyController::class, 'delete'])->name('admin.api.key.delete');
-            Route::get('/edit', [ApiKeyController::class, 'update'])->name('admin.api.key.update');
-            Route::get('/create', [ApiKeyController::class, 'create'])->name('admin.api.key.create');
-            Route::get('/detail', [ApiKeyController::class, 'detail'])->name('admin.api.key.detail');
+            Route::get('/delete', [ApiKeyController::class, 'deleteKey'])->name('admin.api.key.delete');
+            Route::get('/edit', [ApiKeyController::class, 'updateKey'])->name('admin.api.key.update');
+            Route::get('/create', [ApiKeyController::class, 'createKey'])->name('admin.api.key.create');
+            Route::get('/detail', [ApiKeyController::class, 'detailKey'])->name('admin.api.key.detail');
+            Route::get('/inactive', [ApiKeyController::class, 'inactiveKey'])->name('admin.api.key.inactive');
         });
 
         // User-group routes

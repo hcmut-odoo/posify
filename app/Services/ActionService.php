@@ -24,6 +24,24 @@ class ActionService extends BaseService
         return $this->actionRepository->get($id);
     }
 
+    public function convertToNestedArray($controllers)
+    {
+        $mergedControllers = [];
+        foreach ($controllers as $controller) {
+            $controllerName = $controller['controller'];
+            $action = $controller['method'];
+
+            if (array_key_exists($controllerName, $mergedControllers)) {
+                $mergedControllers[$controllerName]['method'][] = $action;
+            } else {
+                $mergedControllers[$controllerName] = ['controller' => $controllerName, 'method' => [$action]];
+            }
+        }
+
+        $controllers = array_values($mergedControllers);
+        return $controllers;
+    }
+
     public function search($controller, $method, $fields)
     {
         return $this->actionRepository->search([

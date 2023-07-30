@@ -11,6 +11,8 @@ use App\Repositories\UserGroupRepository;
 use App\Repositories\RoleGroupRepository;
 use App\Repositories\ActionRepository;
 use App\Exceptions\InvalidApiKeyException;
+use App\Exceptions\InvalidParameterException;
+use App\Exceptions\NotFoundException;
 
 class ApiService extends BaseService
 {
@@ -41,24 +43,61 @@ class ApiService extends BaseService
         return $this->apiKeyRepository->getAll();
     }
 
+    public function getKeyWithInfo()
+    {
+        return DB::table('api_keys')
+            ->join('users', 'users.id', '=', 'api_keys.user_id')
+            ->select('users.name AS user_name', 'api_keys.value',
+                'api_keys.created_at', 'api_keys.status', 'api_keys.description')
+            ->get();
+    }
+
     public function findById($id)
     {
-        return $this->apiKeyRepository->get($id);
+        if (!validate_id($id)) {
+            throw new InvalidParameterException("Invalid api key ID: $id");
+        }
+        $apiKey = $this->apiKeyRepository->get($id);
+        if (!$apiKey) {
+            throw new NotFoundException("Record api key has ID $id not found");
+        }
+        return $apiKey;
     }
 
     public function getByKey($key)
     {
-        return $this->apiKeyRepository->getByKey($key);
+        if (!validate_parameter($key)) {
+            throw new InvalidParameterException("Invalid api key ID: $key");
+        }
+        $apiKey = $this->apiKeyRepository->getByKey($key);
+        if (!$apiKey) {
+            throw new NotFoundException("Record api key has key $key not found");
+        }
+
+        return $apiKey;
     }
 
     public function checkExpired($key)
     {
-        $apiKeyRecord = $this->apiKeyRepository->getByKey($key);
-        return $apiKeyRecord->expired_at <= Carbon::now();
+        if (!validate_parameter($key)) {
+            throw new InvalidParameterException("Invalid api key ID: $key");
+        }
+        $apiKey = $this->apiKeyRepository->getByKey($key);
+        if (!$apiKey) {
+            throw new NotFoundException("Record api key has key $key not found");
+        }
+
+        return $apiKey->expired_at <= Carbon::now();
     }
 
     public function getValidActionList($key)
     {
+        if (!validate_parameter($key)) {
+            throw new InvalidParameterException("Invalid api key ID: $key");
+        }
+        if (!$this->apiKeyRepository->getByKey($key)) {
+            throw new NotFoundException("Record api key has key $key not found");
+        }
         $actions = DB::table('api_keys')
             ->select('api_keys.user_id')
             ->where('api_keys.key', '=', $key)
@@ -72,6 +111,12 @@ class ApiService extends BaseService
 
     public function checkAdmin($key)
     {
+        if (!validate_parameter($key)) {
+            throw new InvalidParameterException("Invalid api key ID: $key");
+        }
+        if (!$this->apiKeyRepository->getByKey($key)) {
+            throw new NotFoundException("Record api key has key $key not found");
+        }
         $userGroup = DB::table('api_keys')
             ->select('api_keys.user_id')
             ->where('api_keys.key', '=', $key)
@@ -100,6 +145,9 @@ class ApiService extends BaseService
 
     public function generate($userId)
     {
+        if (!validate_id($userId)) {
+            throw new InvalidParameterException("Invalid user ID: $userId");
+        }
         return $this->apiKeyRepository->create(Str::random(32), $userId);
     }
 

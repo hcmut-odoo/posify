@@ -2,52 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-
-use App\Services\ApiService;
 use Illuminate\Support\Facades\Session;
+use App\Services\ApiService;
+use App\Services\ActionService;
 
 class ApiKeyController extends Controller
 {
     private $apiService;
+    private $actionService;
 
-    public function __construct(ApiService $apiService)
+    public function __construct(ApiService $apiService, ActionService $actionService)
     {
         $this->apiService = $apiService;
-    }
-
-    /**
-     * Generate and assign an API key to the user.
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function generateApiKey(Request $request)
-    {
-        $user = $request->user();
-
-        if (!$user) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
-        }
-
-        $apiKey = User::generateApiKey();
-        $user->api_key = $apiKey;
-        $user->save();
-
-        return response()->json(['api_key' => $apiKey]);
+        $this->actionService = $actionService;
     }
 
     public function index(Request $request)
     {
-        $apiKeyList = $this->apiService->getAll();
+        $apiKeyList = $this->apiService->getKeyWithInfo();
 
-        return view('/admin/apis', [
-            'apis' => $apiKeyList
+        return view('/admin/keys/key_index', [
+            'items' => $apiKeyList
         ]);
     }
 
-    public function create(Request $request)
+    public function createKey(Request $request)
     {
         if ($request->getMethod() === 'POST') {
             $apiKey = $this->apiService->generate($request->user()->id);
@@ -59,24 +39,29 @@ class ApiKeyController extends Controller
             return redirect()->back();
         }
 
-        return view('/admin/apis/create');
-    }
+        $controllers = $this->actionService->getAll();
+        $controllers = $this->actionService->convertToNestedArray($controllers);
 
-    public function update(Request $request)
-    {
-        $apiKeyList = $this->apiService->getAll();
-
-        return view('/admin/apis', [
-            'apis' => $apiKeyList
+        return view('/admin/keys/key_create', [
+            'controllers' => $controllers
         ]);
     }
 
-    public function read(Request $request)
+    public function updateKey(Request $request, $id)
     {
         $apiKeyList = $this->apiService->getAll();
 
-        return view('/admin/apis', [
-            'apis' => $apiKeyList
+        return view('/admin/keys/update', [
+            'items' => $apiKeyList
+        ]);
+    }
+
+    public function viewKey(Request $request, $id)
+    {
+        $apiKeyList = $this->apiService->findById($id);
+
+        return view('/admin/keys/', [
+            'items' => $apiKeyList
         ]);
     }
 }

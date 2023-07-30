@@ -13,6 +13,7 @@
     </title>
 
     <link rel="stylesheet" href="{{ asset('/css/admin/dataTables.bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/dt-sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/dt-gradients.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/admin/dt-theme.css') }}">
@@ -76,6 +77,11 @@
                 <li>
                     <a href="/admin/stores">
                         <i class="fa fa-store" aria-hidden="true"></i>&nbsp;Quản lý cửa hàng
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/api-key">
+                        <i class="fa fa-key" aria-hidden="true"></i>&nbsp;Quản lý khóa
                     </a>
                 </li>
                 <li>

@@ -108,27 +108,27 @@ class ActionSeeder extends Seeder
             [
                 'id' => 19,
                 'controller' => 'CartController',
-                'method' => 'show'
+                'method' => 'showCart'
             ],
             [
                 'id' => 20,
                 'controller' => 'CartController',
-                'method' => 'placeOrder'
+                'method' => 'placeOrderCart'
             ],
             [
                 'id' => 21,
                 'controller' => 'CartController',
-                'method' => 'add'
+                'method' => 'addCartItem'
             ],
             [
                 'id' => 22,
                 'controller' => 'CartController',
-                'method' => 'remove'
+                'method' => 'removeCartItem'
             ],
             [
                 'id' => 23,
                 'controller' => 'CartController',
-                'method' => 'edit'
+                'method' => 'editCartItem'
             ],
             [
                 'id' => 24,
@@ -163,22 +163,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 30,
                 'controller' => 'ProductController',
-                'method' => 'delete'
+                'method' => 'deleteProduct'
             ],
             [
                 'id' => 31,
                 'controller' => 'ProductController',
-                'method' => 'update'
+                'method' => 'updateProduct'
             ],
             [
                 'id' => 32,
                 'controller' => 'ProductController',
-                'method' => 'create'
+                'method' => 'createProduct'
             ],
             [
                 'id' => 33,
                 'controller' => 'ProductController',
-                'method' => 'detail'
+                'method' => 'detailProduct'
             ],
             [
                 'id' => 34,
@@ -188,22 +188,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 35,
                 'controller' => 'CategoryController',
-                'method' => 'delete'
+                'method' => 'deleteCategory'
             ],
             [
                 'id' => 36,
                 'controller' => 'CategoryController',
-                'method' => 'update'
+                'method' => 'updateCategory'
             ],
             [
                 'id' => 37,
                 'controller' => 'CategoryController',
-                'method' => 'create'
+                'method' => 'createCategory'
             ],
             [
                 'id' => 38,
                 'controller' => 'CategoryController',
-                'method' => 'detail'
+                'method' => 'detailCategory'
             ],
             [
                 'id' => 39,
@@ -213,22 +213,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 40,
                 'controller' => 'UserController',
-                'method' => 'delete'
+                'method' => 'deleteUser'
             ],
             [
                 'id' => 41,
                 'controller' => 'UserController',
-                'method' => 'update'
+                'method' => 'updateUser'
             ],
             [
                 'id' => 42,
                 'controller' => 'UserController',
-                'method' => 'create'
+                'method' => 'createUser'
             ],
             [
                 'id' => 43,
                 'controller' => 'UserController',
-                'method' => 'detail'
+                'method' => 'detailUser'
             ],
             [
                 'id' => 44,
@@ -238,22 +238,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 45,
                 'controller' => 'StoreController',
-                'method' => 'delete'
+                'method' => 'deleteStore'
             ],
             [
                 'id' => 46,
                 'controller' => 'StoreController',
-                'method' => 'update'
+                'method' => 'updateStore'
             ],
             [
                 'id' => 47,
                 'controller' => 'StoreController',
-                'method' => 'create'
+                'method' => 'createStore'
             ],
             [
                 'id' => 48,
                 'controller' => 'StoreController',
-                'method' => 'detail'
+                'method' => 'detailStore'
             ],
             [
                 'id' => 49,
@@ -263,7 +263,7 @@ class ActionSeeder extends Seeder
             [
                 'id' => 50,
                 'controller' => 'InvoiceController',
-                'method' => 'delete'
+                'method' => 'deleteInvoice'
             ],
             [
                 'id' => 51,
@@ -323,22 +323,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 62,
                 'controller' => 'ApiKeyController',
-                'method' => 'delete'
+                'method' => 'deleteApiKey'
             ],
             [
                 'id' => 63,
                 'controller' => 'ApiKeyController',
-                'method' => 'update'
+                'method' => 'updateApiKey'
             ],
             [
                 'id' => 64,
                 'controller' => 'ApiKeyController',
-                'method' => 'create'
+                'method' => 'createApiKey'
             ],
             [
                 'id' => 65,
                 'controller' => 'ApiKeyController',
-                'method' => 'detail'
+                'method' => 'detailApiKey'
             ],
             [
                 'id' => 66,
@@ -348,22 +348,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 67,
                 'controller' => 'UserGroupController',
-                'method' => 'delete'
+                'method' => 'deleteUserGroup'
             ],
             [
                 'id' => 68,
                 'controller' => 'UserGroupController',
-                'method' => 'update'
+                'method' => 'updateUserGroup'
             ],
             [
                 'id' => 69,
                 'controller' => 'UserGroupController',
-                'method' => 'create'
+                'method' => 'createUserGroup'
             ],
             [
                 'id' => 70,
                 'controller' => 'UserGroupController',
-                'method' => 'detail'
+                'method' => 'detailUserGroup'
             ],
             [
                 'id' => 71,
@@ -373,22 +373,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 72,
                 'controller' => 'UserRoleController',
-                'method' => 'delete'
+                'method' => 'deleteUserRole'
             ],
             [
                 'id' => 73,
                 'controller' => 'UserRoleController',
-                'method' => 'update'
+                'method' => 'updateUserRole'
             ],
             [
                 'id' => 74,
                 'controller' => 'UserRoleController',
-                'method' => 'create'
+                'method' => 'createUserRole'
             ],
             [
                 'id' => 75,
                 'controller' => 'UserRoleController',
-                'method' => 'detail'
+                'method' => 'detailUserRole'
             ],
             [
                 'id' => 76,
@@ -398,22 +398,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 77,
                 'controller' => 'RoleGroupController',
-                'method' => 'delete'
+                'method' => 'deleteRoleGroup'
             ],
             [
                 'id' => 78,
                 'controller' => 'RoleGroupController',
-                'method' => 'update'
+                'method' => 'updateRoleGroup'
             ],
             [
                 'id' => 79,
                 'controller' => 'RoleGroupController',
-                'method' => 'create'
+                'method' => 'createRoleGroup'
             ],
             [
                 'id' => 80,
                 'controller' => 'RoleGroupController',
-                'method' => 'detail'
+                'method' => 'detailRoleGroup'
             ],
             [
                 'id' => 81,
@@ -423,22 +423,22 @@ class ActionSeeder extends Seeder
             [
                 'id' => 82,
                 'controller' => 'ActionController',
-                'method' => 'delete'
+                'method' => 'deleteAction'
             ],
             [
                 'id' => 83,
                 'controller' => 'ActionController',
-                'method' => 'update'
+                'method' => 'updateAction'
             ],
             [
                 'id' => 84,
                 'controller' => 'ActionController',
-                'method' => 'create'
+                'method' => 'createAction'
             ],
             [
                 'id' => 85,
                 'controller' => 'ActionController',
-                'method' => 'detail'
+                'method' => 'detailAction'
             ],
         ];
 
