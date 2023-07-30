@@ -28,5 +28,5 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker tag pos:latest callmedavid/pos:latest
-          docker push callmedavid/pos:latest
+          docker tag pos:latest callmedavid/posify:latest
+          docker push callmedavid/posify:latest
