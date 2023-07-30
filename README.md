@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://buymee.herokuapp.com">
     <img alt="Buymee website" src="./public/images/logo/logo-2.png" width="100" />
-    <h2 align="center">POINT OF SALE</h2>
+    <h2 align="center">POSIFY</h2>
     <h3 align="center">PHP Laravel</h3>
   </a>
 </p> 
-<p align="center">Finally a POS system that integrates with your marketing, sales, inventory and eCommerce. A simple and flexible POS you can configure to meet your retail shop's precise needs.</p>
+<p align="center">POSIFY is a simple CMS E-Commerce system that integrates with your marketing, sales, inventory and eCommerce. A simple and flexible POSIFY you can configure to meet your retail shop's precise needs.</p>
 
 [![Build Status](https://travis-ci.org/anuraghazra/anuraghazra.github.io.svg?branch=develop)](https://travis-ci.org/anuraghazra/anuraghazra.github.io)
 ![GitHub](https://img.shields.io/github/license/anuraghazra/anuraghazra.github.io)
@@ -28,7 +28,7 @@ _NOTE: The default branch for this repo is `master`, when you push or pull make 
 Fork the repository. then clone the repo locally by doing -
 
 ```bash
-git clone https://github.com/hcmut-odoo/pos
+git clone https://github.com/hcmut-odoo/posify
 ```
 
 ### Step 2: Install Dependencies
@@ -36,7 +36,7 @@ git clone https://github.com/hcmut-odoo/pos
 Access into the project directory
 
 ```bash
-cd pos
+cd posify
 ```
 
 Install all the dependencies
