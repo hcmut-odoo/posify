@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::get('/cart/notice/{status}/{message}', [CartController::class, 'notice'])->name('cart.notice');
     Route::get('/orders', [OrderController::class, 'orders'])->name('order.list');
-    Route::get('/orders/{id}', [OrderController::class, 'orderDetail'])->name('order.detail');
+    Route::get('/orders/{id}', [OrderController::class, 'userViewOrderDetail'])->name('order.detail');
 
     // Admin routes
     Route::middleware('admin')->prefix('/admin')->group(function () {
@@ -98,7 +98,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/delete', [OrderController::class, 'delete'])->name('admin.order.delete');
             Route::post('/accept', [OrderController::class, 'acceptOrder'])->name('admin.order.accept');
             Route::post('/reject', [OrderController::class, 'rejectOrder'])->name('admin.order.reject');
-            Route::get('/detail/{id}', [OrderController::class, 'detail'])->name('admin.order.detail');
+            Route::get('/detail/{id}', [OrderController::class, 'adminViewOrderDetail'])->name('admin.order.detail');
             Route::get('/accepted', [OrderController::class, 'acceptedOrderIndex'])->name('admin.order.accepted');
             Route::get('/rejected', [OrderController::class, 'rejectedOrderIndex'])->name('admin.order.rejected');
             Route::get('/accepted/detail/{id}', [OrderController::class, 'acceptedOrderDetail'])->name('admin.order.accepted.detail');

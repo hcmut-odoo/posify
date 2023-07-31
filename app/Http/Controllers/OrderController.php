@@ -141,12 +141,21 @@ class OrderController extends Controller
         }
     }
 
-    public function orderDetail(Request $request, $id)
+    public function userViewOrderDetail(Request $request, $id)
     {
         $orderItems = $this->orderService->getOrderItems($id);
 
         return view('order_detail', [
             'orders' => $orderItems
+        ]);
+    }
+
+    public function adminViewOrderDetail(Request $request, $id)
+    {
+        $orderItems = $this->orderService->getOrderItems($id);
+
+        return view('/admin/orders/order_detail', [
+            'items' => $orderItems
         ]);
     }
 
