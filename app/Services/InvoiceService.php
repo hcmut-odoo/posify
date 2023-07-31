@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\InvalidParameterException;
+use App\Exceptions\NotFoundException;
 use App\Models\Invoice;
 use App\Repositories\InvoiceRepository;
 use App\Services\OrderService;
@@ -54,7 +56,14 @@ class InvoiceService extends BaseService
 
     public function findById($id)
     {
-        return $this->invoiceRepository->get($id);
+        if (!validate_id($id)) {
+            throw new InvalidParameterException("Invalid invoice ID: $id");
+        }
+        $invoice = $this->invoiceRepository->get($id);
+        if(!$invoice) {
+            throw new NotFoundException("Not found invoice has ID: $id");
+        }
+        return $invoice;
     }
 
     public function pagination($criteria, $perPage, $page)

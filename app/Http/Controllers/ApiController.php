@@ -31,6 +31,7 @@ use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Invoice;
 
 class ApiController extends Controller
 {
@@ -393,6 +394,21 @@ class ApiController extends Controller
         try {
             $rejectedOrders = $this->orderService->getOrderItems($id);
             return $this->successResponse($rejectedOrders);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function invoices(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceList($request, Invoice::class);
+    }
+
+    public function getInvoice(Request $request, $id) : JsonResponse
+    {
+        try {
+            $order = $this->invoiceService->findById($id);
+            return $this->successResponse($order);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
         }
