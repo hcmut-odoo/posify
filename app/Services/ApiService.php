@@ -178,7 +178,7 @@ class ApiService extends BaseService
             } elseif ($operator === 'lteq') {
                 $query->where($field, '<=', $value);
             } elseif ($operator === 'gt') {
-                $query->where($field, '.', $value);
+                $query->where($field, '>', $value);
             } elseif ($operator === 'gteq') {
                 $query->where($field, '>=', $value);
             } elseif ($operator === 'neq') {
