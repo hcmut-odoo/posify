@@ -92,4 +92,17 @@ class UserService extends BaseService
             throw new DeleteFailedException("Failed to delete user has ID: $id");
         }
     }
+
+    public function getUserAddress($id)
+    {
+        if(!validate_parameter($id)) {
+            throw new InvalidParameterException("Invalid user ID");
+        }
+
+        $userAddress = $this->userRepository->getUserAddress($id);
+        if(!$userAddress) {
+            throw new NotFoundException("Not found user");
+        }
+        return $userAddress;
+    }
 }

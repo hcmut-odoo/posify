@@ -64,4 +64,9 @@ class UserRepository
 
         return false;
     }
+
+    public function getUserAddress($id)
+    {
+        return User::find($id, ['address', 'phone_number', 'created_at', 'updated_at']);
+    }
 }

@@ -31,6 +31,7 @@ Route::prefix('/user')->group(function () {
     Route::get('/list', [ApiController::class, 'users'])->name('api.user.list');
     Route::post('/update/{id}', [ApiController::class, 'updateUser'])->name('api.user.update');
     Route::post('/delete/{id}', [ApiController::class, 'deleteUser'])->name('api.user.delete');
+    Route::get('/address/{id}', [ApiController::class, 'getUserAddress'])->name('api.user.address');
 });
 
 Route::prefix('/product')->group(function () {
