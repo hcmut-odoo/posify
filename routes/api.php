@@ -34,6 +34,11 @@ Route::prefix('/user')->group(function () {
     Route::get('/address/{id}', [ApiController::class, 'getUserAddress'])->name('api.user.address');
 });
 
+
+Route::prefix('/address')->group(function () {
+    Route::get('/find/{id}', [ApiController::class, 'getUserAddress'])->name('api.address.find');
+});
+
 Route::prefix('/product')->group(function () {
     Route::post('/create', [ApiController::class, 'createProduct'])->name('api.product.create');
     Route::get('/find/{id}', [ApiController::class, 'getProduct'])->name('api.product.find');
