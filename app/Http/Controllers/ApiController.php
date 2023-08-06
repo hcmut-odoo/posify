@@ -242,10 +242,20 @@ class ApiController extends Controller
         return $this->resourceList($request, User::class);
     }
 
-    public function getUser(Request $request, $id) : JsonResponse
+    public function getUserById(Request $request, $id) : JsonResponse
     {
         try {
             $user = $this->userService->findById($id);
+            return $this->successResponse($user);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getUser(Request $request) : JsonResponse
+    {
+        try {
+            $user = $this->userService->findById($request->input('id'));
             return $this->successResponse($user);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
@@ -408,6 +418,26 @@ class ApiController extends Controller
     {
         try {
             $order = $this->invoiceService->findById($id);
+            return $this->successResponse($order);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getUserAddressById(Request $request, $id) : JsonResponse
+    {
+        try {
+            $order = $this->userService->getUserAddress($id);
+            return $this->successResponse($order);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getUserAddress(Request $request) : JsonResponse
+    {
+        try {
+            $order = $this->userService->getUserAddress($request->input('id'));
             return $this->successResponse($order);
         } catch (\Exception $e) {
             return $this->errorResponse($e);

@@ -27,7 +27,8 @@ Route::post('/check-connection', [ApiController::class, 'checkConnection'])->nam
 
 Route::prefix('/user')->group(function () {
     Route::post('/create', [ApiController::class, 'createUser'])->name('api.user.create');
-    Route::get('/find/{id}', [ApiController::class, 'getUser'])->name('api.user.find');
+    Route::get('/find/{id}', [ApiController::class, 'getUserById'])->name('api.user.find.id');
+    Route::get('/find', [ApiController::class, 'getUser'])->name('api.user.find');
     Route::get('/list', [ApiController::class, 'users'])->name('api.user.list');
     Route::post('/update/{id}', [ApiController::class, 'updateUser'])->name('api.user.update');
     Route::post('/delete/{id}', [ApiController::class, 'deleteUser'])->name('api.user.delete');
@@ -36,7 +37,8 @@ Route::prefix('/user')->group(function () {
 
 
 Route::prefix('/address')->group(function () {
-    Route::get('/find/{id}', [ApiController::class, 'getUserAddress'])->name('api.address.find');
+    Route::get('/find/{id}', [ApiController::class, 'getUserAddressById'])->name('api.address.find.id');
+    Route::get('/find', [ApiController::class, 'getUserAddress'])->name('api.address.find');
 });
 
 Route::prefix('/product')->group(function () {
