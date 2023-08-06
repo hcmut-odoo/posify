@@ -19,8 +19,8 @@ class QueryRequest extends FormRequest
             'page' => 'integer|min:1',
             // 'filter.*.operator' => 'required_with:filter|array|in:eq,like,lt,lteq,gt,gteq,neq',
             // 'filter.*.value' => 'required_with:filter|array',
-            'date.start' => 'nullable|date_format:Y-m-d',
-            'date.end' => 'nullable|date_format:Y-m-d|after_or_equal:date.start',
+            'date.start' => 'nullable|date_format:Y-m-d H:i:s',
+            'date.end' => 'nullable|date_format:Y-m-d H:i:s|after_or_equal:date.start',
             'display.*' => 'string',
             'sort.*' => 'string|in:asc,desc',
         ];

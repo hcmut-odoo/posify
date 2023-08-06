@@ -188,11 +188,11 @@ class ApiService extends BaseService
 
         // Apply date range
         if ($date) {
-            if ($date['start']) {
+            if (isset($date['start']) && $date['start']) {
                 $start = Carbon::parse($date['start']);
                 $query->where('updated_at', '>=', $start);
             }
-            if ($date['end']) {
+            if (isset($date['end']) && $date['end']) {
                 $end = Carbon::parse($date['end']);
                 $query->where('updated_at', '<=', $end);
             }
