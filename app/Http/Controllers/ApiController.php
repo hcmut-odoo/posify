@@ -137,7 +137,17 @@ class ApiController extends Controller
         return $this->resourceList($request, Product::class);
     }
 
-    public function getProduct(Request $request, $id) : JsonResponse
+    public function getProduct(Request $request) : JsonResponse
+    {
+        try {
+            $product = $this->productService->findById($request->input('id'));
+            return $this->successResponse($product);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getProductById(Request $request, $id) : JsonResponse
     {
         try {
             $product = $this->productService->findById($id);
@@ -147,12 +157,23 @@ class ApiController extends Controller
         }
     }
 
-    public function updateProduct(UpdateProductRequest $request, $id) : JsonResponse
+    public function updateProduct(UpdateProductRequest $request) : JsonResponse
     {
         try {
             $data = $request->validated();
             $product = $this->productService->updateProduct($data);
-            return response()->json($product);
+            return $this->successResponse($product);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function updateProductById(UpdateProductRequest $request, $id) : JsonResponse
+    {
+        try {
+            $data = $request->validated();
+            $product = $this->productService->updateProduct($data);
+            return $this->successResponse($product);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
         }
@@ -169,9 +190,20 @@ class ApiController extends Controller
         }
     }
 
-    public function deleteProduct(Request $request, $id) : JsonResponse
+    public function deleteProductById(Request $request, $id) : JsonResponse
     {
         try {
+            $this->productService->deleteProduct($id);
+            return $this->successResponse("Product with ID $id has been deleted");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function deleteProduct(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
             $this->productService->deleteProduct($id);
             return $this->successResponse("Product with ID $id has been deleted");
         } catch (\Exception $e) {
@@ -195,11 +227,21 @@ class ApiController extends Controller
         }
     }
 
-    public function getCategory(Request $request, $id) : JsonResponse
+    public function getCategoryById(Request $request, $id) : JsonResponse
     {
         try {
             $category = $this->categoryService->findById($id);
-            return response()->json($category);
+            return $this->successResponse($category);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getCategory(Request $request) : JsonResponse
+    {
+        try {
+            $category = $this->categoryService->findById($request->input('id'));
+            return $this->successResponse($category);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
         }
@@ -216,7 +258,18 @@ class ApiController extends Controller
         }
     }
 
-    public function deleteCategory(Request $request, $id) : JsonResponse
+    public function deleteCategory(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $this->categoryService->deleteCategory($id);
+            return $this->successResponse("Category with ID $id has been deleted");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function deleteCategoryById(Request $request, $id) : JsonResponse
     {
         try {
             $this->categoryService->deleteCategory($id);
@@ -273,7 +326,18 @@ class ApiController extends Controller
         }
     }
 
-    public function deleteUser(Request $request, $id) : JsonResponse
+    public function deleteUser(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('user');
+            $this->userService->deleteUser($id);
+            return $this->successResponse("User has ID $id deleted successfully");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function deleteUserById(Request $request, $id) : JsonResponse
     {
         try {
             $this->userService->deleteUser($id);
@@ -288,7 +352,17 @@ class ApiController extends Controller
         return $this->resourceList($request, Store::class);
     }
 
-    public function getStore(Request $request, $id) : JsonResponse
+    public function getStore(Request $request) : JsonResponse
+    {
+        try {
+            $store = $this->storeService->findById($request->input('id'));
+            return $this->successResponse($store);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getStoreById(Request $request, $id) : JsonResponse
     {
         try {
             $store = $this->storeService->findById($id);
@@ -309,7 +383,18 @@ class ApiController extends Controller
         }
     }
 
-    public function createStore(Request $request, $id) : JsonResponse
+    public function updateStoreById(Request $request, $id) : JsonResponse
+    {
+        try {
+            $data = $request->validated();
+            $store = $this->storeService->updateStore($data);
+            return $this->successResponse($store);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function createStore(Request $request) : JsonResponse
     {
         try {
             $data = $request->validated();
@@ -320,7 +405,18 @@ class ApiController extends Controller
         }
     }
 
-    public function deleteStore(Request $request, $id) : JsonResponse
+    public function deleteStore(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $this->storeService->deleteStore($id);
+            return $this->successResponse("Store has ID $id deleted successfully");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function deleteStoreById(Request $request, $id) : JsonResponse
     {
         try {
             $this->storeService->deleteStore($id);
@@ -345,7 +441,17 @@ class ApiController extends Controller
         return $this->resourceList($request, Order::class);
     }
 
-    public function getOrder(Request $request, $id) : JsonResponse
+    public function getOrder(Request $request) : JsonResponse
+    {
+        try {
+            $order = $this->orderService->findById($request->input('id'));
+            return $this->successResponse($order);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getOrderById(Request $request, $id) : JsonResponse
     {
         try {
             $order = $this->orderService->findById($id);
@@ -355,7 +461,18 @@ class ApiController extends Controller
         }
     }
 
-    public function acceptOrder(Request $request, $id) : JsonResponse
+    public function acceptOrder(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $this->invoiceService->createInvoice($id);
+            return $this->successResponse("Order has ID $id processed successfully");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function acceptOrderById(Request $request, $id) : JsonResponse
     {
         try {
             $this->invoiceService->createInvoice($id);
@@ -365,7 +482,18 @@ class ApiController extends Controller
         }
     }
 
-    public function rejectOrder(Request $request, $id) : JsonResponse
+    public function rejectOrder(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $this->orderService->rejectOrder($id);
+            return $this->successResponse("Order has ID $id rejected successfully");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function rejectOrderById(Request $request, $id) : JsonResponse
     {
         try {
             $this->orderService->rejectOrder($id);
@@ -387,7 +515,7 @@ class ApiController extends Controller
         }
     }
 
-    public function acceptedOrders(Request $request, $id) : JsonResponse
+    public function acceptedOrders(Request $request) : JsonResponse
     {
         try {
             $perPage = $request->query('per_page');
@@ -399,7 +527,18 @@ class ApiController extends Controller
         }
     }
 
-    public function getOrderItems(Request $request, $id) : JsonResponse
+    public function getOrderItems(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $rejectedOrders = $this->orderService->getOrderItems($id);
+            return $this->successResponse($rejectedOrders);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getOrderItemsById(Request $request, $id) : JsonResponse
     {
         try {
             $rejectedOrders = $this->orderService->getOrderItems($id);
@@ -414,7 +553,18 @@ class ApiController extends Controller
         return $this->resourceList($request, Invoice::class);
     }
 
-    public function getInvoice(Request $request, $id) : JsonResponse
+    public function getInvoice(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $order = $this->invoiceService->findById($id);
+            return $this->successResponse($order);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getInvoiceById(Request $request, $id) : JsonResponse
     {
         try {
             $order = $this->invoiceService->findById($id);
