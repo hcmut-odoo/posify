@@ -74,4 +74,16 @@ class ProductController extends Controller
 
         return redirect()->back();
     }
+
+    public function detailProduct(Request $request)
+    {
+        $productId = $request->input('id');
+        $product = $this->productService->findById($productId);
+        $productVariants = $this->productService->getProductVariantByProductId($productId);
+
+        return view('/admin/products/detail_product', [
+            'product' => $product,
+            'product_variants' => $productVariants
+        ]);
+    }
 }
