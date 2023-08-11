@@ -134,6 +134,7 @@
             @yield('content')
         </div>
     </div>
+    <br><br><br><br><br>
 
     <div class="footer">
         <div class="footer__inner">
