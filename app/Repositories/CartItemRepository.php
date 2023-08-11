@@ -21,7 +21,7 @@ class CartItemRepository
 
     public function update($data)
     {
-        $fields = ['product_id', 'quantity', 'size', 'note', 'stamp'];
+        $fields = ['product_id', 'quantity', 'product_variant_id', 'note', 'stamp'];
         $updateData = [];
 
         foreach ($fields as $field) {
@@ -39,12 +39,12 @@ class CartItemRepository
         return false;
     }
 
-    public function create($productId, $cartId, $size, $note, $quantity)
+    public function create($productId, $cartId, $productVariantId, $note, $quantity)
     {
         return CartItem::create([
             'product_id' => $productId,
             'cart_id' => $cartId,
-            'size' => $size,
+            'product_variant_id' => $productVariantId,
             'note' => $note,
             'quantity' => $quantity
         ]);
@@ -59,8 +59,8 @@ class CartItemRepository
             ->when(isset($criteria['product_id']), function ($query) use ($criteria) {
                 $query->where('product_id', $criteria['product_id']);
             })
-            ->when(isset($criteria['size']), function ($query) use ($criteria) {
-                $query->where('size', $criteria['size']);
+            ->when(isset($criteria['product_variant_id']), function ($query) use ($criteria) {
+                $query->where('product_variant_id', $criteria['product_variant_id']);
             })
             ->when(isset($criteria['note']), function ($query) use ($criteria) {
                 $query->where('note', $criteria['note'] == false ? null : $criteria['note']);
