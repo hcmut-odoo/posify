@@ -126,7 +126,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function delete(Request $request)
+    public function deleteOrder(Request $request)
     {
         $path = $request->getPathInfo();
         $orderId = $request->input('id');
