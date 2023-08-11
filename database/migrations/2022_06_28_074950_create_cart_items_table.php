@@ -18,15 +18,16 @@ class CreateCartItemsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('cart_id');
             $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_variant_id');
             $table->integer('quantity');
             $table->boolean('stamp')->default(true);
             $table->string('note', 100)->nullable();
-            $table->string('size', 100)->nullable();
             $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('cart_id')->references('id')->on('carts');
             $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants');
         });
     }
 
