@@ -31,7 +31,7 @@
                                     <td>{{ $item->name }}</td>
                                     <td>{{ number_format($item->price, 0, ',', '.') . 'đ' }}</td>
                                     <td>
-                                        <a class="fa fa-eye btn btn-info btn-sm" href="/admin/products/details?id={{ $item->id }}"></a>
+                                        <a class="fa fa-eye btn btn-info btn-sm" href="/admin/products/detail?id={{ $item->id }}"></a>
                                         <a class="fa fa-pencil btn btn-warning btn-sm" href="/admin/products/edit?id={{ $item->id }}"></a>
                                         <a class="fa fa-trash btn btn-danger btn-sm" href="/admin/products/delete?id={{ $item->id }}"></a>
                                     </td>

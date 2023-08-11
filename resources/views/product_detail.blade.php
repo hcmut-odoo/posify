@@ -67,7 +67,7 @@
                             <div class="product-detail-size-body">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="size" id="exampleRadios2"
-                                        value="Small" checked>
+                                        value="small" checked>
                                     <div class="form-check-label" for="size">
                                         Nhỏ
                                     </div>
@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="size" id="exampleRadios2"
-                                        value="Medium" checked>
+                                        value="medium" checked>
                                     <div class="form-check-label" for="size">
                                         Vừa
                                     </div>
@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="size" id="exampleRadios3"
-                                        value="Large">
+                                        value="large">
                                     <div class="form-check-label" for="size">
                                         Lớn
                                     </div>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="product-detail-button">
                             <button type="submit" id="liveToastBtn"><span
-                                    class="price">{{ number_format($product->price, 0, ',', '.') }} đ</span>
+                                    class="price">{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                                 -
                                 Thêm
                                 vào
@@ -136,8 +136,8 @@
 @if (\Session::get('addItemMessage'))
     <script>
         const toastTrigger = document.getElementById('liveToastBtn')
-        const toastLiveExample = document.getElementById('liveToast')
-        const toast = new bootstrap.Toast(toastLiveExample)
+        const toastAddItem = document.getElementById('liveToast')
+        const toast = new bootstrap.Toast(toastAddItem)
         toast.show()
     </script>
 @endif

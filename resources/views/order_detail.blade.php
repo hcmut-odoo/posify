@@ -8,13 +8,13 @@ function extraPrice($size, $price)
 {
     $extraPrice = $price;
     switch ($size) {
-        case 'Small':
+        case 'small':
             $extraPrice += 0;
             break;
-        case 'Medium':
+        case 'medium':
             $extraPrice += 3000;
             break;
-        case 'Large':
+        case 'large':
             $extraPrice += 6000;
             break;
         default:
@@ -27,13 +27,13 @@ function sizeContent($size)
 {
     $str = '';
     switch ($size) {
-        case 'Small':
+        case 'small':
             $str = 'Small';
             break;
-        case 'Medium':
+        case 'medium':
             $str = 'Meidum (+3.000đ)';
             break;
-        case 'Large':
+        case 'large':
             $str = 'Large (+6.000đ)';
             break;
         default:

@@ -66,8 +66,9 @@
                                     <tr>
                                         <th style="width: 70px;">No.</th>
                                         <th>Sản phẩm</th>
-                                        <th>Số lượng</th>
+                                        <th>Kích thước</th>
                                         <th>Giá</th>
+                                        <th>Số lượng</th>
                                         <th class="text-right" style="width: 120px;">Tổng cộng</th>
                                     </tr>
                                 </thead>
@@ -81,21 +82,22 @@
                                                     <p class="text-muted mb-0">{{ $item->size }}</p>
                                                 </div>
                                             </td>
-                                            <td>{{ number_format($item->price, 0, ',', '.') }} VNĐ</td>
+                                            <td>{{ $item->size }}</td>
+                                            <td>{{ number_format($item->extend_price, 0, ',', '.') }} VNĐ</td>
                                             <td>{{ $item->quantity }}</td>
-                                            <td class="text-right">{{ number_format($item->price*$item->quantity, 0, ',', '.')}} VNĐ</td>
+                                            <td class="text-right">{{ number_format($item->extend_price*$item->quantity, 0, ',', '.')}} VNĐ</td>
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <th scope="row" colspan="4" class="text-right">Tạm tính</th>
+                                        <th scope="row" colspan="5" class="text-right">Tạm tính</th>
                                         <td class="text-right">{{ number_format($invoice->total, 0, ',', '.') }}</td>
                                     </tr>
                                     <tr>
-                                        <th scope="row" colspan="4" class="border-0 text-right">
+                                        <th scope="row" colspan="5" class="border-0 text-right">
                                             Tax</th>
                                         <td class="border-0 text-right">{{ number_format(floatval($invoice->total)*0.1, 0, ',', '.')}} VNĐ</td>
                                     <tr>
-                                        <th scope="row" colspan="4" class="border-0 text-right">Total</th>
+                                        <th scope="row" colspan="5" class="border-0 text-right">Total</th>
                                         <td class="border-0 text-right"><h4 class="m-0 font-weight-bold">{{ number_format(floatval($invoice->total)*1.1, 0, ',', '.')}} VNĐ</h4></td>
                                     </tr>
                                 </tbody>

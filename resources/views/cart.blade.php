@@ -4,36 +4,17 @@
 <link href="{{ asset('css/product_detail.css') }}" rel="stylesheet">
 <link href="{{ asset('css/cart.css') }}" rel="stylesheet">
 @php
-function extraPrice($size, $price)
-{
-    $extraPrice = $price;
-    switch ($size) {
-        case 'Small':
-            $extraPrice += 0;
-            break;
-        case 'Medium':
-            $extraPrice += 3000;
-            break;
-        case 'Large':
-            $extraPrice += 6000;
-            break;
-        default:
-            break;
-    }
-    return $extraPrice;
-}
-
 function sizeContent($size)
 {
     $str = '';
     switch ($size) {
-        case 'Small':
+        case 'small':
             $str = 'Small';
             break;
-        case 'Medium':
+        case 'medium':
             $str = 'Meidum (+3.000đ)';
             break;
-        case 'Large':
+        case 'large':
             $str = 'Large (+6.000đ)';
             break;
         default:
@@ -46,7 +27,7 @@ function total($iems)
 {
     $total = 0;
     foreach ($iems as $item) {
-    $total += extraPrice($item->size, $item->price) * $item->quantity;
+        $total += $item->extend_price * $item->quantity;
     }
     return $total;
 }
@@ -135,7 +116,7 @@ function total($iems)
                                                     <div class="product-detail-size-body">
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="radio" name="size"
-                                                                id="exampleRadios2" value="Small" checked>
+                                                                id="exampleRadios2" value="small" checked>
                                                             <div class="form-check-label" for="size">
                                                                 Nhỏ +
                                                             </div>
@@ -145,7 +126,7 @@ function total($iems)
                                                         </div>
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="radio" name="size"
-                                                                id="exampleRadios2" value="Medium" checked>
+                                                                id="exampleRadios2" value="medium" checked>
                                                             <div class="form-check-label" for="size">
                                                                 Vừa +
                                                             </div>
@@ -155,7 +136,7 @@ function total($iems)
                                                         </div>
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="radio" name="size"
-                                                                id="exampleRadios3" value="Large">
+                                                                id="exampleRadios3" value="large">
                                                             <div class="form-check-label" for="size">
                                                                 Lớn +
                                                             </div>
@@ -350,17 +331,17 @@ function total($iems)
 
 @if (\Session::get('removeItemMessage'))
 <script>
-    const toastLiveExample = document.getElementById('removeItemToast')
-    const toast = new bootstrap.Toast(toastLiveExample)
-    toast.show()
+    const removeItemToast = document.getElementById('removeItemToast')
+    const removeToast = new bootstrap.Toast(removeItemToast)
+    removeToast.show()
 </script>
 @endif
 
 @if (\Session::get('updateItemMessage'))
 <script>
-    const toastLiveExample = document.getElementById('updateItemToast')
-    const toast = new bootstrap.Toast(toastLiveExample)
-    toast.show()
+    const updateItemToast = document.getElementById('updateItemToast')
+    const updateToast = new bootstrap.Toast(updateItemToast)
+    updateToast.show()
 </script>
 @endif
 

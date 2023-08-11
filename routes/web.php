@@ -58,19 +58,19 @@ Route::middleware('auth')->group(function () {
         // product routes
         Route::prefix('/products')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('admin.product.list');
-            Route::get('/delete', [ProductController::class, 'delete'])->name('admin.product.delete');
-            Route::get('/edit', [ProductController::class, 'update'])->name('admin.product.update');
-            Route::get('/create', [ProductController::class, 'create'])->name('admin.product.create');
-            Route::get('/detail', [ProductController::class, 'detail'])->name('admin.product.detail');
+            Route::get('/delete', [ProductController::class, 'deleteProduct'])->name('admin.product.delete');
+            Route::get('/edit', [ProductController::class, 'updateProduct'])->name('admin.product.update');
+            Route::get('/create', [ProductController::class, 'createProduct'])->name('admin.product.create');
+            Route::get('/detail', [ProductController::class, 'detailProduct'])->name('admin.product.detail');
         });
 
         // category routes
         Route::prefix('/categories')->group(function () {
             Route::get('/', [CategoryController::class, 'index'])->name('admin.category.list');
-            Route::get('/delete', [CategoryController::class, 'delete'])->name('admin.category.delete');
-            Route::get('/edit', [CategoryController::class, 'update'])->name('admin.category.update');
-            Route::get('/create', [CategoryController::class, 'create'])->name('admin.category.create');
-            Route::get('/detail', [CategoryController::class, 'detail'])->name('admin.category.detail');
+            Route::get('/delete', [CategoryController::class, 'deleteCategory'])->name('admin.category.delete');
+            Route::get('/edit', [CategoryController::class, 'updateCategory'])->name('admin.category.update');
+            Route::get('/create', [CategoryController::class, 'createCategory'])->name('admin.category.create');
+            Route::get('/detail', [CategoryController::class, 'detailCategory'])->name('admin.category.detail');
         });
 
         // user routes
@@ -86,16 +86,16 @@ Route::middleware('auth')->group(function () {
         // store routes
         Route::prefix('/stores')->group(function () {
             Route::get('/', [StoreController::class, 'index'])->name('admin.store.list');
-            Route::get('/delete', [StoreController::class, 'delete'])->name('admin.store.delete');
-            Route::get('/edit', [StoreController::class, 'update'])->name('admin.store.update');
-            Route::get('/create', [StoreController::class, 'create'])->name('admin.store.create');
-            Route::get('/detail', [StoreController::class, 'detail'])->name('admin.store.detail');
+            Route::get('/delete', [StoreController::class, 'deleteStore'])->name('admin.store.delete');
+            Route::get('/edit', [StoreController::class, 'updateStore'])->name('admin.store.update');
+            Route::get('/create', [StoreController::class, 'createStore'])->name('admin.store.create');
+            Route::get('/detail', [StoreController::class, 'detailStore'])->name('admin.store.detail');
         });
 
         // order routes
         Route::prefix('/orders')->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('admin.order.list');
-            Route::post('/delete', [OrderController::class, 'delete'])->name('admin.order.delete');
+            Route::post('/delete', [OrderController::class, 'deleteOrder'])->name('admin.order.delete');
             Route::post('/accept', [OrderController::class, 'acceptOrder'])->name('admin.order.accept');
             Route::post('/reject', [OrderController::class, 'rejectOrder'])->name('admin.order.reject');
             Route::get('/detail/{id}', [OrderController::class, 'adminViewOrderDetail'])->name('admin.order.detail');
@@ -110,7 +110,7 @@ Route::middleware('auth')->group(function () {
         // invoice routes
         Route::prefix('/invoices')->group(function () {
             Route::get('/', [InvoiceController::class, 'index'])->name('admin.invoice.list');
-            Route::post('/delete', [InvoiceController::class, 'delete'])->name('admin.invoice.delete');
+            Route::post('/delete', [InvoiceController::class, 'deleteInvoice'])->name('admin.invoice.delete');
             Route::get('/detail/{id}', [InvoiceController::class, 'invoiceDetail'])->name('admin.invoice.detail');
             Route::get('/print/{id}', [InvoiceController::class, 'invoiceForm'])->name('admin.invoice.form');
         });
