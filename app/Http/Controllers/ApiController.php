@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -16,6 +17,7 @@ use App\Exceptions\InvalidParameterException;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\DeleteFailedException;
 use App\Exceptions\UpdateFailedException;
+use App\Exceptions\NotEnoughStockException;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\UserService;
@@ -81,6 +83,8 @@ class ApiController extends Controller
             $message = 'Delete record failed';
         } elseif ($exception instanceof UpdateFailedException) {
             $message = 'Update record failed';
+        } elseif ($exception instanceof NotEnoughStockException) {
+            $message = 'Insufficient stock for product variant';
         } else {
             $message = 'Runtime errors';
             $data = "An error occurred: " . $responseData;
@@ -205,6 +209,74 @@ class ApiController extends Controller
         try {
             $id = $request->input('id');
             $this->productService->deleteProduct($id);
+            return $this->successResponse("Product with ID $id has been deleted");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function productVariants(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceList($request, ProductVariant::class);
+    }
+
+    public function getProductVariant(Request $request) : JsonResponse
+    {
+        try {
+            $product = $this->productService->getProductVariant($request->input('id'));
+            return $this->successResponse($product);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getProductVariantById(Request $request, $id) : JsonResponse
+    {
+        try {
+            $product = $this->productService->getProductVariant($id);
+            return $this->successResponse($product);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function updateProductVariant(UpdateProductRequest $request) : JsonResponse
+    {
+        try {
+            $data = $request->validated();
+            $product = $this->productService->updateProductVariant($data);
+            return $this->successResponse($product);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function createProductVariant(CreateProductRequest $request) : JsonResponse
+    {
+        try {
+            $data = $request->validated();
+            $product = $this->productService->createProductVariant($data);
+            return $this->successResponse($product);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function deleteProductVariantById(Request $request, $id) : JsonResponse
+    {
+        try {
+            $this->productService->deleteProductVariant($id);
+            return $this->successResponse("Product with ID $id has been deleted");
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function deleteProductVariant(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $this->productService->deleteProductVariant($id);
             return $this->successResponse("Product with ID $id has been deleted");
         } catch (\Exception $e) {
             return $this->errorResponse($e);
