@@ -55,6 +55,15 @@ Route::prefix('/product')->group(function () {
     Route::get('/find/{id}', [ApiController::class, 'getProductById'])->name('api.product.find.id');
 });
 
+Route::prefix('/product_variant')->group(function () {
+    Route::post('/create', [ApiController::class, 'createProductVariant'])->name('api.product.variant.create');
+    Route::get('/list', [ApiController::class, 'productVariants'])->name('api.product.variant.list');
+    Route::get('/find', [ApiController::class, 'getProductVariant'])->name('api.product.variant.find');
+    Route::post('/update', [ApiController::class, 'updateProductVariant'])->name('api.product.variant.update');
+    Route::post('/delete', [ApiController::class, 'deleteProductVariant'])->name('api.product.variant.delete');
+    Route::get('/find/{id}', [ApiController::class, 'getProductVariantById'])->name('api.product.variant.find.id');
+});
+
 Route::prefix('/category')->group(function () {
     Route::post('/create', [ApiController::class, 'createCategory'])->name('api.category.create');
     Route::get('/find/{id}', [ApiController::class, 'getCategoryById'])->name('api.category.find.v1');
