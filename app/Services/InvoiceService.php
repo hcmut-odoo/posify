@@ -29,7 +29,7 @@ class InvoiceService extends BaseService
         $totalPrice = 0;
 
         foreach ($orderItems as $orderItem) {
-            $totalPrice = $totalPrice + $orderItem->price;
+            $totalPrice = $totalPrice + $orderItem->extend_price*$orderItem->quantity;
         }
 
         try {
@@ -78,12 +78,14 @@ class InvoiceService extends BaseService
             ->join('orders', 'orders.id', '=', 'invoices.order_id')
             ->join('order_items', 'order_items.order_id', '=', 'invoices.order_id')
             ->join('cart_items', 'cart_items.id', '=', 'order_items.cart_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
             ->select(
                 'cart_items.quantity',
                 'cart_items.note',
-                'cart_items.size',
+                'product_variants.size',
                 'products.name',
+                'product_variants.extend_price',
                 'products.price'
             )
             ->get();
@@ -98,13 +100,14 @@ class InvoiceService extends BaseService
             ->join('orders', 'orders.id', '=', 'invoices.order_id')
             ->join('order_items', 'order_items.order_id', '=', 'invoices.order_id')
             ->join('cart_items', 'cart_items.id', '=', 'order_items.cart_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
             ->select(
                 'invoices.id AS invoice_id', 'invoices.created_at AS invoice_created_at',
                 'orders.payment_method', 'orders.delivery_phone', 'orders.delivery_address',
                 'orders.delivery_name', 'orders.id AS order_id', 'orders.created_at AS order_created_at',
                 'orders.updated_at AS order_accepted_at', 'orders.order_transaction',
-                'cart_items.quantity', 'cart_items.note', 'cart_items.size',
+                'cart_items.quantity', 'cart_items.note', 'product_variants.size',
                 'products.name', 'products.price', 'products.description AS product_description',
                 'products.image_url AS product_image_url', 'products.id AS product_id'
             )
