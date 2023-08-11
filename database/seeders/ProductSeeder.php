@@ -558,11 +558,47 @@ class ProductSeeder extends Seeder
         ];
 
         $id = 1;
+
         foreach ($products as &$product) {
             $product['id'] = $id;
             $id++;
         }
-        
+
         DB::table('products')->insert($products);
+
+        $id = 1;
+        $product_variants = [];
+        $sizes = ['big', 'medium', 'small'];
+        $startDate = strtotime('2023-01-01');
+        $endDate = strtotime('2023-12-31');
+
+        foreach ($products as $product) {
+            foreach ($sizes as $size) {
+                $extendPrice = $product['price'];
+
+                if ($size === 'big') {
+                    $extendPrice += 6000;
+                } elseif ($size === 'medium') {
+                    $extendPrice += 3000;
+                }
+
+                $randomTimestamp = mt_rand($startDate, $endDate);
+                $randomDatetime = date("Y-m-d H:i:s", $randomTimestamp);
+                $product_variant = [
+                    'id' => $id,
+                    'product_id' => $product['id'],
+                    'size' => $size,
+                    'extend_price' => $extendPrice,
+                    'stock_qty' => rand(50, 100),
+                    'created_at' => $randomDatetime,
+                    'updated_at' => $randomDatetime
+                ];
+
+                $product_variants[] = $product_variant;
+                $id++;
+            }
+        }
+
+        DB::table('product_variants')->insert($product_variants);
     }
 }
