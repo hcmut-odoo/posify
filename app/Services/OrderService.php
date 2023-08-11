@@ -59,6 +59,7 @@ class OrderService extends BaseService
             ->join('order_items', 'order_items.order_id', '=', 'orders.id')
             ->join('cart_items', 'order_items.cart_item_id', '=', 'cart_items.id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
             ->where('orders.id', $orderId)
             ->get()
             ->toArray();
