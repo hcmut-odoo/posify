@@ -11,7 +11,7 @@ class CartItem extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['product_id', 'quantity', 'size', 'note', 'cart_id'];
+    protected $fillable = ['product_id', 'quantity', 'product_variant_id', 'note', 'cart_id'];
 
     public function __construct(array $attributes = [])
     {
