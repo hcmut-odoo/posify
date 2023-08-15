@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update', [CartController::class, 'edit'])->name('cart.edit');
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::post('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::get('/cart/notice/{status}/{message}', [CartController::class, 'notice'])->name('cart.notice');
     Route::get('/orders', [OrderController::class, 'orders'])->name('order.list');
     Route::get('/orders/{id}', [OrderController::class, 'userViewOrderDetail'])->name('order.detail');
