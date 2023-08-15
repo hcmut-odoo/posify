@@ -136,6 +136,28 @@
     </div>
     <br><br><br><br><br>
 
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="messageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="{{ url('/images/logo/logo-2.png') }}" width="30px" class="rounded me-2" alt="logo-2">
+                <strong class="me-auto">Buy me store</strong>
+                <small>Bây giờ</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ session('message') }}
+            </div>
+        </div>
+    </div>
+
+    @if (\Session::get('message'))
+        <script>
+            const messageToast = document.getElementById('messageToast')
+            const showToast = new bootstrap.Toast(messageToast)
+            showToast.show()
+        </script>
+    @endif
+
     <div class="footer">
         <div class="footer__inner">
             <h6>Copyright @ 2021 Buy me store. All rights reversed.</h6>
