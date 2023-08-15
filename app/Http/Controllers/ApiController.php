@@ -498,9 +498,20 @@ class ApiController extends Controller
         }
     }
 
-    public function getCartItems(Request $request, $id) : JsonResponse
+    public function getCartItemsById(Request $request, $id) : JsonResponse
     {
         try {
+            $cartItems = $this->cartService->getCartItems($id);
+            return $this->successResponse($cartItems);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getCartItems(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
             $cartItems = $this->cartService->getCartItems($id);
             return $this->successResponse($cartItems);
         } catch (\Exception $e) {
