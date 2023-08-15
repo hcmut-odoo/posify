@@ -37,14 +37,16 @@ class UserController extends Controller
     {
         if($request->getMethod() === 'POST') {
             $data = $request->only(['name', 'role', 'email', 'password', 'address', 'phone_number']);
-            $user = $this->userService->createUser(...array_values($data));
-
-            if ($user) {
+            try {
+                $user = $this->userService->createUser($data);
                 Session::flash('message', 'User was created successfully!');
-            } else {
+
+                return redirect()->route('admin.user.view', ['id' => $user->id]);
+            } catch (\Exception $e) {
                 Session::flash('message', 'Failed to create user!');
+
+                return redirect()->route('admin.user.create.get');
             }
-            return redirect()->back();
         }
 
         return view('/admin/users/create_user');
@@ -53,15 +55,19 @@ class UserController extends Controller
     public function updateUser(Request $request, $id)
     {
         if($request->getMethod() === 'POST') {
-            $data = $request->only(['name', 'role', 'email', 'password', 'address', 'phone_number']);
-            $user = $this->userService->updateUser(...array_values($data));
+            $data = $request->only(['id', 'name', 'role', 'email', 'password', 'address', 'phone_number']);
+            $id = $id ?? $data['id'];
 
-            if ($user) {
+            try {
+                $user = $this->userService->updateUser($data);
                 Session::flash('message', 'User was updated successfully!');
-            } else {
-                Session::flash('message', 'Failed to update user!');
+
+                return redirect()->route('admin.user.update.get', ['id' => $id]);
+            } catch (\Exception $e) {
+                Session::flash('message', 'Failed to updated user!');
+
+                return redirect()->route('admin.user.update.get', ['id' => $id]);
             }
-            return redirect()->back();
         }
 
         $user = $this->userService->findById($id);
@@ -72,11 +78,11 @@ class UserController extends Controller
 
     public function deleteUser(Request $request, $id)
     {
-        $isDeleted = $this->userService->deleteUser($id);
-        if ($isDeleted) {
+        try {
+            $this->userService->deleteUser($id);
             Session::flash('message', 'User was deleted successfully!');
-        } else {
-            Session::flash('message', 'Failed to delete user!');
+        } catch (\Exception $e) {
+            Session::flash('message', $e->getMessage());
         }
 
         return redirect()->back();
