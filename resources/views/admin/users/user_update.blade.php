@@ -18,8 +18,8 @@
                     @csrf
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     <div class="form-group col-md-4">
-                        <label for="lastname">Tên</label>
-                        <input type="text" name="lastname" id="lastname" class="form-control" value="{{ $user->name }}">
+                        <label for="name">Tên</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="phone_number">Số điện thoại</label>
