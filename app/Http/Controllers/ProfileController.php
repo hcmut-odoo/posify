@@ -34,6 +34,7 @@ class ProfileController extends Controller
                 $this->userService->updateUser($data);
 
                 Session::flash('message', "Profile was updated successfully");
+                return redirect()->back();
             }
         } catch (\Exception $e) {
             Session::flash('message', "An error occurred: " . $e->getMessage());
