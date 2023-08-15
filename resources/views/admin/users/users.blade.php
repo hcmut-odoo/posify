@@ -6,7 +6,7 @@
             <section class="panel">
                 <header class="panel-heading">
                     <h1>Quản lý người dùng</h1>
-                    <a href="/admin/products/create" class="btn btn-success">Thêm</a>
+                    <a href="/admin/users/create" class="btn btn-success">Thêm</a>
                 </header>
                 <div class="panel-body">
                     <table class="table table-striped table-hover dt-datatable">
