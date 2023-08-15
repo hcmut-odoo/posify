@@ -57,23 +57,31 @@ class OrderController extends Controller
 
     public function acceptOrder(Request $request)
     {
-        $orderId = $request->input('id');
-        if ($this->invoiceService->createInvoice($orderId)) {
+        try {
+            $orderId = $request->input('id');
+            $this->invoiceService->createInvoice($orderId);
+
             Session::flash('message', 'Invoice was created successfully!');
-        } else {
-            Session::flash('message', 'Failed to create invoice.');
+        } catch (\Exception $e) {
+            Session::flash('message', $e->getMessage());
         }
+        
         return redirect()->back();
     }
+
 
     public function rejectOrder(Request $request)
     {
         $orderId = $request->input('id');
-        if ($this->orderService->rejectOrder($orderId)) {
+        
+        try {
+            $this->orderService->rejectOrder($orderId);
+
             Session::flash('message', 'Order was rejected successfully!');
-        } else {
-            Session::flash('message', 'Failed to reject order.');
+        } catch (\Exception $e) {
+            Session::flash('message', $e->getMessage());
         }
+
         return redirect()->back();
     }
 

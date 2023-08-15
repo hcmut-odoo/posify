@@ -27,49 +27,55 @@ class ProductController extends Controller
 
     public function createProduct(Request $request)
     {
-        if($request->getMethod() === 'POST') {
+        if ($request->getMethod() === 'POST') {
             $data = $request->only(['name', 'description', 'price', 'image_url', 'category_id']);
-            $product = $this->productService->createProduct(...array_values($data));
-
-            if ($product) {
+            
+            try {
+                $product = $this->productService->createProduct($data);
                 Session::flash('message', 'Product was created successfully!');
-            } else {
-                Session::flash('message', 'Failed to create product!');
+
+                return redirect()->route('admin.product.view', ['id' => $product->id]);
+            } catch (\Exception $e) {
+                Session::flash('message', $e->getMessage());
+
+                return redirect()->back();
             }
-            return redirect()->back();
         }
 
-        return view('/admin/categories/create_category');
+        return view('/admin/products/create_product');
     }
 
-    public function updateProduct(Request $request, $id)
+
+    public function updateProduct(Request $request)
     {
-        $category = $this->productService->findById($id);
-
         if($request->getMethod() === 'POST') {
-            $data = $request->only(['name', 'description', 'price', 'image_url', 'category_id']);
-            $isUpdated = $this->productService->updateProduct(...array_values($data));
-
-            if ($isUpdated) {
+            $data = $request->only(['id', 'name', 'description', 'price', 'image_url', 'category_id']);
+            
+            try {
+                $this->productService->updateProduct($data);
                 Session::flash('message', 'Product was updated successfully!');
-            } else {
-                Session::flash('message', 'Failed to update product!');
+            } catch (\Exception $e) {
+                Session::flash('message', $e->getMessage());
             }
-            return redirect()->back();
+
+            return redirect()->route('admin.product.update.get', ['id' => $data['id']]);
         }
 
-        return view('/admin/categories/category_update', [
-            'category' => $category
+        $id = $request->input('id');
+        $product = $this->productService->findById($id);
+
+        return view('/admin/products/update_product', [
+            'product' => $product
         ]);
     }
 
     public function deleteProduct(Request $request, $id)
     {
-        $isDeleted = $this->productService->deleteProduct($id);
-        if ($isDeleted) {
+        try {
+            $this->productService->deleteProduct($id);
             Session::flash('message', 'Product was deleted successfully!');
-        } else {
-            Session::flash('message', 'Failed to product category!');
+        } catch (\Exception $e) {
+            Session::flash('message', $e->getMessage());
         }
 
         return redirect()->back();
