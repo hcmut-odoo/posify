@@ -45,10 +45,13 @@ class UserService extends BaseService
         $phoneNumber = $data['phone_number'];
         $email = $data['email'];
         $password = $data['password'];
+
         if ($this->userRepository->getByEmail($email)) {
             throw new DuplicateEntryException("Email $email is already exist");
         }
+
         $hashedPassword = Hash::make($password);
+
         return $this->userRepository->create($email, $name, $role, $address, $phoneNumber, $hashedPassword);
     }
 
@@ -73,7 +76,8 @@ class UserService extends BaseService
             $data['password'] = Hash::make($data['password']);
         }
 
-        if ($this->userRepository->update($data)) {
+        $effectedRow = $this->userRepository->update($data);
+        if ($effectedRow === 1 || $effectedRow === 0) {
             return $this->userRepository->get($id);
         } else {
             throw new UpdateFailedException("Update failed user record has ID: $id");
