@@ -46,7 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update', [CartController::class, 'edit'])->name('cart.edit');
-    Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'profile'])->name('profile.view');
+    Route::post('/profile', [ProfileController::class, 'profile'])->name('profile.update');
     Route::get('/cart/notice/{status}/{message}', [CartController::class, 'notice'])->name('cart.notice');
     Route::get('/orders', [OrderController::class, 'orders'])->name('order.list');
     Route::get('/orders/{id}', [OrderController::class, 'userViewOrderDetail'])->name('order.detail');
@@ -59,8 +60,10 @@ Route::middleware('auth')->group(function () {
         Route::prefix('/products')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('admin.product.list');
             Route::get('/delete', [ProductController::class, 'deleteProduct'])->name('admin.product.delete');
-            Route::get('/edit', [ProductController::class, 'updateProduct'])->name('admin.product.update');
-            Route::get('/create', [ProductController::class, 'createProduct'])->name('admin.product.create');
+            Route::get('/edit', [ProductController::class, 'updateProduct'])->name('admin.product.update.get');
+            Route::post('/edit', [ProductController::class, 'updateProduct'])->name('admin.product.update.post');
+            Route::get('/create', [ProductController::class, 'createProduct'])->name('admin.product.create.get');
+            Route::post('/create', [ProductController::class, 'createProduct'])->name('admin.product.create.post');
             Route::get('/detail', [ProductController::class, 'detailProduct'])->name('admin.product.detail');
         });
 
@@ -68,8 +71,10 @@ Route::middleware('auth')->group(function () {
         Route::prefix('/categories')->group(function () {
             Route::get('/', [CategoryController::class, 'index'])->name('admin.category.list');
             Route::get('/delete', [CategoryController::class, 'deleteCategory'])->name('admin.category.delete');
-            Route::get('/edit', [CategoryController::class, 'updateCategory'])->name('admin.category.update');
-            Route::get('/create', [CategoryController::class, 'createCategory'])->name('admin.category.create');
+            Route::get('/edit', [CategoryController::class, 'updateCategory'])->name('admin.category.update.get');
+            Route::post('/edit', [CategoryController::class, 'updateCategory'])->name('admin.category.update.post');
+            Route::get('/create', [CategoryController::class, 'createCategory'])->name('admin.category.create.get');
+            Route::post('/create', [CategoryController::class, 'createCategory'])->name('admin.category.create.post');
             Route::get('/detail', [CategoryController::class, 'detailCategory'])->name('admin.category.detail');
         });
 
@@ -79,7 +84,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/delete/{id}', [UserController::class, 'deleteUser'])->name('admin.user.delete');
             Route::get('/update/{id}', [UserController::class, 'updateUser'])->name('admin.user.update.get');
             Route::post('/update/{id}', [UserController::class, 'updateUser'])->name('admin.user.update.post');
-            Route::post('/create', [UserController::class, 'createUser'])->name('admin.user.create');
+            Route::post('/create', [UserController::class, 'createUser'])->name('admin.user.create.post');
+            Route::get('/create', [UserController::class, 'createUser'])->name('admin.user.create.get');
             Route::get('/view/{id}', [UserController::class, 'viewUser'])->name('admin.user.view');
         });
 
@@ -120,7 +126,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [ApiKeyController::class, 'index'])->name('admin.api.key.list');
             Route::get('/delete', [ApiKeyController::class, 'deleteKey'])->name('admin.api.key.delete');
             Route::get('/edit', [ApiKeyController::class, 'updateKey'])->name('admin.api.key.update');
-            Route::get('/create', [ApiKeyController::class, 'createKey'])->name('admin.api.key.create');
+            Route::get('/create', [ApiKeyController::class, 'createKey'])->name('admin.api.key.create.get');
+            Route::post('/create', [ApiKeyController::class, 'createKey'])->name('admin.api.key.create.post');
             Route::get('/detail', [ApiKeyController::class, 'detailKey'])->name('admin.api.key.detail');
             Route::get('/inactive', [ApiKeyController::class, 'inactiveKey'])->name('admin.api.key.inactive');
         });
