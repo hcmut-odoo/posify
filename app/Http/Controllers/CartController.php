@@ -27,11 +27,12 @@ class CartController extends Controller
         $quantity = $request->input("quantity");
         $cartId = $request->input("cart_id");
 
-        $isAdded = $this->cartService->addItem($productId, $cartId, $size, $note, $quantity);
-        if ($isAdded) {
+        try {
+            $this->cartService->addItem($productId, $cartId, $size, $note, $quantity);
+
             Session::flash('addItemMessage', 'Item was added successfully!');
-        } else {
-            Session::flash('addItemMessage', 'Failed to add item.');
+        } catch (\Exception $e) {
+            Session::flash('addItemMessage', $e->getMessage());
         }
 
         return redirect()->back();
@@ -39,10 +40,11 @@ class CartController extends Controller
 
     public function remove(Request $request)
     {
-        $isRemoved = $this->cartService->removeItem($request->input('id'));
-        if ($isRemoved) {
+        try {
+            $this->cartService->removeItem($request->input('id'));
+
             Session::flash('removeItemMessage', 'Item was removed successfully!');
-        } else {
+        } catch (\Exception $e) {
             Session::flash('removeItemMessage', 'Failed to remove item.');
         }
 
@@ -51,10 +53,11 @@ class CartController extends Controller
 
     public function clear(Request $request)
     {
-       $isCleared = $this->cartService->clear($request->user()->id);
-        if ($isCleared) {
+        try {
+            $this->cartService->clear($request->user()->id);
+
             Session::flash('clearCartMessage', 'Cart was cleared successfully!');
-        } else {
+        } catch (\Exception $e) {
             Session::flash('clearCartMessage', 'Failed to clear cart.');
         }
 
@@ -79,13 +82,14 @@ class CartController extends Controller
             'quantity' => $request->input("quantity")
         ];
 
-        $isEdited = $this->cartService->editItem($items);
+        try {
+            $this->cartService->editItem($items);
 
-        if ($isEdited) {
             Session::flash('updateItemMessage', 'Item was edited successfully!');
-        } else {
-            Session::flash('updateItemMessage', 'Failed to edit item.');
+        } catch (\Exception $e) {
+            Session::flash('updateItemMessage', $e->getMessage());
         }
+
         return redirect()->back();
     }
 
@@ -113,19 +117,19 @@ class CartController extends Controller
             'delivery_note' => $request->input('delivery_note'),
             'payment_method' => $request->input('payment_method')
         ];
-
-        $isOrdered = $this->orderService->placeOrder($userId, $orderData);
-        if ($isOrdered) {
+        
+        try {
+            $this->orderService->placeOrder($userId, $orderData);
             return redirect()->route('cart.notice', [
                 'status' => "Order success !",
                 'message' => "Thank you for your purchase on our system."
             ]);
+        } catch (\Exception $e) {
+            return redirect()->route('cart.notice', [
+                'status' => "Order failed !",
+                'message' => $e->getMessage()
+            ]);
         }
-
-        return redirect()->route('cart.notice', [
-            'status' => "Order failed !",
-            'message' => "Sorry for not being able to order right now."
-        ]);
     }
 
     public function notice($status, $message)

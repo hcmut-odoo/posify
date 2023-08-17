@@ -87,7 +87,8 @@ Route::prefix('/store')->group(function () {
 });
 
 Route::prefix('/order')->group(function () {
-    Route::get('/find/{id}', [ApiController::class, 'getOrder'])->name('api.order.find');;
+    Route::get('/find/{id}', [ApiController::class, 'getOrderById'])->name('api.order.find.id');
+    Route::get('/find', [ApiController::class, 'getOrder'])->name('api.order.find');;
     Route::get('/list', [ApiController::class, 'orders'])->name('api.order.list');
     Route::get('/accept', [ApiController::class, 'acceptOrder'])->name('api.order.accept');
     Route::get('/reject', [ApiController::class, 'rejectOrder'])->name('api.order.reject');
@@ -95,6 +96,17 @@ Route::prefix('/order')->group(function () {
     Route::get('/rejected/list', [ApiController::class, 'rejectedOrders'])->name('api.order.rejected.list');
     Route::get('/accept/{id}', [ApiController::class, 'acceptOrderById'])->name('api.order.accept.id');
     Route::get('/reject/{id}', [ApiController::class, 'rejectOrderById'])->name('api.order.reject.id');
+});
+
+Route::prefix('/cart_item')->group(function () {
+    Route::get('/find/{id}', [ApiController::class, 'getCartItemsById'])->name('api.order.item.find.id');
+    Route::get('/find', [ApiController::class, 'getCartItems'])->name('api.order.item.find');;
+    Route::get('/list', [ApiController::class, 'cartItems'])->name('api.cart.item.list');
+});
+
+Route::prefix('/order_item')->group(function () {
+    Route::get('/find', [ApiController::class, 'getOrderItems'])->name('api.order.item.find');;
+    Route::get('/list', [ApiController::class, 'orderItems'])->name('api.order.item.list');
 });
 
 Route::prefix('/invoice')->group(function () {

@@ -15,7 +15,7 @@ class UserRepository
 
     public function getByEmail($email)
     {
-        return User::find('email', $email);
+        return User::find($email, 'email');
     }
 
     public function create($email, $name, $role, $address, $phoneNumber, $hashedPassword)

@@ -23,7 +23,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>
-                                        <a class="fa fa-eye btn btn-info btn-sm" href="/admin/categories/details?id={{ $item->id }}"></a>
+                                        <a class="fa fa-eye btn btn-info btn-sm" href="/admin/categories/detail?id={{ $item->id }}"></a>
                                         <a class="fa fa-pencil btn btn-warning btn-sm" href="/admin/categories/edit?id={{ $item->id }}"></a>
                                         <a class="fa fa-trash btn btn-danger btn-sm" href="/admin/categories/delete?id={{ $item->id }}"></a>
                                     </td>

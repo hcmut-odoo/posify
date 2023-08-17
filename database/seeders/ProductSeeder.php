@@ -558,6 +558,7 @@ class ProductSeeder extends Seeder
         ];
 
         $id = 1;
+        $productsWithoutPrice = [];
 
         foreach ($products as &$product) {
             $product['id'] = $id;
@@ -594,7 +595,7 @@ class ProductSeeder extends Seeder
                     'updated_at' => $randomDatetime
                 ];
 
-                $product_variants[] = $product_variant;
+                $product_variants[] = $product_variant; 
                 $id++;
             }
         }

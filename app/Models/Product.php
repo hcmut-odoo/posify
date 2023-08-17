@@ -17,9 +17,4 @@ class Product extends Model
     {
         parent::__construct($attributes);
     }
-
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
-    }
 }
