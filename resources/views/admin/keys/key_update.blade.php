@@ -1,32 +1,37 @@
 @extends('layouts.admin')
-@section('title', 'Tạo khóa dịch vụ')
+@section('title', 'Cập nhật khóa dịch vụ')
 @section('content')
 <div class="row">
     <div class="col-lg-12">
         <section class="panel">
             <header class="panel-heading">
-                <h1>Thêm khóa dịch vụ web</h1>
+                <h1>Cập nhật khóa dịch vụ web</h1>
             </header>
-            <form action="{{ route('admin.api.key.create.post') }}" method="POST" style="display: inline;">
+            <form action="{{ route('admin.api.key.update.post') }}" method="POST" style="display: inline;">
                 @csrf
                 <input type="hidden" name="key_type" value="web_service_key">
+                <input type="hidden" name="id" value="{{ $key->id }}">
                 <div class="panel-body">
                     <div class="form-inline">
                         <div class="form-group">
                             <label for="api-key">API Key:</label>
-                            <input type="text" id="api-key" class="form-control" name="api_key" required>
+                            <input type="text" id="api-key" class="form-control" name="api_key" value={{ $key->value }} required>
                         </div>
                         <button type="button" class="btn btn-success" id="copy-api-key" style="display:none">Copy</button>
                         <button type="button" class="btn btn-primary" id="generate-api-key">Generate</button>
                     </div>
                     <div class="form-group mt-3">
                         <label for="description">Description:</label>
-                        <textarea id="description" class="form-control" rows="3" name="description" required></textarea>
-                    </div>
+                        <textarea id="description" class="form-control" rows="3" name="description" required>{{ $key->description }}</textarea>
+                    </div>                    
                     <div class="form-group mt-3">
                         <label for="toggle-api-key">Status:</label>
                         <label class="switch">
-                            <input type="checkbox" id="toggle-api-key" name="toggle_api_key" required>
+                            @if ($key->status)
+                                <input type="checkbox" id="toggle-api-key" name="status" value={{ $key->status }} checked required>
+                            @else
+                                <input type="checkbox" id="toggle-api-key" name="status" value={{ $key->status }}  required>
+                            @endif
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -55,7 +60,20 @@
                                     @foreach ($resource['permissions'] as $permission)
                                         <td>
                                             <label>
-                                                <input type="checkbox" name="{{ $resource['resource'] }}_{{ $permission['permission'] }}" value="{{ $permission['permission_id'] }}">
+                                                @if (isset($permission['active']) && $permission['active'] === true)
+                                                    <input 
+                                                        type="checkbox" 
+                                                        name="{{ $resource['resource'] }}_{{ $permission['permission'] }}" 
+                                                        value="{{ $permission['permission_id'] }}" 
+                                                        checked
+                                                    >
+                                                @else 
+                                                    <input 
+                                                        type="checkbox" 
+                                                        name="{{ $resource['resource'] }}_{{ $permission['permission'] }}" 
+                                                        value="{{ $permission['permission_id'] }}"
+                                                    >
+                                                @endif
                                             </label>
                                         </td>
                                     @endforeach
@@ -64,7 +82,7 @@
                         </tbody>
                     </table>
                 </div>
-                <button type="submit" class="btn btn-primary right-button">Tạo key</button>
+                <button type="submit" class="btn btn-primary right-button">Cập nhật key</button>
             </form>
         </section>
     </div>
@@ -165,3 +183,4 @@
 </script>
 @endif
 @endsection
+
