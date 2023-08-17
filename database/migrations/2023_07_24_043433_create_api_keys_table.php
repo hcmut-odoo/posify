@@ -19,12 +19,9 @@ class CreateApiKeysTable extends Migration
             $table->string('value', 50);
             $table->string('description');
             $table->boolean('status')->default(true);
-            $table->unsignedBigInteger('user_id');
             $table->timestamp('expired_at');
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
