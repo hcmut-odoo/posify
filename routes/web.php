@@ -125,10 +125,11 @@ Route::middleware('auth')->group(function () {
         Route::prefix('/api-key')->group(function () {
             Route::get('/', [ApiKeyController::class, 'index'])->name('admin.api.key.list');
             Route::get('/delete', [ApiKeyController::class, 'deleteKey'])->name('admin.api.key.delete');
-            Route::get('/edit', [ApiKeyController::class, 'updateKey'])->name('admin.api.key.update');
+            Route::get('/edit', [ApiKeyController::class, 'updateKey'])->name('admin.api.key.update.get');
+            Route::post('/edit', [ApiKeyController::class, 'updateKey'])->name('admin.api.key.update.post');
             Route::get('/create', [ApiKeyController::class, 'createKey'])->name('admin.api.key.create.get');
             Route::post('/create', [ApiKeyController::class, 'createKey'])->name('admin.api.key.create.post');
-            Route::get('/detail', [ApiKeyController::class, 'detailKey'])->name('admin.api.key.detail');
+            Route::get('/detail', [ApiKeyController::class, 'viewKey'])->name('admin.api.key.detail');
             Route::get('/inactive', [ApiKeyController::class, 'inactiveKey'])->name('admin.api.key.inactive');
         });
 
