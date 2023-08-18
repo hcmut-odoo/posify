@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="size" id="exampleRadios3"
-                                        value="large">
+                                        value="big">
                                     <div class="form-check-label" for="size">
                                         Lớn
                                     </div>
