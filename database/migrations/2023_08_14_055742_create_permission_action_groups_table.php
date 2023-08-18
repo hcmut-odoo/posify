@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiKeysTable extends Migration
+class CreatePermissionActionGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,13 @@ class CreateApiKeysTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_keys', function (Blueprint $table) {
+        Schema::create('permission_action_groups', function (Blueprint $table) {
             $table->id();
-            $table->string('value', 50);
-            $table->string('description');
-            $table->boolean('status')->default(true);
-            $table->timestamp('expired_at');
+            $table->unsignedBigInteger('action_id');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('action_id')->references('id')->on('actions');
         });
     }
 
@@ -35,7 +34,7 @@ class CreateApiKeysTable extends Migration
         // Disable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Schema::dropIfExists('api_keys');
+        Schema::dropIfExists('permission_action_groups');
 
         // Re-enable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

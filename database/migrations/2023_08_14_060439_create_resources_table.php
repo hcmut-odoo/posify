@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiKeysTable extends Migration
+class CreateResourcesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,17 @@ class CreateApiKeysTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_keys', function (Blueprint $table) {
+        Schema::create('resources', function (Blueprint $table) {
             $table->id();
-            $table->string('value', 50);
-            $table->string('description');
-            $table->boolean('status')->default(true);
-            $table->timestamp('expired_at');
+            $table->string('name', 30);
             $table->softDeletes();
             $table->timestamps();
+        });
+
+        Schema::table('actions', function (Blueprint $table) {
+            $table->unsignedBigInteger('resource_id');
+
+            $table->foreign('resource_id')->references('id')->on('resources');
         });
     }
 
@@ -31,11 +34,11 @@ class CreateApiKeysTable extends Migration
      * @return void
      */
     public function down()
-    {
+    {   
         // Disable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Schema::dropIfExists('api_keys');
+        Schema::dropIfExists('resources');
 
         // Re-enable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

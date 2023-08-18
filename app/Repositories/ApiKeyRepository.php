@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\ApiKey;
+use Carbon\Carbon;
 
 class ApiKeyRepository
 {
@@ -13,7 +14,7 @@ class ApiKeyRepository
 
     public function getByKey($key)
     {
-        return ApiKey::where('key', $key)->first();
+        return ApiKey::where('value', $key)->first();
     }
 
     public function remove($id)
@@ -21,11 +22,15 @@ class ApiKeyRepository
         return ApiKey::where('id', $id)->delete();
     }
 
-    public function create($key, $userId)
+    public function create($key, $description)
     {
+        $currentDate = Carbon::now();
+        $nextTwoMonths = $currentDate->addMonths(2);
+
         return ApiKey::create([
-            'key' => $key,
-            'user_id' => $userId
+            'value' => $key,
+            'description' => $description,
+            'expired_at' => $nextTwoMonths
         ]);
     }
 

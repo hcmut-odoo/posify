@@ -45,11 +45,17 @@ class ApiService extends BaseService
 
     public function getKeyWithInfo()
     {
-        return DB::table('api_keys')
-            ->join('users', 'users.id', '=', 'api_keys.user_id')
-            ->select('users.name AS user_name', 'api_keys.value',
-                'api_keys.created_at', 'api_keys.status', 'api_keys.description')
+        $webServiceKeys = DB::table('api_keys')
+            ->join('web_service_keys', 'web_service_keys.api_key_id', '=', 'api_keys.id')
+            ->select('api_keys.id', 'api_keys.value', 'api_keys.created_at', 'api_keys.status', 'api_keys.description')
             ->get();
+
+        $userAccessKey = DB::table('api_keys')
+            ->join('user_access_keys', 'user_access_keys.api_key_id', '=', 'api_keys.id')
+            ->select('api_keys.id', 'api_keys.value', 'api_keys.created_at', 'api_keys.status', 'api_keys.description')
+            ->get();
+
+        return $webServiceKeys->concat($userAccessKey);
     }
 
     public function findById($id)
@@ -138,7 +144,7 @@ class ApiService extends BaseService
         $actionId = $this->actionRepository->search([
             'controller' => $controller,
             'method' => $action
-        ], ['id']);
+        ], ['id'])->first();
 
         return in_array($actionId, $actionIds);
     }

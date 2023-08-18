@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiKeysTable extends Migration
+class CreateWebServiceKeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,19 @@ class CreateApiKeysTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_keys', function (Blueprint $table) {
+        Schema::create('web_service_keys', function (Blueprint $table) {
             $table->id();
-            $table->string('value', 50);
-            $table->string('description');
-            $table->boolean('status')->default(true);
-            $table->timestamp('expired_at');
+            $table->unsignedBigInteger('api_key_id');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('api_key_id')->references('id')->on('api_keys');
+        });
+
+        Schema::table('permission_action_groups', function (Blueprint $table) {
+            $table->unsignedBigInteger('web_service_key_id');
+
+            $table->foreign('web_service_key_id')->references('id')->on('web_service_keys');
         });
     }
 
@@ -35,7 +40,7 @@ class CreateApiKeysTable extends Migration
         // Disable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Schema::dropIfExists('api_keys');
+        Schema::dropIfExists('web_service_keys');
 
         // Re-enable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

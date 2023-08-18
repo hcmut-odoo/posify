@@ -10,5 +10,5 @@ class ApiKey extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['value', 'description', 'user_id', 'expired_at'];
+    protected $fillable = ['value', 'description', 'expired_at'];
 }
