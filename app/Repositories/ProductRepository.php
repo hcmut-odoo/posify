@@ -14,6 +14,11 @@ class ProductRepository
         return Product::find($id);
     }
 
+    public function getProductWithVariant($id)
+    {
+        return Product::with('variants')->find($id);
+    }
+
     public function findByName($name)
     {
         return Product::where('name', $name)->first();
