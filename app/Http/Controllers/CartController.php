@@ -43,9 +43,9 @@ class CartController extends Controller
         try {
             $this->cartService->removeItem($request->input('id'));
 
-            Session::flash('removeItemMessage', 'Item was removed successfully!');
+            Session::flash('message', 'Item was removed successfully!');
         } catch (\Exception $e) {
-            Session::flash('removeItemMessage', 'Failed to remove item.');
+            Session::flash('message', 'Failed to remove item.');
         }
 
         return redirect()->back();
@@ -85,9 +85,9 @@ class CartController extends Controller
         try {
             $this->cartService->editItem($items);
 
-            Session::flash('updateItemMessage', 'Item was edited successfully!');
+            Session::flash('message', 'Item was edited successfully!');
         } catch (\Exception $e) {
-            Session::flash('updateItemMessage', $e->getMessage());
+            Session::flash('message', $e->getMessage());
         }
 
         return redirect()->back();

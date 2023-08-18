@@ -45,7 +45,7 @@ class CartService extends BaseService
                 'cart_id' => $cartId,
                 'product_id' => $productId,
                 'product_variant_id' => $productVariant->id,
-                'note' => false
+                'note' => $note
             ]);
     
             if ($duplicateItem) {
@@ -57,7 +57,7 @@ class CartService extends BaseService
     
             return $this->cartItemRepository->create($productId, $cartId, $productVariant->id, $note, $quantity);
         } catch (\Exception $e) {
-            return false;
+            throw $e;
         }
 
     }
