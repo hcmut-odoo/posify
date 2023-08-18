@@ -153,7 +153,21 @@ class OrderService extends BaseService
         if (!validate_id($orderId)) {
             throw new InvalidParameterException("Invalid order ID: $orderId");
         }
-        return  $this->orderRepository->get($orderId);
+        return $this->orderRepository->get($orderId);
+    }
+
+    public function getOrderDetail($orderId)
+    {
+        if (!validate_id($orderId)) {
+            throw new InvalidParameterException("Invalid order ID: $orderId");
+        }
+
+        $orderItems = $this->getOrderItems($orderId);
+        $orderRecord = $this->orderRepository->get($orderId);
+
+        $orderRecord->order_rows = $orderItems;
+
+        return $orderRecord;
     }
 
     public function rejectOrder($orderId)

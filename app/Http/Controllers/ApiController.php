@@ -527,7 +527,7 @@ class ApiController extends Controller
     public function getOrder(Request $request) : JsonResponse
     {
         try {
-            $order = $this->orderService->findById($request->input('id'));
+            $order = $this->orderService->getOrderDetail($request->input('id'));
             return $this->successResponse($order);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
