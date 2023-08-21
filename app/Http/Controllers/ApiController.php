@@ -154,6 +154,11 @@ class ApiController extends Controller
         return $this->resourceSearch($request, Product::class);
     }
 
+    public function products(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceList($request, Product::class);
+    }
+
     public function getProduct(Request $request) : JsonResponse
     {
         try {
