@@ -115,6 +115,14 @@ class ApiController extends Controller
         return $this->successResponse($resources);
     }
 
+    public function resourceSearch(QueryRequest $request, string $modelClass) : JsonResponse
+    {
+        $data = $request->validated();
+        $resources = $this->apiService->search($data, $modelClass);
+
+        return $this->successResponse($resources);
+    }
+
     public function checkConnection(Request $request) : JsonResponse
     {
         try {
@@ -131,14 +139,19 @@ class ApiController extends Controller
         return $this->resourceList($request, OrderItem::class);
     }
 
-    public function cartItems(QueryRequest $request) : JsonResponse
+    public function searchOrderItems(QueryRequest $request) : JsonResponse
     {
-        return $this->resourceList($request, CartItem::class);
+        return $this->resourceSearch($request, OrderItem::class);
     }
 
-    public function products(QueryRequest $request) : JsonResponse
+    public function searchCartItems(QueryRequest $request) : JsonResponse
     {
-        return $this->resourceList($request, Product::class);
+        return $this->resourceSearch($request, CartItem::class);
+    }
+
+    public function searchProducts(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Product::class);
     }
 
     public function getProduct(Request $request) : JsonResponse
@@ -220,6 +233,11 @@ class ApiController extends Controller
         return $this->resourceList($request, ProductVariant::class);
     }
 
+    public function searchProductVariants(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, ProductVariant::class);
+    }
+
     public function getProductVariant(Request $request) : JsonResponse
     {
         try {
@@ -286,6 +304,11 @@ class ApiController extends Controller
     public function categories(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Category::class);
+    }
+
+    public function searchCategories(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Category::class);
     }
 
     public function createCategory(CreateCategoryRequest $request) : JsonResponse
@@ -367,6 +390,11 @@ class ApiController extends Controller
         return $this->resourceList($request, User::class);
     }
 
+    public function searchUsers(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, User::class);
+    }
+
     public function getUserById(Request $request, $id) : JsonResponse
     {
         try {
@@ -422,6 +450,11 @@ class ApiController extends Controller
     public function stores(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Store::class);
+    }
+
+    public function searchStores(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Store::class);
     }
 
     public function getStore(Request $request) : JsonResponse
@@ -522,6 +555,11 @@ class ApiController extends Controller
     public function orders(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Order::class);
+    }
+
+    public function searchOrders(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Order::class);
     }
 
     public function getOrder(Request $request) : JsonResponse
@@ -634,6 +672,11 @@ class ApiController extends Controller
     public function invoices(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Invoice::class);
+    }
+
+    public function searchInvoices(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Invoice::class);
     }
 
     public function getInvoice(Request $request) : JsonResponse
