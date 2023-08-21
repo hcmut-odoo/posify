@@ -163,9 +163,43 @@ class OrderService extends BaseService
         }
 
         $orderItems = $this->getOrderItems($orderId);
+
+        $orderRows = [];
+        foreach ($orderItems as $orderRow) {
+            // Collect user data
+            $user['id'] = $orderRow->user_id;
+            
+            // Collect product variant data
+            $variant['id'] = $orderRow->product_variant_id;
+            $variant['product_id'] = $orderRow->product_id;
+            $variant['extend_price'] = $orderRow->extend_price;
+            $variant['size'] = $orderRow->size;
+
+            // Collect product data
+            $product['id'] = $orderRow->product_id;
+            $product['variant_id'] = $orderRow->product_variant_id;
+            $product['price'] = $orderRow->price;
+            $product['description'] = $orderRow->description;
+            $product['name'] = $orderRow->name;
+            $product['variant'] = $variant;
+
+            // Collect delivery data
+            $delivery['delivery_note'] = $orderRow->delivery_note;
+            $delivery['delivery_phone'] = $orderRow->delivery_phone;
+            $delivery['delivery_address'] = $orderRow->delivery_address;
+            $delivery['delivery_name'] = $orderRow->delivery_name;
+
+            // Add these information as sub association data
+            $order['product'] = $product;
+            $order['delivery'] = $delivery;
+            $order['user'] = $user;
+
+            $orderRows[] = $order;
+        }
+
         $orderRecord = $this->orderRepository->get($orderId);
 
-        $orderRecord->order_rows = $orderItems;
+        $orderRecord->order_rows = $orderRows;
 
         return $orderRecord;
     }

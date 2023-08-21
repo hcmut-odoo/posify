@@ -92,7 +92,7 @@ Route::prefix('/store')->group(function () {
 
 Route::prefix('/order')->group(function () {
     Route::get('/find/{id}', [ApiController::class, 'getOrderById'])->name('api.order.find.id');
-    Route::get('/find', [ApiController::class, 'getOrder'])->name('api.order.find');;
+    Route::get('/find', [ApiController::class, 'getOrderDetail'])->name('api.order.find');
     Route::get('/list', [ApiController::class, 'orders'])->name('api.order.list');
     Route::get('/search', [ApiController::class, 'searchOrders'])->name('api.order.search');
     Route::get('/accept', [ApiController::class, 'acceptOrder'])->name('api.order.accept');
