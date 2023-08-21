@@ -175,11 +175,16 @@ class ApiKeyService extends BaseService
 
         if ($webServiceKeyRecord) {
             $actionList = $this->permissionActionGroupRepository->getActionIdsByWebserviceKeyId($webServiceKeyRecord->id);
-            $actionId = $this->actionRepository->search([
+            $actionRecord = $this->actionRepository->search([
                 'controller' => $controller,
                 'method' => $method
-            ], ['*'])->first()->id;
+            ], ['*'])->first();
             
+            if (!$actionRecord) {
+                throw new NotFoundException("Record action has controller {$controller} and method {$method} not found");
+            }
+
+            $actionId = $actionRecord->id;
             foreach ($actionList as $actionElement) {
                 if ($actionElement["action_id"] == $actionId) {
                     return true;
