@@ -610,6 +610,13 @@ class ActionSeeder extends Seeder
                 'resource_id' => 16,
                 'permission_id' => 3
             ],
+            [
+                'id' => 86,
+                'controller' => 'ApiController',
+                'method' => 'updateProduct',
+                'resource_id' => 1,
+                'permission_id' => 2
+            ],
         ];
 
         DB::table('actions')->insert($actions);
