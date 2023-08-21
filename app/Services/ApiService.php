@@ -226,6 +226,69 @@ class ApiService extends BaseService
         return $resources;
     }
 
+    public function search($data, string $modelClass)
+    {
+        // Extract the parameters from the payload
+        $filters = $data['filter'] ?? [];
+        $sort = $data['sort'] ?? [];
+        $date = $data['date'] ?? [];
+        $limit = $data['limit'] ?? 10;
+        $page = $data['page'] ?? 1;
+
+        // Query the resource based on the filters
+        $query = $modelClass::query();
+
+        // Apply filters
+        foreach ($filters as $field => $filter) {
+            $operator = $filter['operator'];
+            $value = $filter['value'];
+
+            if ($operator === 'eq') {
+                $query->where($field, $value);
+            } elseif ($operator === 'like') {
+                $query->where($field, 'like', "%$value%");
+            } elseif ($operator === 'lt') {
+                $query->where($field, '<', $value);
+            } elseif ($operator === 'lteq') {
+                $query->where($field, '<=', $value);
+            } elseif ($operator === 'gt') {
+                $query->where($field, '>', $value);
+            } elseif ($operator === 'gteq') {
+                $query->where($field, '>=', $value);
+            } elseif ($operator === 'neq') {
+                $query->where($field, '!=', $value);
+            }
+        }
+
+        // Apply date range
+        if ($date) {
+            if (isset($date['start']) && $date['start']) {
+                $start = Carbon::parse($date['start']);
+                $query->where('updated_at', '>=', $start);
+            }
+            if (isset($date['end']) && $date['end']) {
+                $end = Carbon::parse($date['end']);
+                $query->where('updated_at', '<=', $end);
+            }
+        }
+
+        // Selected only id
+        $query->select(['id']);
+
+        // Apply sorting
+        foreach ($sort as $field => $order) {
+            $query->orderBy($field, $order);
+        }
+
+        // Apply pagination
+        $query->limit($limit)->offset(($page - 1) * $limit);
+
+        // Retrieve the resources
+        $resources = $query->get();
+
+        return $resources;
+    }
+
     public function checkConnection($apiKey)
     {
         if ($apiKey) {
