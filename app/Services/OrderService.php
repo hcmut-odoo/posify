@@ -86,6 +86,16 @@ class OrderService extends BaseService
         return $this->paymentModeRepository->getAll();
     }
 
+    public function getPaymentModeByName($name)
+    {
+        return $this->paymentModeRepository->findByName($name);
+    }
+
+    public function getPaymentModeById($id)
+    {
+        return $this->paymentModeRepository->get($id);
+    }
+
     public function placeOrder($userId, $orderData)
     {
         if (!validate_id($userId)) {

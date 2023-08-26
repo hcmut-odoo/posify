@@ -34,6 +34,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Invoice;
+use App\Models\PaymentMode;
 
 class ApiController extends Controller
 {
@@ -730,6 +731,46 @@ class ApiController extends Controller
         try {
             $order = $this->userService->getUserAddress($request->input('id'));
             return $this->successResponse($order);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function searchPaymentModes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, PaymentMode::class);
+    }
+
+    public function paymentModes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceList($request, PaymentMode::class);
+    }
+
+    public function getPaymentModeById(Request $request, $id)
+    {
+        try {
+            $paymentMode =$this->orderService->getPaymentModeById($id);
+            return $this->successResponse($paymentMode);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getPaymentMode(Request $request)
+    {
+        try {
+            $paymentMode =$this->orderService->getPaymentModeById($request->input('id'));
+            return $this->successResponse($paymentMode);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getPaymentModeByName(Request $request)
+    {
+        try {
+            $paymentMode =$this->orderService->getPaymentModeByName($request->input('name'));
+            return $this->successResponse($paymentMode);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
         }
