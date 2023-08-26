@@ -33,6 +33,7 @@ class CreateUserAccessKeyTable extends Migration
      */
     public function down()
     {
+        // Disable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         Schema::dropIfExists('user_access_keys');
