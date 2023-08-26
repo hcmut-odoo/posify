@@ -2,14 +2,21 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\ApiKey;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ApiKeyRepository
 {
     public function get($id)
     {
-        return ApiKey::find($id);
+        try {
+            $apiKey = ApiKey::findOrFail($id);
+            return $apiKey;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found api key has ID: $id");
+        }
     }
 
     public function getByKey($key)

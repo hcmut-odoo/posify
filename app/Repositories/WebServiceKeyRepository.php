@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\WebServiceKey;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class WebServiceKeyRepository
 {
     public function findById($id)
     {
-        return WebServiceKey::find($id);
+        try {
+            $webServiceKey = WebServiceKey::findOrFail($id);
+            return $webServiceKey;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found web service key has ID: $id");
+        }
     }
 
     public function remove($id)

@@ -2,14 +2,21 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProductVariant;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductVariantRepository
 {
     public function get($id)
     {
-        return ProductVariant::find($id);
+        try {
+            $productVariant = ProductVariant::findOrFail($id);
+            return $productVariant;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found product variant has ID: $id");
+        }
     }
 
     public function getForUpdate($id)

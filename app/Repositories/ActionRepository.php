@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\Action;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ActionRepository
 {
     public function get($id)
     {
-        return Action::find($id);
+        try {
+            $action = Action::findOrFail($id);
+            return $action;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found action has ID: $id");
+        }
     }
 
     public function remove($id)

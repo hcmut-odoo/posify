@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\PermissionActionGroup;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PermissionActionGroupRepository
 {
-    public function findById($id)
+    public function get($id)
     {
-        return PermissionActionGroup::find($id);
+        try {
+            $permissionActionGroup = PermissionActionGroup::findOrFail($id);
+            return $permissionActionGroup;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found permission action group has ID: $id");
+        }
     }
 
     public function findByActionIdAndWebServiceKeyId($actionId, $webServiceKeyId)

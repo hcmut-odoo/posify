@@ -168,7 +168,7 @@ class OrderService extends BaseService
         foreach ($orderItems as $orderRow) {
             // Collect user data
             $user['id'] = $orderRow->user_id;
-            
+
             // Collect product variant data
             $variant['id'] = $orderRow->product_variant_id;
             $variant['product_id'] = $orderRow->product_id;

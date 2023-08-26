@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\UserAccessKey;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserAccessKeyRepository
 {
     public function findById($id)
     {
-        return UserAccessKey::find($id);
+        try {
+            $userAccessKey = UserAccessKey::findOrFail($id);
+            return $userAccessKey;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found user access key has ID: $id");
+        }
     }
 
     public function remove($id)

@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\Store;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -10,7 +12,12 @@ class StoreRepository
 {
     public function get($id)
     {
-        return Store::find($id);
+        try {
+            $store = Store::findOrFail($id);
+            return $store;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found store has ID: $id");
+        }
     }
 
     public function findByName($name)

@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\Permission;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PermissionRepository
 {
-    public function findById($id)
+    public function get($id)
     {
-        return Permission::find($id);
+        try {
+            $permission = Permission::findOrFail($id);
+            return $permission;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found permission has ID: $id");
+        }
     }
 
     public function remove($id)

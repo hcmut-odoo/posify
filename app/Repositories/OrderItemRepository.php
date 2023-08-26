@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderItem;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
@@ -12,7 +14,12 @@ class OrderItemRepository
 {
     public function get($id)
     {
-        return OrderItem::find($id);
+        try {
+            $invoice = OrderItem::findOrFail($id);
+            return $invoice;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found invoice has ID: $id");
+        }
     }
 
     public function remove($id)
