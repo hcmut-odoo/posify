@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrdersTable extends Migration
+class CreatePaymentModeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,19 +14,17 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('payment_modes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('status');
-            $table->uuid('order_transaction');
-            $table->string('delivery_note', 100)->nullable();
-            $table->string('delivery_phone');
-            $table->string('delivery_address');
-            $table->string('delivery_name');
+            $table->string('name', 50);
             $table->softDeletes();
             $table->timestamps();
+        });
 
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->unsignedBigInteger('payment_mode_id');
+
+            $table->foreign('payment_mode_id')->references('id')->on('payment_modes');
         });
     }
 
@@ -40,7 +38,7 @@ class CreateOrdersTable extends Migration
         // Disable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('payment_modes');
 
         // Re-enable foreign key constraints
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
