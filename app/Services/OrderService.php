@@ -233,7 +233,7 @@ class OrderService extends BaseService
 
             // Collect payment data
             $payment['id'] = $orderRow->payment_mode_id;
-            $payment['name'] = $orderRow->payment_mode_name;
+            $payment['name'] = $orderRow->payment_mode;
 
             // Collect delivery data
             $delivery['delivery_note'] = $orderRow->delivery_note;
