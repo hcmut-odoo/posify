@@ -236,7 +236,7 @@ function total($iems)
                             <div class="cart-page-divider"></div>
 
                             <div class="cart-page__content__header__checkbox">
-                                <input value="cash" class="form-check-input" type="radio" name="payment_method"
+                                <input value="cash" class="form-check-input" type="radio" name="payment_mode"
                                     id="flexRadioDefault1" checked>
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     <img class="image-payment" src="{{ url('/images/payment/cash.jpeg') }}">
@@ -244,31 +244,15 @@ function total($iems)
                                 </label>
                             </div>
                             <div class="cart-page__content__header__checkbox">
-                                <input value="momo-pay" class="form-check-input" type="radio" name="payment_method"
+                                <input value="Payment by check" class="form-check-input" type="radio" name="payment_mode"
                                     id="flexRadioDefault2">
                                 <label class="form-check-label" for="flexRadioDefault2">
-                                    <img class="image-payment" src="{{ url('/images/payment/momo.png') }}">
-                                    Momo
+                                    <img class="image-payment" src="{{ url('/images/payment/sec.png') }}">
+                                    Thanh toán bằng Sec
                                 </label>
                             </div>
                             <div class="cart-page__content__header__checkbox">
-                                <input value="zalo-pay" class="form-check-input" type="radio" name="payment_method"
-                                    id="flexRadioDefault2">
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    <img class="image-payment" src="{{ url('/images/payment/zalo.png') }}">
-                                    ZaloPay
-                                </label>
-                            </div>
-                            <div class="cart-page__content__header__checkbox">
-                                <input value="shopee-pay" class="form-check-input" type="radio" name="payment_method"
-                                    id="flexRadioDefault2">
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    <img class="image-payment" src="{{ url('/images/payment/shopee.png') }}">
-                                    ShopeePay
-                                </label>
-                            </div>
-                            <div class="cart-page__content__header__checkbox">
-                                <input value="credit" class="form-check-input" type="radio" name="payment_method"
+                                <input value="Bank wire" class="form-check-input" type="radio" name="payment_mode"
                                     id="flexRadioDefault2">
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     <img class="image-payment" src="{{ url('/images/payment/card.png') }}">

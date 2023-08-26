@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\DB;
 class Order extends Model
 {
     use SoftDeletes;
-    
+
     protected $fillable = [
         'delivery_name', 'status', 'order_transaction', 'user_id',
-        'delivery_phone', 'payment_method', 'delivery_address',
+        'delivery_phone', 'payment_mode_id', 'delivery_address',
         'delivery_note'
     ];
 

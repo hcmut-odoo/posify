@@ -123,6 +123,13 @@ Route::prefix('/invoice')->group(function () {
     Route::get('/find/{id}', [ApiController::class, 'getInvoiceById'])->name('api.invoice.find.id');
 });
 
+Route::prefix('/payment')->group(function () {
+    Route::get('/find', [ApiController::class, 'getPaymentMode'])->name('api.payment.find');
+    Route::get('/list', [ApiController::class, 'paymentModes'])->name('api.payment.list');
+    Route::get('/search', [ApiController::class, 'searchPaymentModes'])->name('api.payment.search');
+    Route::get('/find/{id}', [ApiController::class, 'getPaymentModeById'])->name('api.payment.find.id');
+});
+
 Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::post('/api-key/generate', [ApiKeyController::class, 'generateApiKey'])->name('api.key.generate');
