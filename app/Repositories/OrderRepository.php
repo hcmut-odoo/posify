@@ -18,12 +18,12 @@ class OrderRepository
         }
     }
 
-    public function create($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
+    public function create($userId, $paymentModeId, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
     {
         return Order::create([
             'order_transaction' => uniqid(),
             'user_id' => $userId,
-            'payment_method' => $paymentMethod,
+            'payment_mode_id' => $paymentModeId,
             'status' => 'processing',
             'delivery_name' => $deliveryName,
             'delivery_phone' => $deliveryPhone,

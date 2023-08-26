@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderRequest;
 use Illuminate\Http\Request;
 use App\Services\CartService;
 use App\Services\OrderService;
@@ -107,7 +108,7 @@ class CartController extends Controller
         return redirect()->route('orders')->with('success', 'Order placed successfully!');
     }
 
-    public function placeOrder(Request $request)
+    public function placeOrder(OrderRequest $request)
     {
         $userId = $request->user()->id;
         $orderData = [
@@ -115,9 +116,9 @@ class CartController extends Controller
             'delivery_phone' => $request->input('delivery_phone'),
             'delivery_address' => $request->input('delivery_address'),
             'delivery_note' => $request->input('delivery_note'),
-            'payment_method' => $request->input('payment_method')
+            'payment_mode' => $request->input('payment_mode')
         ];
-        
+
         try {
             $this->orderService->placeOrder($userId, $orderData);
             return redirect()->route('cart.notice', [
