@@ -105,13 +105,13 @@ Route::prefix('/order')->group(function () {
 
 Route::prefix('/cart_item')->group(function () {
     Route::get('/find/{id}', [ApiController::class, 'getCartItemsById'])->name('api.order.item.find.id');
-    Route::get('/find', [ApiController::class, 'getCartItems'])->name('api.order.item.find');;
+    Route::get('/find', [ApiController::class, 'getCartItem'])->name('api.order.item.find');;
     Route::get('/list', [ApiController::class, 'cartItems'])->name('api.cart.item.list');
     Route::get('/search', [ApiController::class, 'searchCartItems'])->name('api.cart.item.search');
 });
 
 Route::prefix('/order_item')->group(function () {
-    Route::get('/find', [ApiController::class, 'getOrderItems'])->name('api.order.item.find');
+    Route::get('/find', [ApiController::class, 'getOrderItem'])->name('api.order.item.find');
     Route::get('/list', [ApiController::class, 'orderItems'])->name('api.order.item.list');
     Route::get('/search', [ApiController::class, 'searchOrderItems'])->name('api.order.item.search');
 });

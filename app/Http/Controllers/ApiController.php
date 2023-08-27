@@ -563,6 +563,17 @@ class ApiController extends Controller
         }
     }
 
+    public function getCartItem(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $cartItems = $this->cartService->getCartItem($id);
+            return $this->successResponse($cartItems);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
     public function orders(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Order::class);
@@ -684,6 +695,16 @@ class ApiController extends Controller
     {
         try {
             $rejectedOrders = $this->orderService->getOrderItems($id);
+            return $this->successResponse($rejectedOrders);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getOrderItem(Request $request) : JsonResponse
+    {
+        try {
+            $rejectedOrders = $this->orderService->getOrderItem($request->input('id'));
             return $this->successResponse($rejectedOrders);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
