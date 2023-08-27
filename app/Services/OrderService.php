@@ -223,7 +223,7 @@ class OrderService extends BaseService
         }
 
         $orderItems = $this->getOrderItems($orderId);
-        dd($orderItems);
+
         $orderRows = [];
         foreach ($orderItems as $orderRow) {
             // Collect user data
