@@ -64,7 +64,7 @@ class OrderService extends BaseService
             ->join('cart_items', 'order_items.cart_item_id', '=', 'cart_items.id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
             ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
-            ->join('payment_modes', 'payment_modes.id', '=', 'orders.id')
+            ->join('payment_modes', 'payment_modes.id', '=', 'orders.payment_mode_id')
             ->select(
                 'orders.*',
                 'order_items.*',

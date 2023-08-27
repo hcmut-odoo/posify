@@ -53,7 +53,8 @@ class CartItemRepository
             'cart_id' => $cartId,
             'product_variant_id' => $productVariantId,
             'note' => $note,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'stamp' => true
         ]);
     }
 
@@ -71,6 +72,9 @@ class CartItemRepository
             })
             ->when(isset($criteria['note']), function ($query) use ($criteria) {
                 $query->where('note', $criteria['note'] == false ? null : $criteria['note']);
+            })
+            ->when(isset($criteria['stamp']), function ($query) use ($criteria) {
+                $query->where('stamp', $criteria['stamp'] == false ? null : $criteria['stamp']);
             })
             ->first();
     }
