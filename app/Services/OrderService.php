@@ -223,7 +223,7 @@ class OrderService extends BaseService
         }
 
         $orderItems = $this->getOrderItems($orderId);
-
+        dd($orderItems);
         $orderRows = [];
         foreach ($orderItems as $orderRow) {
             // Collect user data
@@ -254,11 +254,12 @@ class OrderService extends BaseService
             $delivery['delivery_name'] = $orderRow->delivery_name;
 
             // Add these information as sub association data
+            $order['id'] = $orderRow->order_item_id;
+            $order['quantity'] = $orderRow->quantity;
             $order['product'] = $product;
             $order['delivery'] = $delivery;
             $order['user'] = $user;
             $order['payment'] = $payment;
-            $order['id'] = $orderRow->order_item_id;
 
             $orderRows[] = $order;
         }
