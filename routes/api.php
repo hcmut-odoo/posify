@@ -130,6 +130,13 @@ Route::prefix('/payment')->group(function () {
     Route::get('/find/{id}', [ApiController::class, 'getPaymentModeById'])->name('api.payment.find.id');
 });
 
+Route::prefix('/tax')->group(function () {
+    Route::get('/find', [ApiController::class, 'getTax'])->name('api.tax.find');
+    Route::get('/list', [ApiController::class, 'taxes'])->name('api.tax.list');
+    Route::get('/search', [ApiController::class, 'searchTaxes'])->name('api.tax.search');
+    Route::get('/find/{id}', [ApiController::class, 'getTaxById'])->name('api.tax.find.id');
+});
+
 Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::post('/api-key/generate', [ApiKeyController::class, 'generateApiKey'])->name('api.key.generate');

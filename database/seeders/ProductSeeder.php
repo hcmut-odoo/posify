@@ -559,10 +559,12 @@ class ProductSeeder extends Seeder
 
         $id = 1;
         $productsWithoutPrice = [];
+        $taxId = 1;
 
         foreach ($products as &$product) {
             $product['id'] = $id;
             $id++;
+            $product['tax_id'] = $taxId;
         }
 
         DB::table('products')->insert($products);
@@ -595,7 +597,7 @@ class ProductSeeder extends Seeder
                     'updated_at' => $randomDatetime
                 ];
 
-                $product_variants[] = $product_variant; 
+                $product_variants[] = $product_variant;
                 $id++;
             }
         }

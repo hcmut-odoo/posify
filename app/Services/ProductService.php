@@ -190,7 +190,7 @@ class ProductService extends BaseService
         if (!$productVariants) {
             throw new NotFoundException("Not found product variant has product ID: $productId");
         }
-        
+
         return $productVariants;
     }
 
@@ -224,7 +224,7 @@ class ProductService extends BaseService
         if (!$productVariant) {
             throw new NotFoundException("Not found product variant has ID: $id");
         }
-        
+
         return $productVariant;
     }
 

@@ -26,6 +26,7 @@ use App\Services\CategoryService;
 use App\Services\StoreService;
 use App\Services\ApiService;
 use App\Services\InvoiceService;
+use App\Services\TaxService;
 use App\Http\Requests\QueryRequest;
 use App\Http\Requests\CreateCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -35,6 +36,7 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Invoice;
 use App\Models\PaymentMode;
+use App\Models\Tax;
 
 class ApiController extends Controller
 {
@@ -46,6 +48,7 @@ class ApiController extends Controller
     private $storeService;
     private $apiService;
     private $invoiceService;
+    private $taxService;
 
     public function __construct(
         CartService $cartService,
@@ -55,7 +58,8 @@ class ApiController extends Controller
         CategoryService $categoryService,
         StoreService $storeService,
         ApiService $apiService,
-        InvoiceService $invoiceService
+        InvoiceService $invoiceService,
+        TaxService $taxService
     )
     {
         $this->cartService = $cartService;
@@ -66,6 +70,7 @@ class ApiController extends Controller
         $this->storeService = $storeService;
         $this->apiService = $apiService;
         $this->invoiceService = $invoiceService;
+        $this->taxService = $taxService;
     }
 
     private function errorResponse(\Exception $exception, int $statusCode = 400, string $data = null): JsonResponse
@@ -771,6 +776,36 @@ class ApiController extends Controller
         try {
             $paymentMode =$this->orderService->getPaymentModeByName($request->input('name'));
             return $this->successResponse($paymentMode);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function searchTaxes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Tax::class);
+    }
+
+    public function taxes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceList($request, Tax::class);
+    }
+
+    public function getTax(Request $request) : JsonResponse
+    {
+        try {
+            $tax = $this->taxService->findById($request->input('id'));
+            return $this->successResponse($tax);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getTaxById(Request $request, $id) : JsonResponse
+    {
+        try {
+            $tax = $this->taxService->findById($id);
+            return $this->successResponse($tax);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
         }
