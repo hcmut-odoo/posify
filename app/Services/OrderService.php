@@ -54,6 +54,17 @@ class OrderService extends BaseService
         return $orders;
     }
 
+    public function getOrderItem($orderItemId)
+    {
+        if (!validate_id($orderItemId)) {
+            throw new InvalidParameterException("Invalid order item ID: $orderItemId");
+        }
+
+        $orderItem = $this->orderItemRepository->get($orderItemId);
+
+        return $orderItem;
+    }
+
     public function getOrderItems($orderId)
     {
         if (!validate_id($orderId)) {
@@ -73,6 +84,7 @@ class OrderService extends BaseService
                 'product_variants.*',
                 'payment_modes.name AS payment_mode',
                 'payment_modes.id AS payment_mode_id',
+                'order_items.id AS order_item_id',
             )
             ->where('orders.id', $orderId)
             ->get()
@@ -246,6 +258,7 @@ class OrderService extends BaseService
             $order['delivery'] = $delivery;
             $order['user'] = $user;
             $order['payment'] = $payment;
+            $order['id'] = $orderRow->order_item_id;
 
             $orderRows[] = $order;
         }
