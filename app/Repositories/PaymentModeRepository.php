@@ -50,6 +50,8 @@ class PaymentModeRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+        
         if (!empty($updateData)) {
             return DB::table('payment_modes')
                 ->where('id', $data['id'])

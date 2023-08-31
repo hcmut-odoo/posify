@@ -63,6 +63,8 @@ class StoreRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('stores')
                 ->where('id', $data['id'])

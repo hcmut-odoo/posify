@@ -76,6 +76,8 @@ class ProductVariantRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('product_variants')
                 ->where('id', $data['id'])

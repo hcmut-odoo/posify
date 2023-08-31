@@ -62,6 +62,8 @@ class UserRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('users')
                 ->where('id', $data['id'])
