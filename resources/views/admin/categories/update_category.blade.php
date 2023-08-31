@@ -6,7 +6,7 @@
         <section class="panel">
             <header class="panel-heading">
                 <h1>Chỉnh sửa thông tin danh mục sản phẩm</h1>
-                <a href="/admin/products" class="btn btn-success">Trở về</a>
+                <a href="/admin/categories" class="btn btn-success">Trở về</a>
             </header>
             <form method="POST" action="{{ route('admin.category.update.post') }}">
                 <div class="panel-body">
