@@ -58,6 +58,8 @@ class TaxRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('taxes')
                 ->where('id', $data['id'])

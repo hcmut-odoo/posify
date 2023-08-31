@@ -37,6 +37,8 @@ class CartItemRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('cart_items')
                 ->where('id', $data['id'])

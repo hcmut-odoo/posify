@@ -64,6 +64,8 @@ class OrderItemRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+        
         if (!empty($updateData)) {
             return DB::table('order_items')
                 ->where('id', $data['id'])

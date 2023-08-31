@@ -81,6 +81,8 @@ class ProductRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('products')
                 ->where('id', $data['id'])

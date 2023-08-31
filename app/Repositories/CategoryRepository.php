@@ -56,6 +56,8 @@ class CategoryRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('categories')
                 ->where('id', $data['id'])
