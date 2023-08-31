@@ -212,18 +212,26 @@ class ApiService extends BaseService
             $query->select($display);
         }
 
-        // Apply sorting
-        foreach ($sort as $field => $order) {
-            $query->orderBy($field, $order);
-        }
+        // Count total record
+        $total = $query->count();
 
         // Apply pagination
         $query->limit($limit)->offset(($page - 1) * $limit);
 
         // Retrieve the resources
-        $resources = $query->get();
+        $resources = $query->get()->toArray();
 
-        return $resources;
+        // Collect pagination data
+        $pagination['page'] = $page;
+        $pagination['limit'] = $limit;
+        $pagination['total'] = $total;
+        $pagination['next_page'] = $total > $page * $limit ? true : false;
+        $pagination['prev_page'] = $page > 1;
+
+        $mixed['data'] = $resources;
+        $mixed['pagination'] = $pagination;
+
+        return $mixed;
     }
 
     public function search($data, string $modelClass)
@@ -280,13 +288,26 @@ class ApiService extends BaseService
             $query->orderBy($field, $order);
         }
 
+        // Count total record
+        $total = $query->count();
+
         // Apply pagination
         $query->limit($limit)->offset(($page - 1) * $limit);
 
         // Retrieve the resources
-        $resources = $query->get();
+        $resources = $query->get()->toArray();
 
-        return $resources;
+        // Collect pagination data
+        $pagination['page'] = $page;
+        $pagination['limit'] = $limit;
+        $pagination['total'] = $total;
+        $pagination['next_page'] = $total > $page * $limit ? true : false;
+        $pagination['prev_page'] = $page > 1;
+
+        $mixed['data'] = $resources;
+        $mixed['pagination'] = $pagination;
+
+        return $mixed;
     }
 
     public function checkConnection($apiKey)

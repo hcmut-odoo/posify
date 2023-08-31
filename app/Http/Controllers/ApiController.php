@@ -106,11 +106,21 @@ class ApiController extends Controller
 
     private function successResponse($data, string $message = "success", int $statusCode = 200): JsonResponse
     {
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data' => $data,
-        ], $statusCode);
+        if (isset($data['pagination'])) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $data['data'],
+                'pagination' => $data['pagination']
+            ], $statusCode);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $data
+            ], $statusCode);
+        }
+
     }
 
     public function resourceList(QueryRequest $request, string $modelClass) : JsonResponse
