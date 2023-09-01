@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class ProductSeeder extends Seeder
 {
+    private function deepCopyArray($array) {
+        return json_decode(json_encode($array), true);
+    }
+
     /**
      * Run the database seeds.
      *
@@ -558,7 +562,6 @@ class ProductSeeder extends Seeder
         ];
 
         $id = 1;
-        $productsWithoutPrice = [];
         $taxId = 1;
 
         foreach ($products as &$product) {
@@ -574,8 +577,11 @@ class ProductSeeder extends Seeder
         $sizes = ['big', 'medium', 'small'];
         $startDate = strtotime('2023-01-01');
         $endDate = strtotime('2023-12-31');
+        $deepCopiedProducts = $this->deepCopyArray($products);
 
-        foreach ($products as $product) {
+        for ($i = 0; $i < 60; $i++) {
+            $product = $deepCopiedProducts[$i];
+
             foreach ($sizes as $size) {
                 $extendPrice = $product['price'];
 
