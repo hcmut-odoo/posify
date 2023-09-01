@@ -60,6 +60,7 @@ Route::prefix('/product')->group(function () {
 Route::prefix('/product_variant')->group(function () {
     Route::post('/create', [ApiController::class, 'createProductVariant'])->name('api.product.variant.create');
     Route::get('/list', [ApiController::class, 'productVariants'])->name('api.product.variant.list');
+    Route::get('/search', [ApiController::class, 'searchProductVariants'])->name('api.product.variant.search');
     Route::get('/find', [ApiController::class, 'getProductVariant'])->name('api.product.variant.find');
     Route::post('/update', [ApiController::class, 'updateProductVariant'])->name('api.product.variant.update');
     Route::post('/delete', [ApiController::class, 'deleteProductVariant'])->name('api.product.variant.delete');
