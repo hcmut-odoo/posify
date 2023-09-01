@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\UserGroup;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserGroupRepository
 {
     public function get($id)
     {
-        return UserGroup::find($id);
+        try {
+            $userGroup = UserGroup::findOrFail($id);
+            return $userGroup;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found user group has ID: $id");
+        }
     }
 
     public function remove($id)

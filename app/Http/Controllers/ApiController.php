@@ -26,6 +26,7 @@ use App\Services\CategoryService;
 use App\Services\StoreService;
 use App\Services\ApiService;
 use App\Services\InvoiceService;
+use App\Services\TaxService;
 use App\Http\Requests\QueryRequest;
 use App\Http\Requests\CreateCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -34,6 +35,8 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Invoice;
+use App\Models\PaymentMode;
+use App\Models\Tax;
 
 class ApiController extends Controller
 {
@@ -45,6 +48,7 @@ class ApiController extends Controller
     private $storeService;
     private $apiService;
     private $invoiceService;
+    private $taxService;
 
     public function __construct(
         CartService $cartService,
@@ -54,7 +58,8 @@ class ApiController extends Controller
         CategoryService $categoryService,
         StoreService $storeService,
         ApiService $apiService,
-        InvoiceService $invoiceService
+        InvoiceService $invoiceService,
+        TaxService $taxService
     )
     {
         $this->cartService = $cartService;
@@ -65,6 +70,7 @@ class ApiController extends Controller
         $this->storeService = $storeService;
         $this->apiService = $apiService;
         $this->invoiceService = $invoiceService;
+        $this->taxService = $taxService;
     }
 
     private function errorResponse(\Exception $exception, int $statusCode = 400, string $data = null): JsonResponse
@@ -100,17 +106,35 @@ class ApiController extends Controller
 
     private function successResponse($data, string $message = "success", int $statusCode = 200): JsonResponse
     {
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data' => $data,
-        ], $statusCode);
+        if (isset($data['pagination'])) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $data['data'],
+                'pagination' => $data['pagination']
+            ], $statusCode);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $data
+            ], $statusCode);
+        }
+
     }
 
     public function resourceList(QueryRequest $request, string $modelClass) : JsonResponse
     {
         $data = $request->validated();
         $resources = $this->apiService->query($data, $modelClass);
+
+        return $this->successResponse($resources);
+    }
+
+    public function resourceSearch(QueryRequest $request, string $modelClass) : JsonResponse
+    {
+        $data = $request->validated();
+        $resources = $this->apiService->search($data, $modelClass);
 
         return $this->successResponse($resources);
     }
@@ -131,9 +155,19 @@ class ApiController extends Controller
         return $this->resourceList($request, OrderItem::class);
     }
 
-    public function cartItems(QueryRequest $request) : JsonResponse
+    public function searchOrderItems(QueryRequest $request) : JsonResponse
     {
-        return $this->resourceList($request, CartItem::class);
+        return $this->resourceSearch($request, OrderItem::class);
+    }
+
+    public function searchCartItems(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, CartItem::class);
+    }
+
+    public function searchProducts(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Product::class);
     }
 
     public function products(QueryRequest $request) : JsonResponse
@@ -220,6 +254,11 @@ class ApiController extends Controller
         return $this->resourceList($request, ProductVariant::class);
     }
 
+    public function searchProductVariants(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, ProductVariant::class);
+    }
+
     public function getProductVariant(Request $request) : JsonResponse
     {
         try {
@@ -286,6 +325,11 @@ class ApiController extends Controller
     public function categories(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Category::class);
+    }
+
+    public function searchCategories(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Category::class);
     }
 
     public function createCategory(CreateCategoryRequest $request) : JsonResponse
@@ -367,6 +411,11 @@ class ApiController extends Controller
         return $this->resourceList($request, User::class);
     }
 
+    public function searchUsers(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, User::class);
+    }
+
     public function getUserById(Request $request, $id) : JsonResponse
     {
         try {
@@ -422,6 +471,11 @@ class ApiController extends Controller
     public function stores(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Store::class);
+    }
+
+    public function searchStores(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Store::class);
     }
 
     public function getStore(Request $request) : JsonResponse
@@ -519,9 +573,35 @@ class ApiController extends Controller
         }
     }
 
+    public function getCartItem(Request $request) : JsonResponse
+    {
+        try {
+            $id = $request->input('id');
+            $cartItems = $this->cartService->getCartItem($id);
+            return $this->successResponse($cartItems);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
     public function orders(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Order::class);
+    }
+
+    public function searchOrders(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Order::class);
+    }
+
+    public function getOrderDetail(Request $request) : JsonResponse
+    {
+        try {
+            $order = $this->orderService->getOrderDetail($request->input('id'));
+            return $this->successResponse($order);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
     }
 
     public function getOrder(Request $request) : JsonResponse
@@ -631,9 +711,24 @@ class ApiController extends Controller
         }
     }
 
+    public function getOrderItem(Request $request) : JsonResponse
+    {
+        try {
+            $rejectedOrders = $this->orderService->getOrderItem($request->input('id'));
+            return $this->successResponse($rejectedOrders);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
     public function invoices(QueryRequest $request) : JsonResponse
     {
         return $this->resourceList($request, Invoice::class);
+    }
+
+    public function searchInvoices(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Invoice::class);
     }
 
     public function getInvoice(Request $request) : JsonResponse
@@ -672,6 +767,76 @@ class ApiController extends Controller
         try {
             $order = $this->userService->getUserAddress($request->input('id'));
             return $this->successResponse($order);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function searchPaymentModes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, PaymentMode::class);
+    }
+
+    public function paymentModes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceList($request, PaymentMode::class);
+    }
+
+    public function getPaymentModeById(Request $request, $id)
+    {
+        try {
+            $paymentMode =$this->orderService->getPaymentModeById($id);
+            return $this->successResponse($paymentMode);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getPaymentMode(Request $request)
+    {
+        try {
+            $paymentMode =$this->orderService->getPaymentModeById($request->input('id'));
+            return $this->successResponse($paymentMode);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getPaymentModeByName(Request $request)
+    {
+        try {
+            $paymentMode =$this->orderService->getPaymentModeByName($request->input('name'));
+            return $this->successResponse($paymentMode);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function searchTaxes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceSearch($request, Tax::class);
+    }
+
+    public function taxes(QueryRequest $request) : JsonResponse
+    {
+        return $this->resourceList($request, Tax::class);
+    }
+
+    public function getTax(Request $request) : JsonResponse
+    {
+        try {
+            $tax = $this->taxService->findById($request->input('id'));
+            return $this->successResponse($tax);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function getTaxById(Request $request, $id) : JsonResponse
+    {
+        try {
+            $tax = $this->taxService->findById($id);
+            return $this->successResponse($tax);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
         }

@@ -3,12 +3,19 @@
 namespace App\Repositories;
 
 use App\Models\UserRole;
+use App\Exceptions\NotFoundException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserRoleRepository
 {
     public function get($id)
     {
-        return UserRole::find($id);
+        try {
+            $user = UserRole::findOrFail($id);
+            return $user;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found user has ID: $id");
+        }
     }
 
     public function getByUserId($userId)

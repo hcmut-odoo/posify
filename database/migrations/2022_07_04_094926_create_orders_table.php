@@ -19,7 +19,6 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('status');
             $table->uuid('order_transaction');
-            $table->string('payment_method');
             $table->string('delivery_note', 100)->nullable();
             $table->string('delivery_phone');
             $table->string('delivery_address');

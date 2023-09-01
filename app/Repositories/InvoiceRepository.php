@@ -2,15 +2,22 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Invoice;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class InvoiceRepository
 {
     public function get($id)
     {
-        return Invoice::find($id);
+        try {
+            $invoice = Invoice::findOrFail($id);
+            return $invoice;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found invoice has ID: $id");
+        }
     }
 
     public function remove($id)

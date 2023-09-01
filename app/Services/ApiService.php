@@ -45,11 +45,17 @@ class ApiService extends BaseService
 
     public function getKeyWithInfo()
     {
-        return DB::table('api_keys')
-            ->join('users', 'users.id', '=', 'api_keys.user_id')
-            ->select('users.name AS user_name', 'api_keys.value',
-                'api_keys.created_at', 'api_keys.status', 'api_keys.description')
+        $webServiceKeys = DB::table('api_keys')
+            ->join('web_service_keys', 'web_service_keys.api_key_id', '=', 'api_keys.id')
+            ->select('api_keys.id', 'api_keys.value', 'api_keys.created_at', 'api_keys.status', 'api_keys.description')
             ->get();
+
+        $userAccessKey = DB::table('api_keys')
+            ->join('user_access_keys', 'user_access_keys.api_key_id', '=', 'api_keys.id')
+            ->select('api_keys.id', 'api_keys.value', 'api_keys.created_at', 'api_keys.status', 'api_keys.description')
+            ->get();
+
+        return $webServiceKeys->concat($userAccessKey);
     }
 
     public function findById($id)
@@ -138,7 +144,7 @@ class ApiService extends BaseService
         $actionId = $this->actionRepository->search([
             'controller' => $controller,
             'method' => $action
-        ], ['id']);
+        ], ['id'])->first();
 
         return in_array($actionId, $actionIds);
     }
@@ -206,18 +212,102 @@ class ApiService extends BaseService
             $query->select($display);
         }
 
-        // Apply sorting
-        foreach ($sort as $field => $order) {
-            $query->orderBy($field, $order);
-        }
+        // Count total record
+        $total = $query->count();
 
         // Apply pagination
         $query->limit($limit)->offset(($page - 1) * $limit);
 
         // Retrieve the resources
-        $resources = $query->get();
+        $resources = $query->get()->toArray();
 
-        return $resources;
+        // Collect pagination data
+        $pagination['page'] = $page;
+        $pagination['limit'] = $limit;
+        $pagination['total'] = $total;
+        $pagination['next_page'] = $total > $page * $limit ? true : false;
+        $pagination['prev_page'] = $page > 1;
+
+        $mixed['data'] = $resources;
+        $mixed['pagination'] = $pagination;
+
+        return $mixed;
+    }
+
+    public function search($data, string $modelClass)
+    {
+        // Extract the parameters from the payload
+        $filters = $data['filter'] ?? [];
+        $sort = $data['sort'] ?? [];
+        $date = $data['date'] ?? [];
+        $limit = $data['limit'] ?? 10;
+        $page = $data['page'] ?? 1;
+
+        // Query the resource based on the filters
+        $query = $modelClass::query();
+
+        // Apply filters
+        foreach ($filters as $field => $filter) {
+            $operator = $filter['operator'];
+            $value = $filter['value'];
+
+            if ($operator === 'eq') {
+                $query->where($field, $value);
+            } elseif ($operator === 'like') {
+                $query->where($field, 'like', "%$value%");
+            } elseif ($operator === 'lt') {
+                $query->where($field, '<', $value);
+            } elseif ($operator === 'lteq') {
+                $query->where($field, '<=', $value);
+            } elseif ($operator === 'gt') {
+                $query->where($field, '>', $value);
+            } elseif ($operator === 'gteq') {
+                $query->where($field, '>=', $value);
+            } elseif ($operator === 'neq') {
+                $query->where($field, '!=', $value);
+            }
+        }
+
+        // Apply date range
+        if ($date) {
+            if (isset($date['start']) && $date['start']) {
+                $start = Carbon::parse($date['start']);
+                $query->where('updated_at', '>=', $start);
+            }
+            if (isset($date['end']) && $date['end']) {
+                $end = Carbon::parse($date['end']);
+                $query->where('updated_at', '<=', $end);
+            }
+        }
+
+        // Selected only id
+        $query->select(['id']);
+
+        // Apply sorting
+        foreach ($sort as $field => $order) {
+            $query->orderBy($field, $order);
+        }
+
+        // Count total record
+        $total = $query->count();
+
+        // Apply pagination
+        $query->limit($limit)->offset(($page - 1) * $limit);
+
+        // Retrieve the resources
+        $resources = $query->get()->toArray();
+
+        // Collect pagination data
+        $pagination['page'] = $page;
+        $pagination['limit'] = $limit;
+        $pagination['total'] = $total;
+        $pagination['next_page'] = $total > $page * $limit ? true : false;
+        $pagination['prev_page'] = $page > 1;
+
+        $mixed['data'] = $resources;
+        $mixed['pagination'] = $pagination;
+
+        return $mixed;
     }
 
     public function checkConnection($apiKey)

@@ -58,11 +58,4 @@ class User extends Authenticatable
     {
         return Str::random(32);
     }
-
-    public static function pagination($per_page)
-    {
-        return DB::table('users')
-            ->select('id', 'name', 'email', 'address', 'phone_number', 'created_at', 'updated_at')
-            ->paginate($per_page);
-    }
 }

@@ -14,7 +14,7 @@ function sizeContent($size)
         case 'medium':
             $str = 'Meidum (+3.000đ)';
             break;
-        case 'large':
+        case 'big':
             $str = 'Large (+6.000đ)';
             break;
         default:
@@ -82,8 +82,7 @@ function total($iems)
                                                 <button type="button" class="btn-close" aria-label="Close" onclick="closeForm()" id="{{$item->id}}"></button>
                                                 <div class="row gy-2 information">
                                                     <div class="col-lg-2 col-md-2 col-sm-4 col-4">
-                                                        <img class="cart-page__item-image"
-                                                            src="{{ $item->image_url }}" />
+                                                        <img class="cart-page__item-image" src="{{ $item->image_url }}" />
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-8 col-8 item_information pt-4">
                                                         <h6>{{ $item->name }}</h6>
@@ -136,7 +135,7 @@ function total($iems)
                                                         </div>
                                                         <div class="form-check form-check-inline">
                                                             <input class="form-check-input" type="radio" name="size"
-                                                                id="exampleRadios3" value="large">
+                                                                id="exampleRadios3" value="big">
                                                             <div class="form-check-label" for="size">
                                                                 Lớn +
                                                             </div>
@@ -237,7 +236,7 @@ function total($iems)
                             <div class="cart-page-divider"></div>
 
                             <div class="cart-page__content__header__checkbox">
-                                <input value="cash" class="form-check-input" type="radio" name="payment_method"
+                                <input value="cash" class="form-check-input" type="radio" name="payment_mode"
                                     id="flexRadioDefault1" checked>
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     <img class="image-payment" src="{{ url('/images/payment/cash.jpeg') }}">
@@ -245,31 +244,15 @@ function total($iems)
                                 </label>
                             </div>
                             <div class="cart-page__content__header__checkbox">
-                                <input value="momo-pay" class="form-check-input" type="radio" name="payment_method"
+                                <input value="Payment by check" class="form-check-input" type="radio" name="payment_mode"
                                     id="flexRadioDefault2">
                                 <label class="form-check-label" for="flexRadioDefault2">
-                                    <img class="image-payment" src="{{ url('/images/payment/momo.png') }}">
-                                    Momo
+                                    <img class="image-payment" src="{{ url('/images/payment/sec.png') }}">
+                                    Thanh toán bằng Sec
                                 </label>
                             </div>
                             <div class="cart-page__content__header__checkbox">
-                                <input value="zalo-pay" class="form-check-input" type="radio" name="payment_method"
-                                    id="flexRadioDefault2">
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    <img class="image-payment" src="{{ url('/images/payment/zalo.png') }}">
-                                    ZaloPay
-                                </label>
-                            </div>
-                            <div class="cart-page__content__header__checkbox">
-                                <input value="shopee-pay" class="form-check-input" type="radio" name="payment_method"
-                                    id="flexRadioDefault2">
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    <img class="image-payment" src="{{ url('/images/payment/shopee.png') }}">
-                                    ShopeePay
-                                </label>
-                            </div>
-                            <div class="cart-page__content__header__checkbox">
-                                <input value="credit" class="form-check-input" type="radio" name="payment_method"
+                                <input value="Bank wire" class="form-check-input" type="radio" name="payment_mode"
                                     id="flexRadioDefault2">
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     <img class="image-payment" src="{{ url('/images/payment/card.png') }}">
@@ -293,7 +276,7 @@ function total($iems)
     </div>
 
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="removeItemToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="messageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <img src="{{ url('/images/logo/logo-2.png') }}" width="30px" class="rounded me-2" alt="logo-2">
                 <strong class="me-auto">Buy me store</strong>
@@ -301,47 +284,17 @@ function total($iems)
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                {{ session('removeItemMessage') }}
-            </div>
-        </div>
-        <div id="updateItemToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <img src="{{ url('/images/logo/logo-2.png') }}" width="30px" class="rounded me-2" alt="logo-2">
-                <strong class="me-auto">Buy me store</strong>
-                <small>Bây giờ</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                {{ session('updateItemMessage') }}
-            </div>
-        </div>
-        <div id="placeOrderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <img src="{{ url('/images/logo/logo-2.png') }}" width="30px" class="rounded me-2" alt="logo-2">
-                <strong class="me-auto">Buy me store</strong>
-                <small>Bây giờ</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                {{ session('orderItemMessage') }}
+                {{ session('message') }}
             </div>
         </div>
     </div>
 </div>
 
-@if (\Session::get('removeItemMessage'))
+@if (\Session::get('message'))
 <script>
-    const removeItemToast = document.getElementById('removeItemToast')
-    const removeToast = new bootstrap.Toast(removeItemToast)
-    removeToast.show()
-</script>
-@endif
-
-@if (\Session::get('updateItemMessage'))
-<script>
-    const updateItemToast = document.getElementById('updateItemToast')
-    const updateToast = new bootstrap.Toast(updateItemToast)
-    updateToast.show()
+    const messageToast = document.getElementById('messageToast')
+    const toast = new bootstrap.Toast(messageToast)
+    toast.show()
 </script>
 @endif
 

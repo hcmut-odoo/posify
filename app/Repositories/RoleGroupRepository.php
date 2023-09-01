@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\RoleGroup;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RoleGroupRepository
 {
     public function get($id)
     {
-        return RoleGroup::find($id);
+        try {
+            $resource = RoleGroup::findOrFail($id);
+            return $resource;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found role group has ID: $id");
+        }
     }
 
     public function getByGroupId($groupId)

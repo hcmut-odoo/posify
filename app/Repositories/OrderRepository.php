@@ -2,24 +2,28 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderRepository
 {
     public function get($id)
     {
-        return Order::find($id);
+        try {
+            $order = Order::findOrFail($id);
+            return $order;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found order has ID: $id");
+        }
     }
 
-    public function create($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
+    public function create($userId, $paymentModeId, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
     {
         return Order::create([
             'order_transaction' => uniqid(),
             'user_id' => $userId,
-            'payment_method' => $paymentMethod,
+            'payment_mode_id' => $paymentModeId,
             'status' => 'processing',
             'delivery_name' => $deliveryName,
             'delivery_phone' => $deliveryPhone,

@@ -1,47 +1,32 @@
 @extends('layouts.admin')
 @section('title', 'Tạo khóa dịch vụ')
 @section('content')
-@php
-    $controllers = [
-        [
-            'controller' => 'User',
-            'actions' => ['View', 'Edit', 'Delete'],
-        ],
-        [
-            'controller' => 'Product',
-            'actions' => ['View', 'Create', 'Edit', 'Delete'],
-        ],
-        [
-            'controller' => 'Order',
-            'actions' => ['View', 'Create', 'Edit', 'Delete'],
-        ],
-    ];
-@endphp
 <div class="row">
     <div class="col-lg-12">
         <section class="panel">
             <header class="panel-heading">
                 <h1>Thêm khóa dịch vụ web</h1>
             </header>
-            <form action="{{ route('admin.api.key.create') }}" method="POST" style="display: inline;">
+            <form action="{{ route('admin.api.key.create.post') }}" method="POST" style="display: inline;">
                 @csrf
+                <input type="hidden" name="key_type" value="web_service_key">
                 <div class="panel-body">
                     <div class="form-inline">
                         <div class="form-group">
                             <label for="api-key">API Key:</label>
-                            <input type="text" id="api-key" class="form-control" name="api_key">
+                            <input type="text" id="api-key" class="form-control" name="api_key" required>
                         </div>
                         <button type="button" class="btn btn-success" id="copy-api-key" style="display:none">Copy</button>
                         <button type="button" class="btn btn-primary" id="generate-api-key">Generate</button>
                     </div>
                     <div class="form-group mt-3">
                         <label for="description">Description:</label>
-                        <textarea id="description" class="form-control" rows="3" name="description"></textarea>
+                        <textarea id="description" class="form-control" rows="3" name="description" required></textarea>
                     </div>
                     <div class="form-group mt-3">
                         <label for="toggle-api-key">Status:</label>
                         <label class="switch">
-                            <input type="checkbox" id="toggle-api-key" name="toggle_api_key">
+                            <input type="checkbox" id="toggle-api-key" name="toggle_api_key" required>
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -50,43 +35,30 @@
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Controller</th>
+                                <th>Resource</th>
                                 <th>All</th>
-                                <th>View</th>
-                                <th>Modify</th>
                                 <th>Add</th>
+                                <th>Modify</th>
+                                <th>View</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($controllers as $controller)
+                            @foreach ($resources as $resource)
                                 <tr>
-                                    <td>{{ $controller['controller'] }}</td>
+                                    <td>{{ $resource['resource'] }}</td>
                                     <td>
                                         <label>
                                             <input type="checkbox" class="row-all" data-row="{{ $loop->iteration }}">
                                         </label>
                                     </td>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="{{ $controller['controller'] }}_view_permission">
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="{{ $controller['controller'] }}_update_permission">
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="{{ $controller['controller'] }}_create_permission">
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="{{ $controller['controller'] }}_delete_permission">
-                                        </label>
-                                    </td>
+                                    @foreach ($resource['permissions'] as $permission)
+                                        <td>
+                                            <label>
+                                                <input type="checkbox" name="{{ $resource['resource'] }}_{{ $permission['permission'] }}" value="{{ $permission['permission_id'] }}">
+                                            </label>
+                                        </td>
+                                    @endforeach
                                 </tr>
                             @endforeach
                         </tbody>
@@ -193,4 +165,3 @@
 </script>
 @endif
 @endsection
-

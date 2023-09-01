@@ -10,6 +10,7 @@ use App\Repositories\OrderItemRepository;
 use App\Repositories\UserRepository;
 use App\Exceptions\InvalidParameterException;
 use App\Exceptions\NotFoundException;
+use App\Repositories\PaymentModeRepository;
 use Exception;
 
 class OrderService extends BaseService
@@ -19,13 +20,15 @@ class OrderService extends BaseService
     private $orderItemRepository;
     private $cartItemRepository;
     private $userRepository;
+    private $paymentModeRepository;
 
     public function __construct(
         CartService $cartService,
         OrderRepository $orderRepository,
         OrderItemRepository $orderItemRepository,
         CartItemRepository $cartItemRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        PaymentModeRepository $paymentModeRepository
     )
     {
         $this->cartService = $cartService;
@@ -33,6 +36,7 @@ class OrderService extends BaseService
         $this->orderItemRepository = $orderItemRepository;
         $this->cartItemRepository = $cartItemRepository;
         $this->userRepository = $userRepository;
+        $this->paymentModeRepository = $paymentModeRepository;
         parent::__construct();
     }
 
@@ -50,6 +54,17 @@ class OrderService extends BaseService
         return $orders;
     }
 
+    public function getOrderItem($orderItemId)
+    {
+        if (!validate_id($orderItemId)) {
+            throw new InvalidParameterException("Invalid order item ID: $orderItemId");
+        }
+
+        $orderItem = $this->orderItemRepository->get($orderItemId);
+
+        return $orderItem;
+    }
+
     public function getOrderItems($orderId)
     {
         if (!validate_id($orderId)) {
@@ -60,6 +75,17 @@ class OrderService extends BaseService
             ->join('cart_items', 'order_items.cart_item_id', '=', 'cart_items.id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
             ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
+            ->join('payment_modes', 'payment_modes.id', '=', 'orders.payment_mode_id')
+            ->select(
+                'orders.*',
+                'order_items.*',
+                'cart_items.*',
+                'products.*',
+                'product_variants.*',
+                'payment_modes.name AS payment_mode',
+                'payment_modes.id AS payment_mode_id',
+                'order_items.id AS order_item_id',
+            )
             ->where('orders.id', $orderId)
             ->get()
             ->toArray();
@@ -67,54 +93,88 @@ class OrderService extends BaseService
         return $orderItems;
     }
 
+    public function getPaymentModes()
+    {
+        return $this->paymentModeRepository->getAll();
+    }
+
+    public function getPaymentModeByName($name)
+    {
+        return $this->paymentModeRepository->findByName($name);
+    }
+
+    public function getPaymentModeById($id)
+    {
+        return $this->paymentModeRepository->get($id);
+    }
+
     public function placeOrder($userId, $orderData)
     {
         if (!validate_id($userId)) {
             throw new InvalidParameterException("Invalid user ID: $userId");
         }
+
         $cartItems = $this->cartService->getCartItems($userId);
+
         try {
             DB::beginTransaction();
+
+            $paymentMode = $this->paymentModeRepository->findByName(
+                $orderData['payment_mode']
+            );
+
+            if (!$paymentMode) {
+                throw new NotFoundException("Payment mode $paymentMode not found");
+            }
+
             $order = $this->createOrder(
                 $userId,
-                $orderData['payment_method'],
+                $paymentMode->id,
                 $orderData['delivery_name'],
                 $orderData['delivery_phone'],
                 $orderData['delivery_note'],
                 $orderData['delivery_address']
             );
+
             foreach ($cartItems as $item) {
                 $this->createOrderItem($item->id, $order->id);
             }
+
             foreach ($cartItems as $item) {
                 $this->cartService->markToOder($item->id);
             }
+
             DB::commit();
             return true;
         } catch (\Exception $e) {
             DB::rollback();
+            throw $e;
             return false;
         }
     }
 
-    public function createOrder($userId, $paymentMethod, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
+    public function createOrder($userId, $paymentModeId, $deliveryName, $deliveryPhone, $deliveryNote, $deliveryAddress)
     {
-        $parameters = compact('paymentMethod', 'deliveryName', 'deliveryPhone', 'deliveryAddress');
+        $parameters = compact('paymentModeId', 'deliveryName', 'deliveryPhone', 'deliveryAddress');
+
         if (!validate_id($userId)) {
             throw new InvalidParameterException();
         }
+
         foreach ($parameters as $parameter) {
             if (!validate_parameter($parameter)) {
                 throw new InvalidParameterException();
             }
         }
+
         $user = $this->userRepository->get($userId);
         if (!$user) {
             throw new NotFoundException("User not found with ID: $userId");
         }
+
         return $this->orderRepository->create(
             $userId,
-            $paymentMethod,
+            $paymentModeId,
             $deliveryName,
             $deliveryPhone,
             $deliveryNote,
@@ -153,7 +213,62 @@ class OrderService extends BaseService
         if (!validate_id($orderId)) {
             throw new InvalidParameterException("Invalid order ID: $orderId");
         }
-        return  $this->orderRepository->get($orderId);
+        return $this->orderRepository->get($orderId);
+    }
+
+    public function getOrderDetail($orderId)
+    {
+        if (!validate_id($orderId)) {
+            throw new InvalidParameterException("Invalid order ID: $orderId");
+        }
+
+        $orderItems = $this->getOrderItems($orderId);
+
+        $orderRows = [];
+        foreach ($orderItems as $orderRow) {
+            // Collect user data
+            $user['id'] = $orderRow->user_id;
+
+            // Collect product variant data
+            $variant['id'] = $orderRow->product_variant_id;
+            $variant['product_id'] = $orderRow->product_id;
+            $variant['extend_price'] = $orderRow->extend_price;
+            $variant['size'] = $orderRow->size;
+
+            // Collect product data
+            $product['id'] = $orderRow->product_id;
+            $product['variant_id'] = $orderRow->product_variant_id;
+            $product['price'] = $orderRow->price;
+            $product['description'] = $orderRow->description;
+            $product['name'] = $orderRow->name;
+            $product['variant'] = $variant;
+
+            // Collect payment data
+            $payment['id'] = $orderRow->payment_mode_id;
+            $payment['name'] = $orderRow->payment_mode;
+
+            // Collect delivery data
+            $delivery['delivery_note'] = $orderRow->delivery_note;
+            $delivery['delivery_phone'] = $orderRow->delivery_phone;
+            $delivery['delivery_address'] = $orderRow->delivery_address;
+            $delivery['delivery_name'] = $orderRow->delivery_name;
+
+            // Add these information as sub association data
+            $order['id'] = $orderRow->order_item_id;
+            $order['quantity'] = $orderRow->quantity;
+            $order['product'] = $product;
+            $order['delivery'] = $delivery;
+            $order['user'] = $user;
+            $order['payment'] = $payment;
+
+            $orderRows[] = $order;
+        }
+
+        $orderRecord = $this->orderRepository->get($orderId);
+
+        $orderRecord->order_rows = $orderRows;
+
+        return $orderRecord;
     }
 
     public function rejectOrder($orderId)

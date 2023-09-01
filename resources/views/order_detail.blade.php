@@ -153,7 +153,7 @@ function total($items)
                         </div>
                         <div class="cart-page-divider"></div>
 
-                        @switch($order->payment_method)
+                        @switch($order->payment_mode)
                             @case('cash')
                                 <div class="order-page__content__header__checkbox">
                                     <label class="form-check-label" for="flexRadioDefault1">
@@ -162,31 +162,15 @@ function total($items)
                                     </label>
                                 </div>
                             @break
-                            @case('momo-pay')
+                            @case('Payment by check')
                                 <div class="order-page__content__header__checkbox">
                                     <label class="form-check-label" for="flexRadioDefault2">
-                                        <img class="image-payment" src="/images/payment/momo.png">
-                                        Momo
+                                        <img class="image-payment" src="/images/payment/sec.png">
+                                        Thanh toán bằng Sec
                                     </label>
                                 </div>
                             @break
-                            @case('zalo-pay')
-                                <div class="order-page__content__header__checkbox">
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        <img class="image-payment" src="/images/payment/zalo.png">
-                                        ZaloPay
-                                    </label>
-                                </div>
-                            @break
-                            @case('shopee-pay')
-                                <div class="order-page__content__header__checkbox">
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        <img class="image-payment" src="/images/payment/shopee.png">
-                                        ShopeePay
-                                    </label>
-                                </div>
-                            @break
-                            @case('credit')
+                            @case('Bank wire')
                                 <div class="order-page__content__header__checkbox">
                                     <label class="form-check-label" for="flexRadioDefault2">
                                         <img class="image-payment" src="/images/payment/card.png">

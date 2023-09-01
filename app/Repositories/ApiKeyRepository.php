@@ -2,18 +2,26 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\ApiKey;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ApiKeyRepository
 {
     public function get($id)
     {
-        return ApiKey::find($id);
+        try {
+            $apiKey = ApiKey::findOrFail($id);
+            return $apiKey;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found api key has ID: $id");
+        }
     }
 
     public function getByKey($key)
     {
-        return ApiKey::where('key', $key)->first();
+        return ApiKey::where('value', $key)->first();
     }
 
     public function remove($id)
@@ -21,11 +29,15 @@ class ApiKeyRepository
         return ApiKey::where('id', $id)->delete();
     }
 
-    public function create($key, $userId)
+    public function create($key, $description)
     {
+        $currentDate = Carbon::now();
+        $nextTwoMonths = $currentDate->addMonths(2);
+
         return ApiKey::create([
-            'key' => $key,
-            'user_id' => $userId
+            'value' => $key,
+            'description' => $description,
+            'expired_at' => $nextTwoMonths
         ]);
     }
 

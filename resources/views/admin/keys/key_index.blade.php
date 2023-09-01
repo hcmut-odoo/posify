@@ -14,7 +14,6 @@
                         <tr>
                             <th>ID</th>
                             <th>Key</th>
-                            <th>Người dùng</th>
                             <th>Trạng thái</th>
                             <th>Mô tả</th>
                             <th>Ngày tạo</th>
@@ -25,25 +24,23 @@
                         @foreach ($items as $item)
                             <tr>
                                 <td>{{ $item->id }}</td>
-                                <td>{{ $item->key }}</td>
-                                <td>{{ $item->user_name }}</td>
+                                <td>{{ $item->value }}</td>
                                 <td>{{ $item->status }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>
                                     <a
                                         class="fa fa-eye btn btn-info btn-sm"
-                                        href="{{ route('admin.order.accepted.detail', ['id' => $item->id]) }}">
+                                        href="{{ route('admin.api.key.detail', ['id' => $item->id]) }}">
                                     </a>
-                                    <form action="{{ route('admin.api.key.inactive', ['id' => $item->id]) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $item->id }}">
-                                        <button type="submit" class="far fa-check-circle btn btn-warning btn-sm"></button>
-                                    </form>
+                                    <a
+                                        class="fa fa-pen btn btn-warning btn-sm"
+                                        href="{{ route('admin.api.key.update.get', ['id' => $item->id]) }}">
+                                    </a>
                                     <form action="{{ route('admin.api.key.delete', ['id' => $item->id]) }}" method="POST" style="display: inline;">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $item->id }}">
-                                        <button type="submit" class="far fa-check-circle btn btn-error btn-sm"></button>
+                                        <button type="submit" class="far fa-trash btn btn-danger btn-sm"></button>
                                     </form>
                                 </td>
                             </tr>

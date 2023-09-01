@@ -29,7 +29,7 @@
                             <tr>
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->user_id }}</td>
-                                <td>{{ $order->payment_method }}</td>
+                                <td>{{ $order->payment_mode_id }}</td>
                                 <td>{{ $order->status }}</td>
                                 <td>{{ $order->delivery_name }}</td>
                                 <td>{{ $order->delivery_address }}</td>

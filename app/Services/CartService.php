@@ -45,19 +45,20 @@ class CartService extends BaseService
                 'cart_id' => $cartId,
                 'product_id' => $productId,
                 'product_variant_id' => $productVariant->id,
-                'note' => false
+                'note' => $note,
+                'stamp' => true
             ]);
-    
+
             if ($duplicateItem) {
                 return $this->cartItemRepository->update([
                     'id' => $duplicateItem->id,
                     'quantity' => $duplicateItem->quantity + $quantity
                 ]);
             }
-    
+
             return $this->cartItemRepository->create($productId, $cartId, $productVariant->id, $note, $quantity);
         } catch (\Exception $e) {
-            return false;
+            throw $e;
         }
 
     }
@@ -101,7 +102,7 @@ class CartService extends BaseService
             $currentQuantityInCart = $cartItem->quantity;
             $currentSize = $currentProductVariant->size;
             $productId = $currentProductVariant->product_id;
-            
+
             $newSize = $data['size'];
             $newRequestQuantity = $data['quantity'];
             $finalyProductVariantId = $currentProductVariant->id;
@@ -124,7 +125,7 @@ class CartService extends BaseService
                 if ($differentQuantity > 0) {
                     $this->productService->keepProductVariant($currentProductVariant->id, abs($differentQuantity));
                 }
-                
+
                 if ($differentQuantity < 0) {
                     $this->productService->unKeepProductVariant($currentProductVariant->id, abs($differentQuantity));
                 }
@@ -185,9 +186,9 @@ class CartService extends BaseService
         $items = DB::table('cart_items')
             ->join('products', 'cart_items.product_id', '=', 'products.id')
             ->join('product_variants', 'cart_items.product_variant_id', '=', 'product_variants.id')
-            ->where('cart_items.cart_id', $cartId, 'and')
-            ->where('cart_items.stamp', true)
-            ->where('cart_items.deleted_at', null)
+            ->where('cart_items.cart_id', '=', $cartId)
+            ->where('cart_items.stamp', '=', true)
+            ->where('cart_items.deleted_at', '=', null)
             ->select(
                 'cart_items.id as id',
                 'cart_items.product_id',

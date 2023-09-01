@@ -31,10 +31,10 @@
             }
         });
 
-        setTimeout(function () {
-            overlay.style.display = 'none';
-            window.location.href = '/orders';
-        }, 3000);
+        // setTimeout(function () {
+        //     overlay.style.display = 'none';
+        //     window.location.href = '/orders';
+        // }, 3000);
     });
 </script>
 @endsection

@@ -2,15 +2,22 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CategoryRepository
 {
     public function get($id)
     {
-        return Category::find($id);
+        try {
+            $category = Category::findOrFail($id);
+            return $category;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found category has ID: $id");
+        }
     }
 
     public function findByName($name)
@@ -48,6 +55,8 @@ class CategoryRepository
                 $updateData[$field] = $data[$field];
             }
         }
+
+        $updateData['updated_at'] = now();
 
         if (!empty($updateData)) {
             return DB::table('categories')

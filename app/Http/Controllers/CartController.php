@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderRequest;
 use Illuminate\Http\Request;
 use App\Services\CartService;
 use App\Services\OrderService;
@@ -43,9 +44,9 @@ class CartController extends Controller
         try {
             $this->cartService->removeItem($request->input('id'));
 
-            Session::flash('removeItemMessage', 'Item was removed successfully!');
+            Session::flash('message', 'Item was removed successfully!');
         } catch (\Exception $e) {
-            Session::flash('removeItemMessage', 'Failed to remove item.');
+            Session::flash('message', 'Failed to remove item.');
         }
 
         return redirect()->back();
@@ -85,9 +86,9 @@ class CartController extends Controller
         try {
             $this->cartService->editItem($items);
 
-            Session::flash('updateItemMessage', 'Item was edited successfully!');
+            Session::flash('message', 'Item was edited successfully!');
         } catch (\Exception $e) {
-            Session::flash('updateItemMessage', $e->getMessage());
+            Session::flash('message', $e->getMessage());
         }
 
         return redirect()->back();
@@ -107,7 +108,7 @@ class CartController extends Controller
         return redirect()->route('orders')->with('success', 'Order placed successfully!');
     }
 
-    public function placeOrder(Request $request)
+    public function placeOrder(OrderRequest $request)
     {
         $userId = $request->user()->id;
         $orderData = [
@@ -115,9 +116,9 @@ class CartController extends Controller
             'delivery_phone' => $request->input('delivery_phone'),
             'delivery_address' => $request->input('delivery_address'),
             'delivery_note' => $request->input('delivery_note'),
-            'payment_method' => $request->input('payment_method')
+            'payment_mode' => $request->input('payment_mode')
         ];
-        
+
         try {
             $this->orderService->placeOrder($userId, $orderData);
             return redirect()->route('cart.notice', [

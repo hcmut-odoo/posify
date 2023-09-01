@@ -2,16 +2,23 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\CartItem;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
 class CartItemRepository
 {
     public function get($id)
     {
-        return CartItem::find($id);
+        try {
+            $cartItem = CartItem::findOrFail($id);
+            return $cartItem;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found cart item has ID: $id");
+        }
     }
 
     public function remove($id)
@@ -30,6 +37,8 @@ class CartItemRepository
             }
         }
 
+        $updateData['updated_at'] = now();
+
         if (!empty($updateData)) {
             return DB::table('cart_items')
                 ->where('id', $data['id'])
@@ -46,7 +55,8 @@ class CartItemRepository
             'cart_id' => $cartId,
             'product_variant_id' => $productVariantId,
             'note' => $note,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'stamp' => true
         ]);
     }
 
@@ -64,6 +74,9 @@ class CartItemRepository
             })
             ->when(isset($criteria['note']), function ($query) use ($criteria) {
                 $query->where('note', $criteria['note'] == false ? null : $criteria['note']);
+            })
+            ->when(isset($criteria['stamp']), function ($query) use ($criteria) {
+                $query->where('stamp', $criteria['stamp'] == false ? null : $criteria['stamp']);
             })
             ->first();
     }

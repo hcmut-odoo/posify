@@ -2,15 +2,21 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class UserRepository
 {
     public function get($id)
     {
-        return User::find($id);
+        try {
+            $user = User::findOrFail($id);
+            return $user;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found user has ID: $id");
+        }
     }
 
     public function getByEmail($email)
@@ -55,6 +61,8 @@ class UserRepository
                 $updateData[$field] = $data[$field];
             }
         }
+
+        $updateData['updated_at'] = now();
 
         if (!empty($updateData)) {
             return DB::table('users')

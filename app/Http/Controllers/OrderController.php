@@ -65,7 +65,7 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             Session::flash('message', $e->getMessage());
         }
-        
+
         return redirect()->back();
     }
 
@@ -73,7 +73,7 @@ class OrderController extends Controller
     public function rejectOrder(Request $request)
     {
         $orderId = $request->input('id');
-        
+
         try {
             $this->orderService->rejectOrder($orderId);
 
@@ -152,18 +152,22 @@ class OrderController extends Controller
     public function userViewOrderDetail(Request $request, $id)
     {
         $orderItems = $this->orderService->getOrderItems($id);
+        $order = $this->orderService->findById($id);
 
         return view('order_detail', [
-            'orders' => $orderItems
+            'orders' => $orderItems,
+            'order' => $order
         ]);
     }
 
     public function adminViewOrderDetail(Request $request, $id)
     {
         $orderItems = $this->orderService->getOrderItems($id);
+        $order = $this->orderService->findById($id);
 
         return view('/admin/orders/order_detail', [
-            'items' => $orderItems
+            'items' => $orderItems,
+            'order' => $order
         ]);
     }
 

@@ -7,6 +7,7 @@ use Database\Seeders\UserSeeder;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\StoreSeeder;
 use Database\Seeders\ProductSeeder;
+use Database\Seeders\PaymentModeSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,7 +22,12 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CategorySeeder::class,
             StoreSeeder::class,
-            ProductSeeder::class
+            TaxSeeder::class,
+            ProductSeeder::class,
+            ResourceSeeder::class,
+            PermissionSeeder::class,
+            ActionSeeder::class,
+            PaymentModeSeeder::class
         ]);
     }
 }
