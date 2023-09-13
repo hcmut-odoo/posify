@@ -96,8 +96,8 @@ Route::prefix('/order')->group(function () {
     Route::get('/find', [ApiController::class, 'getOrderDetail'])->name('api.order.find');
     Route::get('/list', [ApiController::class, 'orders'])->name('api.order.list');
     Route::get('/search', [ApiController::class, 'searchOrders'])->name('api.order.search');
-    Route::get('/accept', [ApiController::class, 'acceptOrder'])->name('api.order.accept');
-    Route::get('/reject', [ApiController::class, 'rejectOrder'])->name('api.order.reject');
+    Route::post('/accept', [ApiController::class, 'acceptOrder'])->name('api.order.accept');
+    Route::post('/reject', [ApiController::class, 'rejectOrder'])->name('api.order.reject');
     Route::get('/accepted/list', [ApiController::class, 'acceptedOrders'])->name('api.order.accepted.list');
     Route::get('/rejected/list', [ApiController::class, 'rejectedOrders'])->name('api.order.rejected.list');
     Route::get('/accept/{id}', [ApiController::class, 'acceptOrderById'])->name('api.order.accept.id');
