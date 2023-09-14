@@ -117,13 +117,6 @@ Route::prefix('/order_item')->group(function () {
     Route::get('/search', [ApiController::class, 'searchOrderItems'])->name('api.order.item.search');
 });
 
-Route::prefix('/invoice')->group(function () {
-    Route::get('/find', [ApiController::class, 'getInvoice'])->name('api.invoice.find');
-    Route::get('/list', [ApiController::class, 'invoices'])->name('api.invoice.list');
-    Route::get('/search', [ApiController::class, 'searchInvoices'])->name('api.invoice.search');
-    Route::get('/find/{id}', [ApiController::class, 'getInvoiceById'])->name('api.invoice.find.id');
-});
-
 Route::prefix('/payment')->group(function () {
     Route::get('/find', [ApiController::class, 'getPaymentMode'])->name('api.payment.find');
     Route::get('/list', [ApiController::class, 'paymentModes'])->name('api.payment.list');

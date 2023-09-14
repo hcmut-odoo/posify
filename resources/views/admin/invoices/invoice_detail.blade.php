@@ -44,7 +44,7 @@
                                     <td>{{ $item->quantity }}</td>
                                     <td>{{ $item->order_created_at }}</td>
                                     <td>{{ $item->order_accepted_at }}</td>
-                                    <td>{{ $item->invoice_created_at }}</td>
+                                    <td>{{ $item->order_accepted_at }}</td>
                                     <td>{{ $item->note }}</td>
                                 </tr>
                             @endforeach

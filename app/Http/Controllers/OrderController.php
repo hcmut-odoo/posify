@@ -12,19 +12,11 @@ use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
-    private $cartService;
     private $orderService;
-    private $invoiceService;
 
-    public function __construct(
-        CartService $cartService,
-        OrderService $orderService,
-        InvoiceService $invoiceService
-    )
+    public function __construct(OrderService $orderService)
     {
-        $this->cartService = $cartService;
         $this->orderService = $orderService;
-        $this->invoiceService = $invoiceService;
     }
 
     public function orders(Request $request)
@@ -59,9 +51,8 @@ class OrderController extends Controller
     {
         try {
             $orderId = $request->input('id');
-            $this->invoiceService->createInvoice($orderId);
-
-            Session::flash('message', 'Invoice was created successfully!');
+            $this->orderService->transformOrder($orderId);
+            Session::flash('message', 'Order was transform successfully!');
         } catch (\Exception $e) {
             Session::flash('message', $e->getMessage());
         }

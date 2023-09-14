@@ -36,20 +36,12 @@
                         <div class="col-sm-6">
                             <div class="text-muted text-right">
                                 <div>
-                                    <h5 class="font-size-15 mb-1">Hóa đơn số:</h5>
-                                    <p>#{{ $invoice->id }}</p>
+                                    <h5 class="font-size-15 mb-1">Đơn hàng số:</h5>
+                                    <p>#{{ $order->id }}</p>
                                 </div>
                                 <div class="mt-4">
                                     <h5 class="font-size-15 mb-1">Ngày đặt hàng:</h5>
                                     <p>{{ $order->created_at }}</p>
-                                </div>
-                                <div class="mt-4">
-                                    <h5 class="font-size-15 mb-1">Ngày xác nhận:</h5>
-                                    <p>{{ $order->created_at }}</p>
-                                </div>
-                                <div class="mt-4">
-                                    <h5 class="font-size-15 mb-1">Ngày xuất hóa đơn:</h5>
-                                    <p>{{ $invoice->created_at }}</p>
                                 </div>
                                 <div class="mt-4">
                                     <h5 class="font-size-15 mb-1">Mã đơn hàng:</h5>
@@ -90,15 +82,15 @@
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="5" class="text-right">Tạm tính</th>
-                                        <td class="text-right">{{ number_format($invoice->total, 0, ',', '.') }}</td>
+                                        <td class="text-right">{{ number_format($order->total, 0, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="5" class="border-0 text-right">
                                             Tax</th>
-                                        <td class="border-0 text-right">{{ number_format(floatval($invoice->total)*0.1, 0, ',', '.')}} VNĐ</td>
+                                        <td class="border-0 text-right">{{ number_format(floatval($order->total)*0.1, 0, ',', '.')}} VNĐ</td>
                                     <tr>
                                         <th scope="row" colspan="5" class="border-0 text-right">Total</th>
-                                        <td class="border-0 text-right"><h4 class="m-0 font-weight-bold">{{ number_format(floatval($invoice->total)*1.1, 0, ',', '.')}} VNĐ</h4></td>
+                                        <td class="border-0 text-right"><h4 class="m-0 font-weight-bold">{{ number_format(floatval($order->total)*1.1, 0, ',', '.')}} VNĐ</h4></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -135,7 +127,7 @@
 
             // Set the document title for the PDF before printing
             var partner = @json($partner);
-            var invoice = @json($invoice);
+            var invoice = @json($order);
             var dateExport = new Date(invoice.created_at).toISOString().split('T')[0];
             var pdfTitle = partner.name + "-" + dateExport;
             var originalTitle = document.title;
