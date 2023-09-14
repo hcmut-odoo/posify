@@ -25,7 +25,6 @@ use App\Services\ProductService;
 use App\Services\CategoryService;
 use App\Services\StoreService;
 use App\Services\ApiService;
-use App\Services\InvoiceService;
 use App\Services\TaxService;
 use App\Http\Requests\QueryRequest;
 use App\Http\Requests\CreateCategoryRequest;
@@ -34,7 +33,6 @@ use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\Invoice;
 use App\Models\PaymentMode;
 use App\Models\Tax;
 
@@ -47,7 +45,6 @@ class ApiController extends Controller
     private $categoryService;
     private $storeService;
     private $apiService;
-    private $invoiceService;
     private $taxService;
 
     public function __construct(
@@ -58,7 +55,6 @@ class ApiController extends Controller
         CategoryService $categoryService,
         StoreService $storeService,
         ApiService $apiService,
-        InvoiceService $invoiceService,
         TaxService $taxService
     )
     {
@@ -69,7 +65,6 @@ class ApiController extends Controller
         $this->categoryService = $categoryService;
         $this->storeService = $storeService;
         $this->apiService = $apiService;
-        $this->invoiceService = $invoiceService;
         $this->taxService = $taxService;
     }
 
@@ -628,7 +623,7 @@ class ApiController extends Controller
     {
         try {
             $id = $request->input('id');
-            $this->invoiceService->createInvoice($id);
+            $this->orderService->transformOrder($id);
             return $this->successResponse("Order has ID $id processed successfully");
         } catch (\Exception $e) {
             return $this->errorResponse($e);
@@ -638,7 +633,7 @@ class ApiController extends Controller
     public function acceptOrderById(Request $request, $id) : JsonResponse
     {
         try {
-            $this->invoiceService->createInvoice($id);
+            $this->orderService->transformOrder($id);
             return $this->successResponse("Order has ID $id processed successfully");
         } catch (\Exception $e) {
             return $this->errorResponse($e);
@@ -716,37 +711,6 @@ class ApiController extends Controller
         try {
             $rejectedOrders = $this->orderService->getOrderItem($request->input('id'));
             return $this->successResponse($rejectedOrders);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e);
-        }
-    }
-
-    public function invoices(QueryRequest $request) : JsonResponse
-    {
-        return $this->resourceList($request, Invoice::class);
-    }
-
-    public function searchInvoices(QueryRequest $request) : JsonResponse
-    {
-        return $this->resourceSearch($request, Invoice::class);
-    }
-
-    public function getInvoice(Request $request) : JsonResponse
-    {
-        try {
-            $id = $request->input('id');
-            $order = $this->invoiceService->findById($id);
-            return $this->successResponse($order);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e);
-        }
-    }
-
-    public function getInvoiceById(Request $request, $id) : JsonResponse
-    {
-        try {
-            $order = $this->invoiceService->findById($id);
-            return $this->successResponse($order);
         } catch (\Exception $e) {
             return $this->errorResponse($e);
         }
