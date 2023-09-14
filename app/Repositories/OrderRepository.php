@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Exceptions\NotFoundException;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 class OrderRepository
 {
@@ -28,8 +29,31 @@ class OrderRepository
             'delivery_name' => $deliveryName,
             'delivery_phone' => $deliveryPhone,
             'delivery_address' => $deliveryAddress,
-            'delivery_note' => $deliveryNote
+            'delivery_note' => $deliveryNote,
+            'total' => 0
         ]);
+    }
+
+    public function update($data)
+    {
+        $fields = ['status', 'total'];
+        $updateData = [];
+
+        foreach ($fields as $field) {
+            if (isset($data[$field])) {
+                $updateData[$field] = $data[$field];
+            }
+        }
+
+        $updateData['updated_at'] = now();
+
+        if (!empty($updateData)) {
+            return DB::table('orders')
+                ->where('id', $data['id'])
+                ->update($updateData);
+        }
+
+        return false;
     }
 
     public function remove($id)
