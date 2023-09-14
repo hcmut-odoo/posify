@@ -13,6 +13,8 @@ use App\Repositories\ActionRepository;
 use App\Exceptions\InvalidApiKeyException;
 use App\Exceptions\InvalidParameterException;
 use App\Exceptions\NotFoundException;
+use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 
 class ApiService extends BaseService
 {
@@ -169,6 +171,12 @@ class ApiService extends BaseService
 
         // Query the resource based on the filters
         $query = $modelClass::query();
+
+        // If the modelClass is "Product," add variants to the query
+
+        if ($modelClass === Product::class) {
+            $query->with('variants');
+        }
 
         // Apply filters
         foreach ($filters as $field => $filter) {
