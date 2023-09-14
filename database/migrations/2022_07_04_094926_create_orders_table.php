@@ -23,6 +23,7 @@ class CreateOrdersTable extends Migration
             $table->string('delivery_phone');
             $table->string('delivery_address');
             $table->string('delivery_name');
+            $table->decimal('total');
             $table->softDeletes();
             $table->timestamps();
 
