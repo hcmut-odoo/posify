@@ -182,6 +182,36 @@ class OrderService extends BaseService
         );
     }
 
+    public function transformOrder($orderId)
+    {
+        $order = $this->findById($orderId);
+        $orderItems = $this->getOrderItems($orderId);
+        $totalPrice = 0;
+
+        foreach ($orderItems as $orderItem) {
+            $totalPrice = $totalPrice + $orderItem->extend_price*$orderItem->quantity;
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $transformOrder = $this->orderRepository->update([
+                'id' => $orderId,
+                'total' => $totalPrice
+            ]);
+            $order->status = 'done';
+            $order->save();
+
+            DB::commit();
+            return $transformOrder;
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return false;
+        }
+
+    }
+
     public function createOrderItem($cartItemId, $orderId)
     {
         if (!validate_id($cartItemId) || !validate_id($orderId)) {
@@ -290,5 +320,49 @@ class OrderService extends BaseService
     public function pagination($criteria, $perPage, $page)
     {
         return $this->orderRepository->pagination($criteria, ['*'], $perPage, $page);
+    }
+
+    public function getInvoiceFormData($orderId)
+    {
+        $invoiceFormData = DB::table('orders')
+            ->where('orders.id', '=', $orderId)
+            ->join('order_items', 'order_items.order_id', '=', 'orders.id')
+            ->join('cart_items', 'cart_items.id', '=', 'order_items.cart_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
+            ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->select(
+                'cart_items.quantity',
+                'cart_items.note',
+                'product_variants.size',
+                'products.name',
+                'product_variants.extend_price',
+                'products.price'
+            )
+            ->get();
+
+        return $invoiceFormData;
+    }
+
+    public function getInvoiceDetailData($orderId)
+    {
+        $invoiceDetails = DB::table('orders')
+            ->where('orders.id', '=', $orderId)
+            ->join('order_items', 'order_items.order_id', '=', 'orders.id')
+            ->join('cart_items', 'cart_items.id', '=', 'order_items.cart_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
+            ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->join('payment_modes', 'payment_modes.id', '=', 'orders.payment_mode_id')
+            ->select(
+                'orders.payment_mode_id', 'orders.delivery_phone', 'orders.delivery_address',
+                'orders.delivery_name', 'orders.id AS order_id', 'orders.created_at AS order_created_at',
+                'orders.updated_at AS order_accepted_at', 'orders.order_transaction',
+                'cart_items.quantity', 'cart_items.note', 'product_variants.size',
+                'products.name', 'products.price', 'products.description AS product_description',
+                'products.image_url AS product_image_url', 'products.id AS product_id',
+                'payment_modes.name AS payment_mode'
+            )
+            ->get();
+
+        return $invoiceDetails;
     }
 }
