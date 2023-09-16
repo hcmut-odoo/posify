@@ -623,7 +623,7 @@ class ApiController extends Controller
     {
         try {
             $id = $request->input('id');
-            $this->orderService->transformOrder($id);
+            $this->orderService->transformOrder($id, 'done');
             return $this->successResponse("Order has ID $id processed successfully");
         } catch (\Exception $e) {
             return $this->errorResponse($e);
@@ -633,7 +633,7 @@ class ApiController extends Controller
     public function acceptOrderById(Request $request, $id) : JsonResponse
     {
         try {
-            $this->orderService->transformOrder($id);
+            $this->orderService->transformOrder($id, 'done');
             return $this->successResponse("Order has ID $id processed successfully");
         } catch (\Exception $e) {
             return $this->errorResponse($e);

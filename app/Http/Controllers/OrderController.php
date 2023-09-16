@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Order;
-use App\Services\CartService;
 use App\Services\OrderService;
-use App\Services\InvoiceService;
 use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
@@ -51,7 +49,7 @@ class OrderController extends Controller
     {
         try {
             $orderId = $request->input('id');
-            $this->orderService->transformOrder($orderId);
+            $this->orderService->transformOrder($orderId, 'done');
             Session::flash('message', 'Order was transform successfully!');
         } catch (\Exception $e) {
             Session::flash('message', $e->getMessage());
