@@ -25,7 +25,9 @@ class UserSeeder extends Seeder
                 'address' => 'HCMC',
                 'phone_number' => '0924956363',
                 'role' => 'admin',
-                'email_verified_at' => now()
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id' => 2,
@@ -35,7 +37,9 @@ class UserSeeder extends Seeder
                 'address' => 'HCMC',
                 'phone_number' => '0924956362',
                 'role' => 'staff',
-                'email_verified_at' => now()
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         );
     }
