@@ -144,6 +144,9 @@ class OrderService extends BaseService
                 $this->cartService->markToOder($item->id);
             }
 
+            $orderId = $order->id;
+            $this->transformOrder($orderId, 'processing');
+
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -182,7 +185,7 @@ class OrderService extends BaseService
         );
     }
 
-    public function transformOrder($orderId)
+    public function transformOrder($orderId, $status)
     {
         $order = $this->findById($orderId);
         $orderItems = $this->getOrderItems($orderId);
@@ -197,10 +200,9 @@ class OrderService extends BaseService
 
             $transformOrder = $this->orderRepository->update([
                 'id' => $orderId,
-                'total' => $totalPrice
+                'total' => $totalPrice,
+                'status' => $status
             ]);
-            $order->status = 'done';
-            $order->save();
 
             DB::commit();
             return $transformOrder;
