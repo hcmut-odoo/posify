@@ -13,6 +13,7 @@ use App\Repositories\ActionRepository;
 use App\Exceptions\InvalidApiKeyException;
 use App\Exceptions\InvalidParameterException;
 use App\Exceptions\NotFoundException;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 
@@ -172,10 +173,26 @@ class ApiService extends BaseService
         // Query the resource based on the filters
         $query = $modelClass::query();
 
-        // If the modelClass is "Product," add variants to the query
-
         if ($modelClass === Product::class) {
+            // If the modelClass is "Product," add variants to the query
             $query->with('variants');
+        } elseif ($modelClass === Order::class) {
+            // If the modelClass is "Order," add orderRows to the query
+            $query->join('order_items', 'order_items.order_id', '=', 'orders.id')
+                ->join('cart_items', 'order_items.cart_item_id', '=', 'cart_items.id')
+                ->join('products', 'products.id', '=', 'cart_items.product_id')
+                ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
+                ->join('payment_modes', 'payment_modes.id', '=', 'orders.payment_mode_id')
+                ->select(
+                    'order_items.*',
+                    'cart_items.*',
+                    'products.*',
+                    'product_variants.*',
+                    'orders.*',
+                    'payment_modes.name AS payment_mode',
+                    'payment_modes.id AS payment_mode_id',
+                    'order_items.id AS order_item_id',
+                );
         }
 
         // Apply filters
@@ -228,6 +245,11 @@ class ApiService extends BaseService
 
         // Retrieve the resources
         $resources = $query->get()->toArray();
+
+        // Format resource
+        if ($modelClass === Order::class) {
+            $resources = $this->formatOrderResources($resources);
+        }
 
         // Collect pagination data
         $pagination['page'] = $page;
@@ -325,5 +347,67 @@ class ApiService extends BaseService
         } else {
             throw new InvalidApiKeyException();
         }
+    }
+
+    public function formatOrderResources($resources)
+    {
+        $output = [];
+
+        foreach ($resources as $row) {
+            $order = [
+                "id" => $row["order_id"],
+                "user_id" => $row["user_id"],
+                "status" => $row["status"],
+                "order_transaction" => $row["order_transaction"],
+                "delivery_note" => $row["delivery_note"],
+                "delivery_phone" => $row["delivery_phone"],
+                "delivery_address" => $row["delivery_address"],
+                "delivery_name" => $row["delivery_name"],
+                "total" => $row["total"],
+                "deleted_at" => $row["deleted_at"],
+                "created_at" => $row["created_at"],
+                "updated_at" => $row["updated_at"],
+                "payment_mode_id" => $row["payment_mode_id"],
+            ];
+
+            $orderRows = [
+                "id" => $row["order_item_id"],
+                "quantity" => $row["quantity"],
+                "product" => [
+                    "id" => $row["product_id"],
+                    "variant_id" => $row["product_variant_id"],
+                    "price" => $row["price"],
+                    "description" => $row["description"],
+                    "name" => $row["name"],
+                    "variant" => [
+                        "id" => $row["product_variant_id"],
+                        "product_id" => $row["product_id"],
+                        "extend_price" => $row["extend_price"],
+                        "size" => $row["size"],
+                    ],
+                ],
+                "delivery" => [
+                    "delivery_note" => $row["delivery_note"],
+                    "delivery_phone" => $row["delivery_phone"],
+                    "delivery_address" => $row["delivery_address"],
+                    "delivery_name" => $row["delivery_name"],
+                ],
+                "user" => [
+                    "id" => $row["user_id"],
+                ],
+                "payment" => [
+                    "id" => $row["payment_mode_id"],
+                    "name" => $row["payment_mode"],
+                ],
+            ];
+
+            // Add the orderRows to the order
+            $order["order_rows"] = [$orderRows];
+
+            // Append the order to the output array
+            $output[] = $order;
+        }
+
+        return $output;
     }
 }
