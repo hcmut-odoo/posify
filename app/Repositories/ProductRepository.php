@@ -66,7 +66,8 @@ class ProductRepository
             'name' => $name,
             'price' => $price,
             'description' => $description,
-            'image_url' => $imageUrl
+            'image_url' => $imageUrl,
+            'tax_id' => 1
         ]);
     }
 
