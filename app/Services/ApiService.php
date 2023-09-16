@@ -48,14 +48,14 @@ class ApiService extends BaseService
 
     public function getKeyWithInfo()
     {
-        $webServiceKeys = DB::table('api_keys')
-            ->join('web_service_keys', 'web_service_keys.api_key_id', '=', 'api_keys.id')
-            ->select('api_keys.id', 'api_keys.value', 'api_keys.created_at', 'api_keys.status', 'api_keys.description')
+        $webServiceKeys = DB::table("api_keys")
+            ->join("web_service_keys", "web_service_keys.api_key_id", "=", "api_keys.id")
+            ->select("api_keys.id", "api_keys.value", "api_keys.created_at", "api_keys.status", "api_keys.description")
             ->get();
 
-        $userAccessKey = DB::table('api_keys')
-            ->join('user_access_keys', 'user_access_keys.api_key_id', '=', 'api_keys.id')
-            ->select('api_keys.id', 'api_keys.value', 'api_keys.created_at', 'api_keys.status', 'api_keys.description')
+        $userAccessKey = DB::table("api_keys")
+            ->join("user_access_keys", "user_access_keys.api_key_id", "=", "api_keys.id")
+            ->select("api_keys.id", "api_keys.value", "api_keys.created_at", "api_keys.status", "api_keys.description")
             ->get();
 
         return $webServiceKeys->concat($userAccessKey);
@@ -107,11 +107,11 @@ class ApiService extends BaseService
         if (!$this->apiKeyRepository->getByKey($key)) {
             throw new NotFoundException("Record api key has key $key not found");
         }
-        $actions = DB::table('api_keys')
-            ->select('api_keys.user_id')
-            ->where('api_keys.key', '=', $key)
-            ->join('user_roles', 'user_roles.user_id', '=', 'api_keys.user_id')
-            ->join('role_groups', 'user_roles.user_group_id', '=', 'role_groups.user_group_id')
+        $actions = DB::table("api_keys")
+            ->select("api_keys.user_id")
+            ->where("api_keys.key", "=", $key)
+            ->join("user_roles", "user_roles.user_id", "=", "api_keys.user_id")
+            ->join("role_groups", "user_roles.user_group_id", "=", "role_groups.user_group_id")
             ->get()
             ->toArray();
 
@@ -126,11 +126,11 @@ class ApiService extends BaseService
         if (!$this->apiKeyRepository->getByKey($key)) {
             throw new NotFoundException("Record api key has key $key not found");
         }
-        $userGroup = DB::table('api_keys')
-            ->select('api_keys.user_id')
-            ->where('api_keys.key', '=', $key)
-            ->join('user_roles', 'user_roles.user_id', '=', 'api_keys.user_id')
-            ->join('user_groups', 'user_roles.user_group_id', '=', 'user_groups.id')
+        $userGroup = DB::table("api_keys")
+            ->select("api_keys.user_id")
+            ->where("api_keys.key", "=", $key)
+            ->join("user_roles", "user_roles.user_id", "=", "api_keys.user_id")
+            ->join("user_groups", "user_roles.user_group_id", "=", "user_groups.id")
             ->first();
 
         return $userGroup->permission === "admin";
@@ -145,9 +145,9 @@ class ApiService extends BaseService
         }
         $actionIds = $this->roleGroupRepository->getByGroupId($userRole->group_id);
         $actionId = $this->actionRepository->search([
-            'controller' => $controller,
-            'method' => $action
-        ], ['id'])->first();
+            "controller" => $controller,
+            "method" => $action
+        ], ["id"])->first();
 
         return in_array($actionId, $actionIds);
     }
@@ -163,76 +163,101 @@ class ApiService extends BaseService
     public function query($data, string $modelClass)
     {
         // Extract the parameters from the payload
-        $filters = $data['filter'] ?? [];
-        $display = $data['display'] ?? [];
-        $sort = $data['sort'] ?? [];
-        $date = $data['date'] ?? [];
-        $limit = $data['limit'] ?? 10;
-        $page = $data['page'] ?? 1;
+        $filters = $data["filter"] ?? [];
+        $display = $data["display"] ?? [];
+        $sort = $data["sort"] ?? [];
+        $date = $data["date"] ?? [];
+        $limit = $data["limit"] ?? 10;
+        $page = $data["page"] ?? 1;
 
         // Query the resource based on the filters
         $query = $modelClass::query();
 
         if ($modelClass === Product::class) {
             // If the modelClass is "Product," add variants to the query
-            $query->with('variants');
+            $query->with("variants");
         } elseif ($modelClass === Order::class) {
             // If the modelClass is "Order," add orderRows to the query
-            $query->join('order_items', 'order_items.order_id', '=', 'orders.id')
-                ->join('cart_items', 'order_items.cart_item_id', '=', 'cart_items.id')
-                ->join('products', 'products.id', '=', 'cart_items.product_id')
-                ->join('product_variants', 'product_variants.id', '=', 'cart_items.product_variant_id')
-                ->join('payment_modes', 'payment_modes.id', '=', 'orders.payment_mode_id')
+            $query->join("order_items", "order_items.order_id", "=", "orders.id")
+                ->join("cart_items", "order_items.cart_item_id", "=", "cart_items.id")
+                ->join("products", "products.id", "=", "cart_items.product_id")
+                ->join("product_variants", "product_variants.id", "=", "cart_items.product_variant_id")
+                ->join("payment_modes", "payment_modes.id", "=", "orders.payment_mode_id")
                 ->select(
-                    'order_items.*',
-                    'cart_items.*',
-                    'products.*',
-                    'product_variants.*',
-                    'orders.*',
-                    'payment_modes.name AS payment_mode',
-                    'payment_modes.id AS payment_mode_id',
-                    'order_items.id AS order_item_id',
+                    "orders.id                        AS order_id",
+                    "orders.user_id                   AS user_id",
+                    "orders.status                    AS status",
+                    "orders.order_transaction         AS order_transaction",
+                    "orders.delivery_phone            AS delivery_phone",
+                    "orders.delivery_note             AS delivery_note",
+                    "orders.delivery_address          AS delivery_address",
+                    "orders.delivery_name             AS delivery_name",
+                    "orders.total                     AS total",
+                    "orders.created_at                AS order_created_at",
+                    "orders.updated_at                AS order_updated_at",
+                    "cart_items.product_variant_id    AS product_variant_id",
+                    "cart_items.quantity              AS quantity",
+                    "products.id                      AS product_id",
+                    "products.price                   AS price",
+                    "products.description             AS description",
+                    "products.name                    AS name",
+                    "product_variants.extend_price    AS extend_price",
+                    "product_variants.size            AS size",
+                    "payment_modes.name               AS payment_mode",
+                    "payment_modes.id                 AS payment_mode_id",
+                    "order_items.id                   AS order_item_id",
                 );
         }
 
         // Apply filters
         foreach ($filters as $field => $filter) {
-            $operator = $filter['operator'];
-            $value = $filter['value'];
+            $operator = $filter["operator"];
+            $value = $filter["value"];
 
-            if ($operator === 'eq') {
+            if ($operator === "eq") {
                 $query->where($field, $value);
-            } elseif ($operator === 'like') {
-                $query->where($field, 'like', "%$value%");
-            } elseif ($operator === 'lt') {
-                $query->where($field, '<', $value);
-            } elseif ($operator === 'lteq') {
-                $query->where($field, '<=', $value);
-            } elseif ($operator === 'gt') {
-                $query->where($field, '>', $value);
-            } elseif ($operator === 'gteq') {
-                $query->where($field, '>=', $value);
-            } elseif ($operator === 'neq') {
-                $query->where($field, '!=', $value);
+            } elseif ($operator === "like") {
+                $query->where($field, "like", "%$value%");
+            } elseif ($operator === "lt") {
+                $query->where($field, "<", $value);
+            } elseif ($operator === "lteq") {
+                $query->where($field, "<=", $value);
+            } elseif ($operator === "gt") {
+                $query->where($field, ">", $value);
+            } elseif ($operator === "gteq") {
+                $query->where($field, ">=", $value);
+            } elseif ($operator === "neq") {
+                $query->where($field, "!=", $value);
             }
         }
 
         // Apply date range
         if ($date) {
-            if (isset($date['start']) && $date['start']) {
-                $start = Carbon::parse($date['start']);
-                $query->where('updated_at', '>=', $start);
-            }
-            if (isset($date['end']) && $date['end']) {
-                $end = Carbon::parse($date['end']);
-                $query->where('updated_at', '<=', $end);
+            if ($modelClass === Order::class) {
+                if (isset($date["start"]) && $date["start"]) {
+                    $start = Carbon::parse($date["start"]);
+                    $query->where("orders.updated_at", ">=", $start);
+                }
+                if (isset($date["end"]) && $date["end"]) {
+                    $end = Carbon::parse($date["end"]);
+                    $query->where("orders.updated_at", "<=", $end);
+                }
+            } else {
+                if (isset($date["start"]) && $date["start"]) {
+                    $start = Carbon::parse($date["start"]);
+                    $query->where("updated_at", ">=", $start);
+                }
+                if (isset($date["end"]) && $date["end"]) {
+                    $end = Carbon::parse($date["end"]);
+                    $query->where("updated_at", "<=", $end);
+                }
             }
         }
 
         // Selected fields
         if ($display && count($display) > 0) {
-            if (!in_array('id', $display)) {
-                array_unshift($display, 'id');
+            if (!in_array("id", $display)) {
+                array_unshift($display, "id");
             }
             $query->select($display);
         }
@@ -252,14 +277,14 @@ class ApiService extends BaseService
         }
 
         // Collect pagination data
-        $pagination['page'] = $page;
-        $pagination['limit'] = $limit;
-        $pagination['total'] = $total;
-        $pagination['next_page'] = $total > $page * $limit ? true : false;
-        $pagination['prev_page'] = $page > 1;
+        $pagination["page"] = $page;
+        $pagination["limit"] = $limit;
+        $pagination["total"] = $total;
+        $pagination["next_page"] = $total > $page * $limit ? true : false;
+        $pagination["prev_page"] = $page > 1;
 
-        $mixed['data'] = $resources;
-        $mixed['pagination'] = $pagination;
+        $mixed["data"] = $resources;
+        $mixed["pagination"] = $pagination;
 
         return $mixed;
     }
@@ -267,51 +292,51 @@ class ApiService extends BaseService
     public function search($data, string $modelClass)
     {
         // Extract the parameters from the payload
-        $filters = $data['filter'] ?? [];
-        $sort = $data['sort'] ?? [];
-        $date = $data['date'] ?? [];
-        $limit = $data['limit'] ?? 10;
-        $page = $data['page'] ?? 1;
+        $filters = $data["filter"] ?? [];
+        $sort = $data["sort"] ?? [];
+        $date = $data["date"] ?? [];
+        $limit = $data["limit"] ?? 10;
+        $page = $data["page"] ?? 1;
 
         // Query the resource based on the filters
         $query = $modelClass::query();
 
         // Apply filters
         foreach ($filters as $field => $filter) {
-            $operator = $filter['operator'];
-            $value = $filter['value'];
+            $operator = $filter["operator"];
+            $value = $filter["value"];
 
-            if ($operator === 'eq') {
+            if ($operator === "eq") {
                 $query->where($field, $value);
-            } elseif ($operator === 'like') {
-                $query->where($field, 'like', "%$value%");
-            } elseif ($operator === 'lt') {
-                $query->where($field, '<', $value);
-            } elseif ($operator === 'lteq') {
-                $query->where($field, '<=', $value);
-            } elseif ($operator === 'gt') {
-                $query->where($field, '>', $value);
-            } elseif ($operator === 'gteq') {
-                $query->where($field, '>=', $value);
-            } elseif ($operator === 'neq') {
-                $query->where($field, '!=', $value);
+            } elseif ($operator === "like") {
+                $query->where($field, "like", "%$value%");
+            } elseif ($operator === "lt") {
+                $query->where($field, "<", $value);
+            } elseif ($operator === "lteq") {
+                $query->where($field, "<=", $value);
+            } elseif ($operator === "gt") {
+                $query->where($field, ">", $value);
+            } elseif ($operator === "gteq") {
+                $query->where($field, ">=", $value);
+            } elseif ($operator === "neq") {
+                $query->where($field, "!=", $value);
             }
         }
 
         // Apply date range
         if ($date) {
-            if (isset($date['start']) && $date['start']) {
-                $start = Carbon::parse($date['start']);
-                $query->where('updated_at', '>=', $start);
+            if (isset($date["start"]) && $date["start"]) {
+                $start = Carbon::parse($date["start"]);
+                $query->where("updated_at", ">=", $start);
             }
-            if (isset($date['end']) && $date['end']) {
-                $end = Carbon::parse($date['end']);
-                $query->where('updated_at', '<=', $end);
+            if (isset($date["end"]) && $date["end"]) {
+                $end = Carbon::parse($date["end"]);
+                $query->where("updated_at", "<=", $end);
             }
         }
 
         // Selected only id
-        $query->select(['id']);
+        $query->select(["id"]);
 
         // Apply sorting
         foreach ($sort as $field => $order) {
@@ -328,14 +353,14 @@ class ApiService extends BaseService
         $resources = $query->get()->toArray();
 
         // Collect pagination data
-        $pagination['page'] = $page;
-        $pagination['limit'] = $limit;
-        $pagination['total'] = $total;
-        $pagination['next_page'] = $total > $page * $limit ? true : false;
-        $pagination['prev_page'] = $page > 1;
+        $pagination["page"] = $page;
+        $pagination["limit"] = $limit;
+        $pagination["total"] = $total;
+        $pagination["next_page"] = $total > $page * $limit ? true : false;
+        $pagination["prev_page"] = $page > 1;
 
-        $mixed['data'] = $resources;
-        $mixed['pagination'] = $pagination;
+        $mixed["data"] = $resources;
+        $mixed["pagination"] = $pagination;
 
         return $mixed;
     }
@@ -364,9 +389,8 @@ class ApiService extends BaseService
                 "delivery_address" => $row["delivery_address"],
                 "delivery_name" => $row["delivery_name"],
                 "total" => $row["total"],
-                "deleted_at" => $row["deleted_at"],
-                "created_at" => $row["created_at"],
-                "updated_at" => $row["updated_at"],
+                "created_at" => $row["order_created_at"],
+                "updated_at" => $row["order_updated_at"],
                 "payment_mode_id" => $row["payment_mode_id"],
             ];
 
