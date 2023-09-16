@@ -425,11 +425,20 @@ class ApiService extends BaseService
                 ],
             ];
 
-            // Add the orderRows to the order
-            $order["order_rows"] = [$orderRows];
-
             // Append the order to the output array
-            $output[] = $order;
+            if (count($output)) {
+                $lastOrder = end($output);
+                if ($lastOrder["id"] == $order["id"]) {
+                    $lastIndex = count($output) - 1;
+                    $output[$lastIndex]["order_rows"][] = $orderRows;
+                } else {
+                    $order["order_rows"][] = $orderRows;
+                    $output[] = $order;
+                }
+            } else {
+                $order["order_rows"][] = $orderRows;
+                $output[] = $order;
+            }
         }
 
         return $output;
