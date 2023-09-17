@@ -13,8 +13,8 @@ class ProductVariantFactory extends Factory
     {
         return [
             'product_id' => Product::factory(), // Establish the relationship to Product factory
-            'size' => $this->faker->optional()->word(),
-            'color' => $this->faker->optional()->colorName(),
+            'size' => $this->faker->word(),
+            'color' => $this->faker->colorName(),
             'extend_price' => $this->faker->randomFloat(2, 20000, 60000),
             'stock_qty' => $this->faker->numberBetween(0, 100),
         ];
