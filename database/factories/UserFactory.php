@@ -5,14 +5,10 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Order;
 
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     protected $model = User::class;
 
     public function definition()
@@ -30,17 +26,15 @@ class UserFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function unverified()
+    public function configure()
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
+        return $this->afterCreating(function (User $user) {
+            // Create a random number of orders (2 to 5)
+            $numberOfOrders = random_int(2, 5);
+
+            Order::factory()
+                ->count($numberOfOrders)
+                ->create(['user_id' => $user->id]);
         });
     }
 }

@@ -11,8 +11,10 @@ class CartFactory extends Factory
 
     public function definition()
     {
+        $user = User::inRandomOrder()->first();
+
         return [
-            'user_id' => User::factory(), // Establish the relationship to User factory
+            'user_id' => $user->id,
         ];
     }
 }

@@ -1,10 +1,10 @@
 <?php
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\OrderItem;
 use App\Models\Order;
 use App\Models\CartItem;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderItemFactory extends Factory
 {
@@ -13,8 +13,11 @@ class OrderItemFactory extends Factory
     public function definition()
     {
         return [
-            'order_id' => Order::factory(), // Establish the relationship to Order factory
-            'cart_item_id' => CartItem::factory(), // Establish the relationship to CartItem factory
+            'order_id' => function () {
+                return Order::factory()->create()->id;
+            },
+            'cart_item_id' => CartItem::factory(),
         ];
     }
 }
+
