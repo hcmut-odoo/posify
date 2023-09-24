@@ -7,6 +7,7 @@ on:
       - master
       - docker
       - test
+      - develop
   pull_request:
     types:
       - opened
@@ -41,4 +42,11 @@ jobs:
           if [ "$GITHUB_REF" == "refs/heads/test" ]; then
             docker tag pos:latest callmedavid/posify:test
             docker push callmedavid/posify:test
+          fi
+
+      - name: Check branch and push additional tag if develop branch
+        run: |
+          if [ "$GITHUB_REF" == "refs/heads/develop" ]; then
+            docker tag pos:latest callmedavid/posify:develop
+            docker push callmedavid/posify:develop
           fi

@@ -126,6 +126,14 @@ class ApiController extends Controller
         return $this->successResponse($resources);
     }
 
+    public function OrderResourceList(QueryRequest $request, string $modelClass) : JsonResponse
+    {
+        $data = $request->validated();
+        $resources = $this->apiService->orderQuery($data, $modelClass);
+
+        return $this->successResponse($resources);
+    }
+
     public function resourceSearch(QueryRequest $request, string $modelClass) : JsonResponse
     {
         $data = $request->validated();
@@ -581,7 +589,7 @@ class ApiController extends Controller
 
     public function orders(QueryRequest $request) : JsonResponse
     {
-        return $this->resourceList($request, Order::class);
+        return $this->OrderResourceList($request, Order::class);
     }
 
     public function searchOrders(QueryRequest $request) : JsonResponse

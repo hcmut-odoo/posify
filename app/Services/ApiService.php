@@ -24,13 +24,15 @@ class ApiService extends BaseService
     private $userGroupRepository;
     private $roleGroupRepository;
     private $actionRepository;
+    private $orderService;
 
     public function __construct(
         ApiKeyRepository $apiKeyRepository,
         UserRoleRepository $userRoleRepository,
         UserGroupRepository $userGroupRepository,
         RoleGroupRepository $roleGroupRepository,
-        ActionRepository $actionRepository
+        ActionRepository $actionRepository,
+        OrderService $orderService
     )
     {
         $this->apiKeyRepository = $apiKeyRepository;
@@ -38,6 +40,7 @@ class ApiService extends BaseService
         $this->userGroupRepository = $userGroupRepository;
         $this->roleGroupRepository = $roleGroupRepository;
         $this->actionRepository = $actionRepository;
+        $this->orderService = $orderService;
         parent::__construct();
     }
 
@@ -160,6 +163,81 @@ class ApiService extends BaseService
         return $this->apiKeyRepository->create(Str::random(32), $userId);
     }
 
+    public function orderQuery($data, string $modelClass)
+    {
+        // Extract the parameters from the payload
+        $filters = $data["filter"] ?? [];
+        $display = $data["display"] ?? [];
+        $sort = $data["sort"] ?? [];
+        $date = $data["date"] ?? [];
+        $limit = $data["limit"] ?? 10;
+        $page = $data["page"] ?? 1;
+
+        // Query the resource based on the filters
+        $query = $modelClass::query();
+
+        // Apply filters
+        foreach ($filters as $field => $filter) {
+            $operator = $filter["operator"];
+            $value = $filter["value"];
+
+            if ($operator === "eq") {
+                $query->where($field, $value);
+            } elseif ($operator === "like") {
+                $query->where($field, "like", "%$value%");
+            } elseif ($operator === "lt") {
+                $query->where($field, "<", $value);
+            } elseif ($operator === "lteq") {
+                $query->where($field, "<=", $value);
+            } elseif ($operator === "gt") {
+                $query->where($field, ">", $value);
+            } elseif ($operator === "gteq") {
+                $query->where($field, ">=", $value);
+            } elseif ($operator === "neq") {
+                $query->where($field, "!=", $value);
+            }
+        }
+
+        // Apply date range
+        if ($date) {
+            if (isset($date["start"]) && $date["start"]) {
+                $start = Carbon::parse($date["start"]);
+                $query->where("updated_at", ">=", $start);
+            }
+            if (isset($date["end"]) && $date["end"]) {
+                $end = Carbon::parse($date["end"]);
+                $query->where("updated_at", "<=", $end);
+            }
+        }
+
+        // Selected only id
+        $query->select(["id"]);
+
+        // Count total record
+        $total = $query->count();
+
+        // Apply pagination
+        $query->limit($limit)->offset(($page - 1) * $limit);
+
+        // Retrieve the resources
+        $resources = $query->get()->toArray();
+
+        // Format resource
+        $resources = $this->formatOrderResources($resources);
+
+        // Collect pagination data
+        $pagination["page"] = $page;
+        $pagination["limit"] = $limit;
+        $pagination["total"] = $total;
+        $pagination["next_page"] = $total > $page * $limit ? true : false;
+        $pagination["prev_page"] = $page > 1;
+
+        $mixed["data"] = $resources;
+        $mixed["pagination"] = $pagination;
+
+        return $mixed;
+    }
+
     public function query($data, string $modelClass)
     {
         // Extract the parameters from the payload
@@ -176,37 +254,6 @@ class ApiService extends BaseService
         if ($modelClass === Product::class) {
             // If the modelClass is "Product," add variants to the query
             $query->with("variants");
-        } elseif ($modelClass === Order::class) {
-            // If the modelClass is "Order," add orderRows to the query
-            $query->join("order_items", "order_items.order_id", "=", "orders.id")
-                ->join("cart_items", "order_items.cart_item_id", "=", "cart_items.id")
-                ->join("products", "products.id", "=", "cart_items.product_id")
-                ->join("product_variants", "product_variants.id", "=", "cart_items.product_variant_id")
-                ->join("payment_modes", "payment_modes.id", "=", "orders.payment_mode_id")
-                ->select(
-                    "orders.id                        AS order_id",
-                    "orders.user_id                   AS user_id",
-                    "orders.status                    AS status",
-                    "orders.order_transaction         AS order_transaction",
-                    "orders.delivery_phone            AS delivery_phone",
-                    "orders.delivery_note             AS delivery_note",
-                    "orders.delivery_address          AS delivery_address",
-                    "orders.delivery_name             AS delivery_name",
-                    "orders.total                     AS total",
-                    "orders.created_at                AS order_created_at",
-                    "orders.updated_at                AS order_updated_at",
-                    "cart_items.product_variant_id    AS product_variant_id",
-                    "cart_items.quantity              AS quantity",
-                    "products.id                      AS product_id",
-                    "products.price                   AS price",
-                    "products.description             AS description",
-                    "products.name                    AS name",
-                    "product_variants.extend_price    AS extend_price",
-                    "product_variants.size            AS size",
-                    "payment_modes.name               AS payment_mode",
-                    "payment_modes.id                 AS payment_mode_id",
-                    "order_items.id                   AS order_item_id",
-                );
         }
 
         // Apply filters
@@ -233,24 +280,13 @@ class ApiService extends BaseService
 
         // Apply date range
         if ($date) {
-            if ($modelClass === Order::class) {
-                if (isset($date["start"]) && $date["start"]) {
-                    $start = Carbon::parse($date["start"]);
-                    $query->where("orders.updated_at", ">=", $start);
-                }
-                if (isset($date["end"]) && $date["end"]) {
-                    $end = Carbon::parse($date["end"]);
-                    $query->where("orders.updated_at", "<=", $end);
-                }
-            } else {
-                if (isset($date["start"]) && $date["start"]) {
-                    $start = Carbon::parse($date["start"]);
-                    $query->where("updated_at", ">=", $start);
-                }
-                if (isset($date["end"]) && $date["end"]) {
-                    $end = Carbon::parse($date["end"]);
-                    $query->where("updated_at", "<=", $end);
-                }
+            if (isset($date["start"]) && $date["start"]) {
+                $start = Carbon::parse($date["start"]);
+                $query->where("updated_at", ">=", $start);
+            }
+            if (isset($date["end"]) && $date["end"]) {
+                $end = Carbon::parse($date["end"]);
+                $query->where("updated_at", "<=", $end);
             }
         }
 
@@ -270,11 +306,6 @@ class ApiService extends BaseService
 
         // Retrieve the resources
         $resources = $query->get()->toArray();
-
-        // Format resource
-        if ($modelClass === Order::class) {
-            $resources = $this->formatOrderResources($resources);
-        }
 
         // Collect pagination data
         $pagination["page"] = $page;
@@ -379,66 +410,8 @@ class ApiService extends BaseService
         $output = [];
 
         foreach ($resources as $row) {
-            $order = [
-                "id" => $row["order_id"],
-                "user_id" => $row["user_id"],
-                "status" => $row["status"],
-                "order_transaction" => $row["order_transaction"],
-                "delivery_note" => $row["delivery_note"],
-                "delivery_phone" => $row["delivery_phone"],
-                "delivery_address" => $row["delivery_address"],
-                "delivery_name" => $row["delivery_name"],
-                "total" => $row["total"],
-                "created_at" => $row["order_created_at"],
-                "updated_at" => $row["order_updated_at"],
-                "payment_mode_id" => $row["payment_mode_id"],
-            ];
-
-            $orderRows = [
-                "id" => $row["order_item_id"],
-                "quantity" => $row["quantity"],
-                "product" => [
-                    "id" => $row["product_id"],
-                    "variant_id" => $row["product_variant_id"],
-                    "price" => $row["price"],
-                    "description" => $row["description"],
-                    "name" => $row["name"],
-                    "variant" => [
-                        "id" => $row["product_variant_id"],
-                        "product_id" => $row["product_id"],
-                        "extend_price" => $row["extend_price"],
-                        "size" => $row["size"],
-                    ],
-                ],
-                "delivery" => [
-                    "delivery_note" => $row["delivery_note"],
-                    "delivery_phone" => $row["delivery_phone"],
-                    "delivery_address" => $row["delivery_address"],
-                    "delivery_name" => $row["delivery_name"],
-                ],
-                "user" => [
-                    "id" => $row["user_id"],
-                ],
-                "payment" => [
-                    "id" => $row["payment_mode_id"],
-                    "name" => $row["payment_mode"],
-                ],
-            ];
-
-            // Append the order to the output array
-            if (count($output)) {
-                $lastOrder = end($output);
-                if ($lastOrder["id"] == $order["id"]) {
-                    $lastIndex = count($output) - 1;
-                    $output[$lastIndex]["order_rows"][] = $orderRows;
-                } else {
-                    $order["order_rows"][] = $orderRows;
-                    $output[] = $order;
-                }
-            } else {
-                $order["order_rows"][] = $orderRows;
-                $output[] = $order;
-            }
+            $order = $this->orderService->getOrderDetail($row["id"]);
+            $output[] = $order;
         }
 
         return $output;
