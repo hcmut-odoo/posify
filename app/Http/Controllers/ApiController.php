@@ -121,7 +121,7 @@ class ApiController extends Controller
     public function resourceList(QueryRequest $request, string $modelClass) : JsonResponse
     {
         $data = $request->validated();
-        $resources = $this->apiService->query($data, $modelClass);
+        $resources = $this->apiService->orderQuery($data, $modelClass);
 
         return $this->successResponse($resources);
     }
