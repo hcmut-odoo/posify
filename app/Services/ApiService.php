@@ -202,11 +202,11 @@ class ApiService extends BaseService
         if ($date) {
             if (isset($date["start"]) && $date["start"]) {
                 $start = Carbon::parse($date["start"]);
-                $query->where("orders.updated_at", ">=", $start);
+                $query->where("updated_at", ">=", $start);
             }
             if (isset($date["end"]) && $date["end"]) {
                 $end = Carbon::parse($date["end"]);
-                $query->where("orders.updated_at", "<=", $end);
+                $query->where("updated_at", "<=", $end);
             }
         }
 
