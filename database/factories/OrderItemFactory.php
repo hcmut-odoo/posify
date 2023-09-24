@@ -17,6 +17,8 @@ class OrderItemFactory extends Factory
                 return Order::factory()->create()->id;
             },
             'cart_item_id' => CartItem::factory(),
+            'created_at' => $this->faker->dateTimeBetween('-2 years', '-1 years'),
+            'updated_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
         ];
     }
 }

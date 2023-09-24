@@ -22,6 +22,8 @@ class CartItemFactory extends Factory
             'quantity' => $this->faker->numberBetween(1, 5),
             'stamp' => $this->faker->boolean(),
             'note' => $this->faker->optional()->text(100),
+            'created_at' => $this->faker->dateTimeBetween('-2 years', '-1 years'),
+            'updated_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
         ];
     }
 }

@@ -31,6 +31,8 @@ class OrderFactory extends Factory
             'delivery_name' => $this->faker->name(),
             'total' => $this->faker->randomFloat(2, 30000, 200000), // Adjust the range as needed
             'payment_mode_id' => $this->faker->randomElement([1, 2, 3]),
+            'created_at' => $this->faker->dateTimeBetween('-2 years', '-1 years'),
+            'updated_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
         ];
     }
 
