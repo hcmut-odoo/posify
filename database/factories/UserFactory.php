@@ -21,8 +21,8 @@ class UserFactory extends Factory
             'phone_number' => $this->faker->phoneNumber(),
             'role' => $this->faker->randomElement(['admin', 'user']),
             'email_verified_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
-            'created_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
-            'updated_at' => now(),
+            'created_at' => $this->faker->dateTimeBetween('-2 years', '-1 years'),
+            'updated_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
         ];
     }
 
