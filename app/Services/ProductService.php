@@ -196,21 +196,21 @@ class ProductService extends BaseService
 
     public function updateProductVariant($data)
     {
-        $productId = $data['id'];
-        $categoryId = $data['category_id'];
+        $productVariantId = $data['id'];
+        $productVariantQty = $data["stock_qty"];
 
-        if (!$this->productRepository->get($data['id'])) {
-            throw new NotFoundException("Not found product has ID: $productId");
+        if (!$this->productRepository->get($productVariantId)) {
+            throw new NotFoundException("Not found product variant has ID: $productVariantId");
         }
 
-        if (!$this->categoryRepository->get($data['category_id'])) {
-            throw new NotFoundException("Not found category has ID: $categoryId");
+        if ($productVariantQty < 0) {
+            throw new InvalidParameterException("Product variant quantity must be larger than zero: $productVariantQty");
         }
 
-        if ($this->productRepository->update($data)) {
-            return $this->productRepository->get($productId);
+        if ($this->productVariantRepository->update($data)) {
+            return $this->productVariantRepository->get($productVariantId);
         } else {
-            throw new UpdateFailedException("Update failed category record has ID: $categoryId");
+            throw new UpdateFailedException("Update failed product variant record has ID: $productVariantId");
         }
     }
 
