@@ -11,7 +11,11 @@ class Product extends Model
     use SoftDeletes, HasFactory;
 
     protected $table = 'products';
-    protected $fillable = ['name', 'description', 'price', 'image_url', 'category_id', 'tax_id'];
+    protected $fillable = [
+        'name', 'description', 'price',
+        'image_url', 'category_id', 'tax_id',
+        'barcode'
+    ];
 
     public function __construct(array $attributes = [])
     {
