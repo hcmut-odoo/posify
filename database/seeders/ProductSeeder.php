@@ -595,6 +595,7 @@ class ProductSeeder extends Seeder
 
                 $randomTimestamp = mt_rand($startDate, $endDate);
                 $randomDatetime = date("Y-m-d H:i:s", $randomTimestamp);
+                $variantBarcode = Str::uuid()->toString();
                 $product_variant = [
                     'id' => $id,
                     'product_id' => $product['id'],
@@ -602,7 +603,8 @@ class ProductSeeder extends Seeder
                     'extend_price' => $extendPrice,
                     'stock_qty' => rand(50, 100),
                     'created_at' => $randomDatetime,
-                    'updated_at' => $randomDatetime
+                    'updated_at' => $randomDatetime,
+                    'variant_barcode' => $variantBarcode
                 ];
 
                 $product_variants[] = $product_variant;
