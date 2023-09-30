@@ -13,6 +13,7 @@ use App\Exceptions\NotFoundException;
 use App\Exceptions\UpdateFailedException;
 use App\Exceptions\NotEnoughStockException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductService extends BaseService
 {
@@ -103,7 +104,8 @@ class ProductService extends BaseService
             throw new DuplicateEntryException("Product can not have the same name `$name` and cateogry has ID $categoryId");
         }
 
-        return $this->productRepository->create($categoryId, $name, $price, $description, $imageUrl);
+        $barcode = Str::uuid()->toString();
+        return $this->productRepository->create($categoryId, $name, $price, $description, $imageUrl, $barcode);
     }
 
     public function updateProduct($data)
@@ -164,7 +166,8 @@ class ProductService extends BaseService
             throw new DuplicateEntryException("Product variant can not have the same attribute");
         }
 
-        return $this->productVariantRepository->create($productId, $size, $price, $color, $quantity);
+        $variantBarcode = Str::uuid()->toString();
+        return $this->productVariantRepository->create($productId, $size, $price, $color, $quantity, $variantBarcode);
     }
 
     public function deleteProductVariant($id)
