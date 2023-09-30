@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -568,6 +569,7 @@ class ProductSeeder extends Seeder
             $product['id'] = $id;
             $id++;
             $product['tax_id'] = $taxId;
+            $product['barcode'] = Str::uuid()->toString();
         }
 
         DB::table('products')->insert($products);
