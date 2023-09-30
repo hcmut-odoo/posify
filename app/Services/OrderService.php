@@ -299,7 +299,10 @@ class OrderService extends BaseService
         }
 
         $orderRecord = $this->orderRepository->get($orderId);
-
+        $userId = $orderRecord["user_id"];
+        $userInformation = $this->userRepository->get($userId);
+        $orderRecord->email = $userInformation->email;
+        $orderRecord->phone_number = $userInformation->phone_number;
         $orderRecord->order_rows = $orderRows;
 
         return $orderRecord;
