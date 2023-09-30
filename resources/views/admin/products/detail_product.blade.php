@@ -36,6 +36,7 @@
                                 <th>Kích thước</th>
                                 <th>Giá mở rộng</th>
                                 <th>Số lượng</th>
+                                <th>Barcode</th>
                                 <th class="no-sort"></th>
                             </tr>
                         </thead>
@@ -46,6 +47,7 @@
                                     <td>{{ $item->size }}</td>
                                     <td>{{ number_format($item->extend_price, 0, ',', '.') . ' VNĐ' }}</td>
                                     <td>{{ $item->stock_qty }}</td>
+                                    <td>{{ $item->variant_barcode }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
