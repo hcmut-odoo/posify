@@ -59,7 +59,7 @@ class ProductRepository
         return Product::paginate($perPage, ['*'], 'page', $page);
     }
 
-    public function create($categoryId, $name, $price, $description, $imageUrl)
+    public function create($categoryId, $name, $price, $description, $imageUrl, $barcode)
     {
         return Product::create([
             'category_id' => $categoryId,
@@ -67,13 +67,14 @@ class ProductRepository
             'price' => $price,
             'description' => $description,
             'image_url' => $imageUrl,
-            'tax_id' => 1
+            'tax_id' => 1,
+            'barcode' => $barcode
         ]);
     }
 
     public function update($data)
     {
-        $fields = ['category_id', 'price', 'description', 'name', 'image_url'];
+        $fields = ['category_id', 'price', 'description', 'name', 'image_url', 'barcode'];
         $updateData = [];
 
         foreach ($fields as $field) {
