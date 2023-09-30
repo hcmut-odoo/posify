@@ -166,7 +166,8 @@ class ProductService extends BaseService
             throw new DuplicateEntryException("Product variant can not have the same attribute");
         }
 
-        return $this->productVariantRepository->create($productId, $size, $price, $color, $quantity);
+        $variantBarcode = Str::uuid()->toString();
+        return $this->productVariantRepository->create($productId, $size, $price, $color, $quantity, $variantBarcode);
     }
 
     public function deleteProductVariant($id)

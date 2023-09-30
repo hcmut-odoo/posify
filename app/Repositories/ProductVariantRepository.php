@@ -54,20 +54,21 @@ class ProductVariantRepository
             ->first();
     }
 
-    public function create($productId, $size, $extendPrice, $color, $stockQuantity)
+    public function create($productId, $size, $extendPrice, $color, $stockQuantity, $variant_barcode)
     {
         return ProductVariant::create([
             'product_id' => $productId,
             'size' => $size,
             'extend_price' => $extendPrice,
             'stock_qty' => $stockQuantity,
-            'color' => $color ?? 'none'
+            'color' => $color ?? 'none',
+            'variant_barcode' => $variant_barcode
         ]);
     }
 
     public function update($data)
     {
-        $fields = ['product_id', 'size', 'color', 'stock_qty', 'extend_price'];
+        $fields = ['product_id', 'size', 'color', 'stock_qty', 'extend_price', 'variant_barcode'];
         $updateData = [];
 
         foreach ($fields as $field) {
