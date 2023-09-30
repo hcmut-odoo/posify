@@ -266,6 +266,7 @@ class OrderService extends BaseService
             $variant['product_id'] = $orderRow->product_id;
             $variant['extend_price'] = $orderRow->extend_price;
             $variant['size'] = $orderRow->size;
+            $variant['variant_barcode'] = $orderRow->variant_barcode;
 
             // Collect product data
             $product['id'] = $orderRow->product_id;
@@ -273,6 +274,7 @@ class OrderService extends BaseService
             $product['price'] = $orderRow->price;
             $product['description'] = $orderRow->description;
             $product['name'] = $orderRow->name;
+            $product['barcode'] = $orderRow->barcode;
             $product['variant'] = $variant;
 
             // Collect payment data
