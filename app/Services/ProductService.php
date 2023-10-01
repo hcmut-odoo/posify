@@ -199,23 +199,34 @@ class ProductService extends BaseService
 
     public function updateProductVariant($data)
     {
-        $productVariantId = $data['id'];
-        $productVariantQty = $data["stock_qty"];
-
-        if (!$this->productRepository->get($productVariantId)) {
-            throw new NotFoundException("Not found product variant has ID: $productVariantId");
+        if (!isset($data['id']) && !isset($data['variant_barcode'])) {
+            throw new InvalidParameterException("Product variant must have an identifying field (id or variant_barcode).");
         }
+
+        $identifyField = isset($data['id']) ? $data['id'] : (isset($data['variant_barcode']) ? $data['variant_barcode'] : null);
+        $productVariantQty = $data["stock_qty"];
 
         if ($productVariantQty < 0) {
             throw new InvalidParameterException("Product variant quantity must be larger than zero: $productVariantQty");
         }
 
+        if (isset($data['id']) && !$this->productVariantRepository->get($identifyField)) {
+            throw new NotFoundException("Not found product variant with ID: $identifyField");
+        } elseif (isset($data['variant_barcode']) && !$this->productVariantRepository->getByBarcode($identifyField)) {
+            throw new NotFoundException("Not found product variant with barcode: $identifyField");
+        }
+
         if ($this->productVariantRepository->update($data)) {
-            return $this->productVariantRepository->get($productVariantId);
+            if (isset($data['id'])) {
+                return $this->productVariantRepository->get($identifyField);
+            }
+
+            return $this->productVariantRepository->getByBarcode($identifyField);
         } else {
-            throw new UpdateFailedException("Update failed product variant record has ID: $productVariantId");
+            throw new UpdateFailedException("Update failed for product variant with ID: $identifyField");
         }
     }
+
 
     public function getProductVariant($id)
     {

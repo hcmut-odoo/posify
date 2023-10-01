@@ -13,6 +13,7 @@ class UpdateProductVariantRequest extends FormRequest
         return [
             'id' => 'sometimes|required|exists:product_variants,id',
             'product_id' => 'sometimes|required|exists:products,id',
+            'variant_barcode' => 'sometimes|required|exists:product_variants,variant_barcode',
             'size' => 'nullable|string',
             'color' => 'nullable|string',
             'extend_price' => 'sometimes|required|numeric|min:1',
