@@ -19,6 +19,16 @@ class ProductVariantRepository
         }
     }
 
+    public function getByBarcode($variantBarcode)
+    {
+        try {
+            $product = ProductVariant::where('variant_barcode', $variantBarcode)->firstOrFail();
+            return $product;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found product with barcode: $variantBarcode");
+        }
+    }
+
     public function getForUpdate($id)
     {
         return ProductVariant::where('id', $id)->lockForUpdate()->first();
@@ -68,7 +78,7 @@ class ProductVariantRepository
 
     public function update($data)
     {
-        $fields = ['product_id', 'size', 'color', 'stock_qty', 'extend_price', 'variant_barcode'];
+        $fields = ['product_id', 'size', 'color', 'stock_qty', 'extend_price'];
         $updateData = [];
 
         foreach ($fields as $field) {
@@ -77,12 +87,18 @@ class ProductVariantRepository
             }
         }
 
-        $updateData['updated_at'] = now();
-
         if (!empty($updateData)) {
-            return DB::table('product_variants')
-                ->where('id', $data['id'])
-                ->update($updateData);
+            $updateData['updated_at'] = now();
+
+            if (isset($data['id'])) {
+                return DB::table('product_variants')
+                    ->where('id', $data['id'])
+                    ->update($updateData);
+            } else {
+                return DB::table('product_variants')
+                    ->where('variant_barcode', $data['variant_barcode'])
+                    ->update($updateData);
+            }
         }
 
         return false;
