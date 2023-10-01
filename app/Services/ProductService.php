@@ -223,7 +223,7 @@ class ProductService extends BaseService
 
             return $this->productVariantRepository->getByBarcode($identifyField);
         } else {
-            throw new UpdateFailedException("Update failed for product variant with ID: $identifyField");
+            throw new UpdateFailedException("Update failed for product variant");
         }
     }
 
