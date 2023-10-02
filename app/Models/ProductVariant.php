@@ -11,7 +11,7 @@ class ProductVariant extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'product_variants';
-    protected $fillable = ['product_id', 'size', 'color', 'stock_qty', 'variant_barcode'];
+    protected $fillable = ['product_id', 'size', 'color', 'stock_qty', 'variant_barcode', 'extend_price'];
 
     public function __construct(array $attributes = [])
     {

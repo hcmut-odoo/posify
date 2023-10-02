@@ -34,6 +34,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UpdateProductVariantRequest;
+use App\Http\Requests\CreateProductVariantRequest;
 use App\Models\PaymentMode;
 use App\Models\Tax;
 
@@ -294,7 +295,7 @@ class ApiController extends Controller
         }
     }
 
-    public function createProductVariant(CreateProductRequest $request) : JsonResponse
+    public function createProductVariant(CreateProductVariantRequest $request) : JsonResponse
     {
         try {
             $data = $request->validated();
