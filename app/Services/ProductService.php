@@ -146,6 +146,7 @@ class ProductService extends BaseService
         $productId = $data['product_id'];
         $quantity = $data['stock_qty'];
         $price = $data['extend_price'];
+        $variantBarcode = isset($data['variant_barcode']) ? $data['variant_barcode'] : Str::uuid()->toString();
         $size = $data['size'];
         $color = $data['color'];
 
@@ -166,7 +167,6 @@ class ProductService extends BaseService
             throw new DuplicateEntryException("Product variant can not have the same attribute");
         }
 
-        $variantBarcode = Str::uuid()->toString();
         return $this->productVariantRepository->create($productId, $size, $price, $color, $quantity, $variantBarcode);
     }
 
