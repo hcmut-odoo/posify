@@ -92,15 +92,17 @@ class ProductVariantRepository
             DB::beginTransaction();
             try {
                 if (isset($data['id'])) {
-                    return DB::table('product_variants')
+                    DB::table('product_variants')
                         ->where('id', $data['id'])
                         ->update($updateData);
                 } else {
-                    return DB::table('product_variants')
+                    DB::table('product_variants')
                         ->where('variant_barcode', $data['variant_barcode'])
                         ->update($updateData);
                 }
+
                 DB::commit();
+                return true;
             } catch (\Exception $e) {
                 DB::rollback();
             }
