@@ -17,9 +17,9 @@ class ProductVariantFactory extends Factory
         return [
             'product_id' => Product::factory(), // Establish the relationship to Product factory
             'variant_barcode' => $this->faker->uuid(),
-            'size' => $this->faker->word(),
+            'size' => $this->faker->randomElement(['big', 'medium', 'small']),
             'color' => $this->faker->colorName(),
-            'extend_price' => $this->faker->randomFloat(2, 20000, 60000),
+            'extend_price' => $this->faker->randomFloat(2, 3000, 9000),
             'stock_qty' => $this->faker->numberBetween(0, 100),
             'created_at' => $this->faker->dateTimeBetween('-2 years', '-1 years'),
             'updated_at' => $this->faker->dateTimeBetween('-1 years', 'now'),

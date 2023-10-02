@@ -67,6 +67,9 @@
                                 <tbody>
                                     @foreach ($items as $item)
                                         <tr>
+                                            @php
+                                                $computed_price = $item->extend_price + $item->price;
+                                            @endphp
                                             <th scope="row">{{ $item->numerical_order }}</th>
                                             <td>
                                                 <div>
@@ -75,9 +78,9 @@
                                                 </div>
                                             </td>
                                             <td>{{ $item->size }}</td>
-                                            <td>{{ number_format($item->extend_price, 0, ',', '.') }} VNĐ</td>
+                                            <td>{{ number_format($computed_price, 0, ',', '.') }} VNĐ</td>
                                             <td>{{ $item->quantity }}</td>
-                                            <td class="text-right">{{ number_format($item->extend_price*$item->quantity, 0, ',', '.')}} VNĐ</td>
+                                            <td class="text-right">{{ number_format($computed_price*$item->quantity, 0, ',', '.')}} VNĐ</td>
                                         </tr>
                                     @endforeach
                                     <tr>

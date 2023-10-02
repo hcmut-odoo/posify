@@ -187,12 +187,13 @@ class OrderService extends BaseService
 
     public function transformOrder($orderId, $status)
     {
-        $order = $this->findById($orderId);
         $orderItems = $this->getOrderItems($orderId);
         $totalPrice = 0;
 
         foreach ($orderItems as $orderItem) {
-            $totalPrice = $totalPrice + $orderItem->extend_price*$orderItem->quantity;
+            $standard_price = $orderItem->price;
+            $extend_price = $orderItem->extend_price;
+            $totalPrice = $totalPrice + ($standard_price + $extend_price)*$orderItem->quantity;
         }
 
         try {

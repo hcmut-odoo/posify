@@ -585,7 +585,7 @@ class ProductSeeder extends Seeder
             $product = $deepCopiedProducts[$i];
 
             foreach ($sizes as $size) {
-                $extendPrice = $product['price'];
+                $extendPrice = 0;
 
                 if ($size === 'big') {
                     $extendPrice += 6000;
