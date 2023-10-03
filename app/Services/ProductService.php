@@ -13,6 +13,7 @@ use App\Exceptions\NotFoundException;
 use App\Exceptions\UpdateFailedException;
 use App\Exceptions\NotEnoughStockException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductService extends BaseService
 {
@@ -103,7 +104,8 @@ class ProductService extends BaseService
             throw new DuplicateEntryException("Product can not have the same name `$name` and cateogry has ID $categoryId");
         }
 
-        return $this->productRepository->create($categoryId, $name, $price, $description, $imageUrl);
+        $barcode = Str::uuid()->toString();
+        return $this->productRepository->create($categoryId, $name, $price, $description, $imageUrl, $barcode);
     }
 
     public function updateProduct($data)
@@ -144,6 +146,7 @@ class ProductService extends BaseService
         $productId = $data['product_id'];
         $quantity = $data['stock_qty'];
         $price = $data['extend_price'];
+        $variantBarcode = isset($data['variant_barcode']) ? $data['variant_barcode'] : Str::uuid()->toString();
         $size = $data['size'];
         $color = $data['color'];
 
@@ -164,7 +167,7 @@ class ProductService extends BaseService
             throw new DuplicateEntryException("Product variant can not have the same attribute");
         }
 
-        return $this->productVariantRepository->create($productId, $size, $price, $color, $quantity);
+        return $this->productVariantRepository->create($productId, $size, $price, $color, $quantity, $variantBarcode);
     }
 
     public function deleteProductVariant($id)
@@ -196,23 +199,34 @@ class ProductService extends BaseService
 
     public function updateProductVariant($data)
     {
-        $productId = $data['id'];
-        $categoryId = $data['category_id'];
-
-        if (!$this->productRepository->get($data['id'])) {
-            throw new NotFoundException("Not found product has ID: $productId");
+        if (!isset($data['id']) && !isset($data['variant_barcode'])) {
+            throw new InvalidParameterException("Product variant must have an identifying field (id or variant_barcode).");
         }
 
-        if (!$this->categoryRepository->get($data['category_id'])) {
-            throw new NotFoundException("Not found category has ID: $categoryId");
+        $identifyField = isset($data['id']) ? $data['id'] : (isset($data['variant_barcode']) ? $data['variant_barcode'] : null);
+        $productVariantQty = $data["stock_qty"];
+
+        if ($productVariantQty < 0) {
+            throw new InvalidParameterException("Product variant quantity must be larger than zero: $productVariantQty");
         }
 
-        if ($this->productRepository->update($data)) {
-            return $this->productRepository->get($productId);
+        if (isset($data['id']) && !$this->productVariantRepository->get($identifyField)) {
+            throw new NotFoundException("Not found product variant with ID: $identifyField");
+        } elseif (isset($data['variant_barcode']) && !$this->productVariantRepository->getByBarcode($identifyField)) {
+            throw new NotFoundException("Not found product variant with barcode: $identifyField");
+        }
+
+        if ($this->productVariantRepository->update($data)) {
+            if (isset($data['id'])) {
+                return $this->productVariantRepository->get($identifyField);
+            }
+
+            return $this->productVariantRepository->getByBarcode($identifyField);
         } else {
-            throw new UpdateFailedException("Update failed category record has ID: $categoryId");
+            throw new UpdateFailedException("Update failed for product variant");
         }
     }
+
 
     public function getProductVariant($id)
     {

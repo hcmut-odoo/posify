@@ -6,17 +6,17 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateProductRequest extends FormRequest
+class CreateProductVariantRequest extends FormRequest
 {
     public function rules()
     {
         return [
-            'id' => 'required|exists:products,id',
-            'name' => 'sometimes|required|string|max:255',
-            'price' => 'sometimes|required|numeric|min:1',
-            'description' => 'sometimes|required|string',
-            'image_url' => 'sometimes|required|string',
-            'category_id' => 'sometimes|numeric|min:1|exists:categories,id'
+            'product_id' => 'sometimes|required|exists:products,id',
+            'variant_barcode' => 'sometimes|required',
+            'size' => 'nullable|string',
+            'color' => 'nullable|string',
+            'extend_price' => 'sometimes|required|numeric|min:1',
+            'stock_qty' => 'sometimes|required|numeric|min:1',
         ];
     }
 

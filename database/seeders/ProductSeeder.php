@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -568,6 +569,7 @@ class ProductSeeder extends Seeder
             $product['id'] = $id;
             $id++;
             $product['tax_id'] = $taxId;
+            $product['barcode'] = Str::uuid()->toString();
         }
 
         DB::table('products')->insert($products);
@@ -583,7 +585,7 @@ class ProductSeeder extends Seeder
             $product = $deepCopiedProducts[$i];
 
             foreach ($sizes as $size) {
-                $extendPrice = $product['price'];
+                $extendPrice = 0;
 
                 if ($size === 'big') {
                     $extendPrice += 6000;
@@ -593,6 +595,7 @@ class ProductSeeder extends Seeder
 
                 $randomTimestamp = mt_rand($startDate, $endDate);
                 $randomDatetime = date("Y-m-d H:i:s", $randomTimestamp);
+                $variantBarcode = Str::uuid()->toString();
                 $product_variant = [
                     'id' => $id,
                     'product_id' => $product['id'],
@@ -600,7 +603,8 @@ class ProductSeeder extends Seeder
                     'extend_price' => $extendPrice,
                     'stock_qty' => rand(50, 100),
                     'created_at' => $randomDatetime,
-                    'updated_at' => $randomDatetime
+                    'updated_at' => $randomDatetime,
+                    'variant_barcode' => $variantBarcode
                 ];
 
                 $product_variants[] = $product_variant;

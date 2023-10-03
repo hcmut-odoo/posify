@@ -187,12 +187,13 @@ class OrderService extends BaseService
 
     public function transformOrder($orderId, $status)
     {
-        $order = $this->findById($orderId);
         $orderItems = $this->getOrderItems($orderId);
         $totalPrice = 0;
 
         foreach ($orderItems as $orderItem) {
-            $totalPrice = $totalPrice + $orderItem->extend_price*$orderItem->quantity;
+            $standard_price = $orderItem->price;
+            $extend_price = $orderItem->extend_price;
+            $totalPrice = $totalPrice + ($standard_price + $extend_price)*$orderItem->quantity;
         }
 
         try {
@@ -266,6 +267,7 @@ class OrderService extends BaseService
             $variant['product_id'] = $orderRow->product_id;
             $variant['extend_price'] = $orderRow->extend_price;
             $variant['size'] = $orderRow->size;
+            $variant['variant_barcode'] = $orderRow->variant_barcode;
 
             // Collect product data
             $product['id'] = $orderRow->product_id;
@@ -273,6 +275,7 @@ class OrderService extends BaseService
             $product['price'] = $orderRow->price;
             $product['description'] = $orderRow->description;
             $product['name'] = $orderRow->name;
+            $product['barcode'] = $orderRow->barcode;
             $product['variant'] = $variant;
 
             // Collect payment data
@@ -297,7 +300,10 @@ class OrderService extends BaseService
         }
 
         $orderRecord = $this->orderRepository->get($orderId);
-
+        $userId = $orderRecord["user_id"];
+        $userInformation = $this->userRepository->get($userId);
+        $orderRecord->email = $userInformation->email;
+        $orderRecord->phone_number = $userInformation->phone_number;
         $orderRecord->order_rows = $orderRows;
 
         return $orderRecord;

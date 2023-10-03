@@ -16,6 +16,7 @@ class CreateProductVariantsTable extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
+            $table->string('variant_barcode')->uniqid();
             $table->string('size')->nullable();
             $table->string('color')->nullable();
             $table->decimal('extend_price', 8, 2);

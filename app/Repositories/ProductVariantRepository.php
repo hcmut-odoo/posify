@@ -19,6 +19,16 @@ class ProductVariantRepository
         }
     }
 
+    public function getByBarcode($variantBarcode)
+    {
+        try {
+            $product = ProductVariant::where('variant_barcode', $variantBarcode)->firstOrFail();
+            return $product;
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Not found product with barcode: $variantBarcode");
+        }
+    }
+
     public function getForUpdate($id)
     {
         return ProductVariant::where('id', $id)->lockForUpdate()->first();
@@ -54,14 +64,15 @@ class ProductVariantRepository
             ->first();
     }
 
-    public function create($productId, $size, $extendPrice, $color, $stockQuantity)
+    public function create($productId, $size, $extendPrice, $color, $stockQuantity, $variant_barcode)
     {
         return ProductVariant::create([
             'product_id' => $productId,
             'size' => $size,
             'extend_price' => $extendPrice,
             'stock_qty' => $stockQuantity,
-            'color' => $color ?? 'none'
+            'color' => $color ?? 'none',
+            'variant_barcode' => $variant_barcode
         ]);
     }
 
@@ -76,12 +87,25 @@ class ProductVariantRepository
             }
         }
 
-        $updateData['updated_at'] = now();
-
         if (!empty($updateData)) {
-            return DB::table('product_variants')
-                ->where('id', $data['id'])
-                ->update($updateData);
+            $updateData['updated_at'] = now();
+            DB::beginTransaction();
+            try {
+                if (isset($data['id'])) {
+                    DB::table('product_variants')
+                        ->where('id', $data['id'])
+                        ->update($updateData);
+                } else {
+                    DB::table('product_variants')
+                        ->where('variant_barcode', $data['variant_barcode'])
+                        ->update($updateData);
+                }
+
+                DB::commit();
+                return true;
+            } catch (\Exception $e) {
+                DB::rollback();
+            }
         }
 
         return false;
