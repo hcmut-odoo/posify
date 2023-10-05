@@ -30,13 +30,14 @@ class OrderRepository
             'delivery_phone' => $deliveryPhone,
             'delivery_address' => $deliveryAddress,
             'delivery_note' => $deliveryNote,
-            'total' => 0
+            'total' => 0,
+            'total_tax' => 0,
         ]);
     }
 
     public function update($data)
     {
-        $fields = ['status', 'total'];
+        $fields = ['status', 'total', 'total_tax'];
         $updateData = [];
 
         foreach ($fields as $field) {

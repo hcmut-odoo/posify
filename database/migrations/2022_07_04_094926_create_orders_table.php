@@ -24,6 +24,7 @@ class CreateOrdersTable extends Migration
             $table->string('delivery_address');
             $table->string('delivery_name');
             $table->decimal('total');
+            $table->decimal('total_tax');
             $table->softDeletes();
             $table->timestamps();
 

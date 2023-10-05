@@ -189,6 +189,7 @@ class OrderService extends BaseService
     {
         $orderItems = $this->getOrderItems($orderId);
         $totalPrice = 0;
+        $tax = 0.1;
 
         foreach ($orderItems as $orderItem) {
             $standard_price = $orderItem->price;
@@ -196,13 +197,17 @@ class OrderService extends BaseService
             $totalPrice = $totalPrice + ($standard_price + $extend_price)*$orderItem->quantity;
         }
 
+        $totalPriceTaxInclude = $totalPrice * (1 + $tax);
+        $totalTax = $totalPrice * $tax;
+
         try {
             DB::beginTransaction();
 
             $transformOrder = $this->orderRepository->update([
                 'id' => $orderId,
-                'total' => $totalPrice,
-                'status' => $status
+                'total' => $totalPriceTaxInclude,
+                'status' => $status,
+                'total_tax' => $totalTax
             ]);
 
             DB::commit();
@@ -281,6 +286,14 @@ class OrderService extends BaseService
             // Collect payment data
             $payment['id'] = $orderRow->payment_mode_id;
             $payment['name'] = $orderRow->payment_mode;
+
+            // Caculate tax
+            $tax = 0.1;
+            $itemPrice = $orderRow->price + $orderRow->extend_price;
+            $taxAmount =  $itemPrice * $tax;
+
+            $product['item_price'] = $itemPrice;
+            $product['tax_amount'] = $taxAmount;
 
             // Collect delivery data
             $delivery['delivery_note'] = $orderRow->delivery_note;
